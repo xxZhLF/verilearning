@@ -15,6 +15,8 @@
 - GTKWave ([Home](https://gtkwave.sourceforge.net/))
   - `sudo apt install gtkwave`
 
+Xilinx Vivado
+
 ---
 
 git promopt 优化： [here](https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh)
