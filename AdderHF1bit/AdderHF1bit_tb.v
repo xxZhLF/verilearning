@@ -9,12 +9,15 @@ module AdderHF1bit_tb (
     initial begin
            in1 = 1'b0;
            in2 = 1'b0;
+    end
+
+    always begin
         #5 in1 = 1'b0;
         #5 in2 = 1'b1;
         #5 in1 = 1'b1;
         #5 in2 = 1'b0;
         #5 in1 = 1'b1;
-        #5 in2 = 1'b1;
+        #5 in2 = 1'b1;        
     end
 
     AdderHF1bit adder(
