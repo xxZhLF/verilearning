@@ -4,7 +4,7 @@ Testbehch := AdderHF1bit_tb
 OPutTo := obj_dir/
 
 FLGS := --cc
-FLGS += --top-module $(Testbehch)
+FLGS += --top-module $(TopModule)
 FLGS += --timing
 FLGS += --build
 FLGS += --main
@@ -16,7 +16,7 @@ srcs := $(wildcard *.v)
 
 .PHONY: all
 all: 
-	verilator $(Testbehch).v $(FLGS) 
+	verilator $(TopModule).v $(FLGS) 
 
 .PHONY: run
 run: 
