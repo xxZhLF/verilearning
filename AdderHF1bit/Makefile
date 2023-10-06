@@ -1,17 +1,19 @@
 TopModule := AdderHF1bit
 Testbehch := AdderHF1bit_tb
 
-FLAGS := --cc
-FLAGS += --top-module $(Testbehch)
-FLAGS += --timing
-FLAGS += --build
-FLAGS += --main
-FLAGS += --exe
+FLGS := --cc
+FLGS += --top-module $(Testbehch)
+FLGS += --timing
+FLGS += --build
+FLGS += --main
+FLGS += --exe
 # FLAGS += --binary
+
+srcs := $(wildcard *.v)
 
 .PHONY: all
 all: 
-	verilator $(Testbehch).v $(FLAGS) 
+	verilator $(Testbehch).v $(FLGS) 
 #	./obj_dir/V$(TopModule)
 
 .PHONY: clean
