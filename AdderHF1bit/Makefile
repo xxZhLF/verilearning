@@ -1,16 +1,18 @@
 TopModule := AdderHF1bit
-Testbench := AdderHF1bit_tb.cpp
+Testbehch := AdderHF1bit_tb
 
 FLAGS := --cc
-FLAGS += --top-module $(TopModule)
-FLAGS += --exe $(Testbench)
+FLAGS += --top-module $(Testbehch)
+FLAGS += --timing
 FLAGS += --build
-
-srcs = $(wildcard *.v)
+FLAGS += --main
+FLAGS += --exe
+# FLAGS += --binary
 
 .PHONY: all
 all: 
-	@ verilator $(srcs) $(FLAGS) 
+	verilator $(Testbehch).v $(FLAGS) 
+#	./obj_dir/V$(TopModule)
 
 .PHONY: clean
 clean:
