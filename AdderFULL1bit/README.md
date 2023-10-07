@@ -1,6 +1,6 @@
 一个 One-Bit 全加器
 
-| op1 | op2 | cin | \|  | sum | COUT |
+| op1 | op2 | cin | \|  | sum | cout |
 | :-: | :-: | :-: | :-: | :-: | :-:  |
 |  0  |  0  |  0  | \|  |  0  |  0   |
 |  0  |  0  |  1  | \|  |  1  |  0   |
@@ -13,4 +13,4 @@
 
 sum = op1 **XOR** op2 **XOR** cin
 
-COUT = (op1 **AND** op2) **OR** (op1 **XOR** op2) **AND** cin
+cout = (op1 **AND** op2) **OR** (op1 **XOR** op2) **AND** cin
