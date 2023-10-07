@@ -14,8 +14,7 @@
     7. `sudo make install`
 - GTKWave ([Home](https://gtkwave.sourceforge.net/))
   - `sudo apt install gtkwave`
-
-Xilinx Vivado
+- Xilinx Vivado (Optional)
 
 ---
 
