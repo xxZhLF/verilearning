@@ -25,7 +25,7 @@ module AdderHF1bit_tb (
         $dumpvars(0, in1);
         $dumpvars(1, in2);
         $dumpvars(2, out);
-        $finish;
+        // $finish;
     end
 
 endmodule
