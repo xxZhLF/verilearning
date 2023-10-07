@@ -1,0 +1,35 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sat Oct  7 14:48:45 2023
+[*]
+[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/AdderFL1bit/AdderFL1bit.vcd"
+[dumpfile_mtime] "Sat Oct  7 14:44:53 2023"
+[dumpfile_size] 1680
+[savefile] "/home/xxzhou/MyWORKspace/verilearning/AdderFL1bit/AdderFL1bit.gtkw"
+[timestart] 0
+[size] 1428 819
+[pos] -167 -64
+*-8.000000 481 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.AdderFL1bit_tb.
+[sst_width] 214
+[signals_width] 78
+[sst_expanded] 1
+[sst_vpaned_height] 229
+@29
+[color] 1
+TOP.AdderFL1bit_tb.adder.op1
+@28
+[color] 1
+TOP.AdderFL1bit_tb.adder.op2
+[color] 5
+TOP.AdderFL1bit_tb.adder.cin
+@200
+-
+@28
+[color] 4
+TOP.AdderFL1bit_tb.adder.sum
+[color] 3
+TOP.AdderFL1bit_tb.adder.cout
+[pattern_trace] 1
+[pattern_trace] 0
