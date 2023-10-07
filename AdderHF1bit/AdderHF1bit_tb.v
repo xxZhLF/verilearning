@@ -12,10 +12,10 @@ module AdderHF1bit_tb (
 
     initial begin
         repeat(10) begin
+            #5 in1 = 1'b0; in2 = 1'b0;
             #5 in1 = 1'b0; in2 = 1'b1;
             #5 in1 = 1'b1; in2 = 1'b0;
             #5 in1 = 1'b1; in2 = 1'b1;
-            #5 in1 = 1'b0; in2 = 1'b0;        
         end
     end
 
