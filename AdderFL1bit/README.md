@@ -13,4 +13,4 @@
 
 sum = op1 **XOR** op2 **XOR** cin
 
-cout = (op1 **AND** op2) **OR** (op1 **XOR** op2) **AND** cin
+cout = (op1 **AND** op2) **OR** ((op1 **XOR** op2) **AND** cin)
