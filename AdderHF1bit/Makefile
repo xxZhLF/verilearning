@@ -1,18 +1,18 @@
-include AdderHF1bit.mk
+TopModule := AdderHF1bit
+Testbehch := AdderHF1bit_tb
 
-.PHONY: all
-all: 
-	verilator $(SRCS) $(FLGS) 
+OPutTo := obj_dir/
 
-.PHONY: run
-run: 
-	./$(OPutTo)V$(Testbehch)
+FLGS := --cc
+FLGS += --top-module $(Testbehch)
+FLGS += --timing
+FLGS += --build
+FLGS += --main
+FLGS += --exe
+# FLAGS += --binary
+FLGS += --trace
 
-.PHONY: show
-show:
-	gtkwave $(TopModule).vcd
+SRCS := $(Testbehch)
+SRCS += $(TopModule)
 
-.PHONY: clean
-clean:
-	@- rm -rf $(OPutTo)
-	@- rm $(TopModule).vcd
+include ../COMMON.mk
