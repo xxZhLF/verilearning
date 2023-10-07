@@ -5,7 +5,7 @@ OPutTo := obj_dir/
 
 FLGS := --cc
 FLGS += --top-module $(Testbehch)
-FLAGS += --binary
+FLGS += --binary
 FLGS += --trace
 
 SRCS := $(Testbehch)
