@@ -1,22 +1,8 @@
-TopModule := AdderHF1bit
-Testbehch := AdderHF1bit_tb
-
-OPutTo := obj_dir/
-
-FLGS := --cc
-FLGS += --top-module $(TopModule)
-FLGS += --timing
-FLGS += --build
-FLGS += --main
-FLGS += --exe
-# FLAGS += --binary
-FLGS += --trace
-
-srcs := $(wildcard *.v)
+include AdderHF1bit.mk
 
 .PHONY: all
 all: 
-	verilator $(TopModule).v $(FLGS) 
+	verilator $(SRCS) $(FLGS) 
 
 .PHONY: run
 run: 
