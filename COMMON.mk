@@ -1,16 +1,25 @@
+BIN  := $(OPutTo)V$(Testbehch)
+WAVE := $(TopModule).vcd
+
 .PHONY: all
 all: 
 	verilator $(SRCS) $(FLGS) 
 
 .PHONY: run
-run: 
-	./$(OPutTo)V$(Testbehch)
+run: $(BIN)
+	./$(BIN)
 
 .PHONY: show
-show:
-	gtkwave $(TopModule).vcd
+show: $(WAVE)
+	gtkwave $(WAVE)
 
 .PHONY: clean
 clean:
 	@- rm -rf $(OPutTo)
 	@- rm $(TopModule).vcd
+
+$(BIN): 
+	make all
+
+$(WAVE): $(BIN)
+	make run
