@@ -16,6 +16,7 @@ module AdderHF1bit_tb (
             #5 in1 = 1'b0; in2 = 1'b1;
             #5 in1 = 1'b1; in2 = 1'b0;
             #5 in1 = 1'b1; in2 = 1'b1;
+            #5 ;
         end
     end
 

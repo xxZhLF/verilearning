@@ -22,6 +22,7 @@ module AdderFL1bit_tb(
             #5 op1 = 1'b1; op2 = 1'b0; cin = 1'b1;
             #5 op1 = 1'b1; op2 = 1'b1; cin = 1'b0;
             #5 op1 = 1'b1; op2 = 1'b1; cin = 1'b1;
+            #5 ;
         end
     end
 
