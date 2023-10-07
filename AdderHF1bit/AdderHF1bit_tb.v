@@ -1,6 +1,4 @@
-`timescale 100ps/1ps
-
-`include "AdderHF1bit.v"
+`timescale 100ps/1ps    
 
 module AdderHF1bit_tb (
     // None
