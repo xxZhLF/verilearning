@@ -1,4 +1,4 @@
-`timescale 100ps/1ps    
+`timescale 10ps/1ps    
 
 module AdderHF1bit_tb (
     // None
@@ -8,10 +8,15 @@ module AdderHF1bit_tb (
     wire out;
     initial begin
            in1 = 1'b0; in2 = 1'b0;
-        #5 in1 = 1'b0; in2 = 1'b1;
-        #5 in1 = 1'b1; in2 = 1'b0;
-        #5 in1 = 1'b1; in2 = 1'b1;
-        #5 in1 = 1'b0; in2 = 1'b0; #10 ;
+    end
+
+    initial begin
+        repeat(10) begin
+            #5 in1 = 1'b0; in2 = 1'b1;
+            #5 in1 = 1'b1; in2 = 1'b0;
+            #5 in1 = 1'b1; in2 = 1'b1;
+            #5 in1 = 1'b0; in2 = 1'b0;        
+        end
     end
 
     AdderHF1bit adder(
