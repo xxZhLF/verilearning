@@ -1,6 +1,14 @@
+`timescale 1ps/1ps    
+
+// `define DEBUG_ON
+
 module AdderLA32bit_tb(
     // None
 );
+
+`ifdef DEBUG_ON
+    wire [31:0] debug;
+`endif 
 
     reg  [31:0] op1, op2;
     reg         cin;
@@ -13,12 +21,14 @@ module AdderLA32bit_tb(
     end
 
     initial begin
-        repeat(10) begin
-            #5 op1 = 32'h00000007; op2 = 32'h00000007; cin = 1'b0;
-            #5 op1 = 32'h00000007; op2 = 32'h00000007; cin = 1'b1;
-            #5 op1 = 32'hF0F0F0F0; op2 = 32'h0F0F0F0F; cin = 1'b1;
-            #5 ;
+        integer i;
+        for (i = 0; i < 32; ++i) begin
+            #5 op1 = 32'h00000001 << i; op2 = 32'h00000001 << i; cin = 1'b0;
+            #5 op1 = 32'h00000001 << i; op2 = 32'h00000001 << i; cin = 1'b1;
         end
+        #5 op1 = 32'hFFFF0000; op2 = 32'h0000FFFF; cin = 1'b0;
+        #5 op1 = 32'hFFFF0000; op2 = 32'h0000FFFF; cin = 1'b1;
+        #5 ;
     end
 
     AdderLA32bit adder(
@@ -27,6 +37,9 @@ module AdderLA32bit_tb(
         .cin(cin),
         .sum(sum),
         .cout(cout)
+`ifdef DEBUG_ON
+      , .debug(debug)
+`endif 
     );
 
     initial begin
@@ -36,6 +49,9 @@ module AdderLA32bit_tb(
         $dumpvars(2, cin);
         $dumpvars(3, sum);
         $dumpvars(4, cout);
+`ifdef DEBUG_ON
+        $dumpvars(5, debug);
+`endif 
     end
 
 endmodule
