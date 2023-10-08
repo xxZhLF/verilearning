@@ -30,13 +30,13 @@ $$
     c_{in,2} &= P_{1} + G_{1} \cdot c_{in,1} \\
              &= P_{1} + G_{1} \cdot (P_{0} + G_{0} \cdot c_{in,0}) \\
              &= P_{1} + P_{0} \cdot G_{1} + G_{0} \cdot G_{1} \cdot c_{in,0} \\
-    % c_{in,3} &= P_{2} + G_{2} \cdot c_{in,1} \\
-    %          &= P_{2} + G_{2} \cdot (P_{1} + P_{0} \cdot G_{1} + G_{0} \cdot G_{1} \cdot c_{in,0}) \\
-    %          &= P_{2} + P_{1} \cdot G_{2} + P_{0} \cdot G_{1} \cdot G_{2} + G_{0} \cdot G_{1} \cdot G_{2} \cdot c_{in,0} \\
-    % c_{in,4} &= P_{3} + G_{3} \cdot c_{in,3} \\
-    %          &= P_{3} + G_{3} \cdot (P_{2} + P_{1} \cdot G_{2} + P_{0} \cdot G_{1} \cdot G_{2} + G_{0} \cdot G_{1} \cdot G_{2} \cdot c_{in,0}) \\
-    %          &= P_{3} + P_{2} \cdot G_{3} + P_{1} \cdot G_{2} \cdot G_{3} + P_{0} \cdot G_{1} \cdot G_{2} \cdot G_{3} + G_{0} \cdot G_{1} \cdot G_{2} \cdot G_{3} \cdot c_{in,0} \\
-    %          &= P_{3} + \sum_{i=0}^{2} P_{i} \cdot \prod_{j=i+1}^{3} G_{j} + c_{in,0} \cdot \prod_{j=0}^{3} G_{j} \\
+    c_{in,3} &= P_{2} + G_{2} \cdot c_{in,1} \\
+             &= P_{2} + G_{2} \cdot (P_{1} + P_{0} \cdot G_{1} + G_{0} \cdot G_{1} \cdot c_{in,0}) \\
+             &= P_{2} + P_{1} \cdot G_{2} + P_{0} \cdot G_{1} \cdot G_{2} + G_{0} \cdot G_{1} \cdot G_{2} \cdot c_{in,0} \\
+    c_{in,4} &= P_{3} + G_{3} \cdot c_{in,3} \\
+             &= P_{3} + G_{3} \cdot (P_{2} + P_{1} \cdot G_{2} + P_{0} \cdot G_{1} \cdot G_{2} + G_{0} \cdot G_{1} \cdot G_{2} \cdot c_{in,0}) \\
+             &= P_{3} + P_{2} \cdot G_{3} + P_{1} \cdot G_{2} \cdot G_{3} + P_{0} \cdot G_{1} \cdot G_{2} \cdot G_{3} + G_{0} \cdot G_{1} \cdot G_{2} \cdot G_{3} \cdot c_{in,0} \\
+             &= P_{3} + \sum_{i=0}^{2} P_{i} \cdot \prod_{j=i+1}^{3} G_{j} + c_{in,0} \cdot \prod_{j=0}^{3} G_{j} \\
     % & \ \;\! \vdots \\
     % c_{in,N} &= P_{N-1} + \sum_{i=0}^{N-2} P_{i} \cdot \prod_{j=i+1}^{N-1} G_{j} + c_{in,0} \cdot \prod_{j=0}^{N-1} G_{j} \\
 \end{aligned} 
