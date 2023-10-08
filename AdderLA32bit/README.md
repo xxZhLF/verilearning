@@ -27,14 +27,15 @@
 
 <!-- $$ -->
 ```math
-\begin{aligned}
     \left\{ \begin{aligned}
     c_{in,0} &= c_{in,0} \\
     c_{in,1} &= P_{0} + G_{0} \cdot c_{in,0} \\
     c_{in,2} &= P_{1} + G_{1} \cdot c_{in,1} \\
              &= P_{1} + G_{1} \cdot (P_{0} + G_{0} \cdot c_{in,0}) \\
              &= P_{1} + P_{0} \cdot G_{1} + G_{0} \cdot G_{1} \cdot c_{in,0} \\
+    c_{in,3} &= P_{2} + G_{2} \cdot c_{in,1} \\
+             &= P_{2} + G_{2} \cdot (P_{1} + P_{0} \cdot G_{1} + G_{0} \cdot G_{1} \cdot c_{in,0}) \\
+             &= P_{2} + P_{1} \cdot G_{2} + P_{0} \cdot G_{1} \cdot G_{2} + G_{0} \cdot G_{1} \cdot G_{2} \cdot c_{in,0} \\
 \end{aligned} \right.
-\end{aligned}
 ```
 <!-- $$ -->
