@@ -1,6 +1,6 @@
 32-Bit 先行进位加法器（Carry-Lookahade Adder）
 
-$$
+```math
 \begin{aligned}
     &\left\{ \begin{aligned}
         sum &= op_{1} \oplus op_{2} \oplus c_{in} \\
@@ -19,12 +19,12 @@ $$
         c_{out} &= G + P \cdot c_{in} \quad \ast
     \end{aligned} \right.
 \end{aligned}
-$$
+```
 
 由，标「*」处的公式便可，提前计算出所有位的进位值。
 
-$$
-\begin{aligned}
+```math
+\left\{ \begin{aligned}
     c_{in,0} &= c_{in,0} \\
     c_{in,1} &= P_{0} + G_{0} \cdot c_{in,0} \\
     c_{in,2} &= P_{1} + G_{1} \cdot c_{in,1} \\
@@ -39,11 +39,5 @@ $$
              &= P_{3} + \sum_{i=0}^{2} P_{i} \cdot \prod_{j=i+1}^{3} G_{j} + c_{in,0} \cdot \prod_{j=0}^{3} G_{j} \\
     &\quad\vdots \\
     c_{in,N} &= P_{N-1} + \sum_{i=0}^{N-2} P_{i} \cdot \prod_{j=i+1}^{N-1} G_{j} + c_{in,0} \cdot \prod_{j=0}^{N-1} G_{j} \\
-\end{aligned} 
-$$
-
-```math
-\left\{
-asdf
-\right.
+\end{aligned} \right.
 ```
