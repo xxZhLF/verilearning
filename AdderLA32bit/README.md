@@ -39,5 +39,5 @@
              &\quad\vdots \\
     c_{in,N} &= \left( P_{N-1} + \sum_{i=0}^{N-2} P_{i} \cdot \prod_{j=i+1}^{N-1} G_{j} \right) + \left( c_{in,0} \cdot \prod_{j=0}^{N-1} G_{j} \right) \\             
 \end{aligned} \right.
-N=32
 ```
+N=32
