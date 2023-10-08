@@ -16,6 +16,7 @@ module AdderLA32bit_tb(
         repeat(10) begin
             #5 op1 = 32'h00000007; op2 = 32'h00000007; cin = 1'b0;
             #5 op1 = 32'h00000007; op2 = 32'h00000007; cin = 1'b1;
+            #5 op1 = 32'hF0F0F0F0; op2 = 32'h0F0F0F0F; cin = 1'b1;
             #5 ;
         end
     end
