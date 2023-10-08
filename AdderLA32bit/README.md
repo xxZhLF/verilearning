@@ -42,8 +42,8 @@ $$
 \end{aligned} 
 $$
 
-$$
+```math
 \left\{
 asdf
 \right.
-$$
+```
