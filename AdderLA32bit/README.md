@@ -1,4 +1,4 @@
-32-Bit 先行进位加法器（Carry-Lookahade Adder）
+32-Bit 先行进位加法器（Carry-Lookahead Adder）
 
 ```math
 \begin{aligned}
