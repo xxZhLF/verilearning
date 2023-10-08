@@ -1,5 +1,6 @@
 32-Bit 先行进位加法器（Carry-Lookahade Adder）
 
+<!-- $$ -->
 ```math
 \begin{aligned}
     &\left\{ \begin{aligned}
@@ -20,9 +21,11 @@
     \end{aligned} \right.
 \end{aligned}
 ```
+<!-- $$ -->
 
 由，标「*」处的公式便可，提前计算出所有位的进位值。
 
+<!-- $$ -->
 ```math
 \left\{ \begin{aligned}
     c_{in,0} &= c_{in,0} \\
@@ -41,3 +44,4 @@
     c_{in,N} &= P_{N-1} + \sum_{i=0}^{N-2} P_{i} \cdot \prod_{j=i+1}^{N-1} G_{j} + c_{in,0} \cdot \prod_{j=0}^{N-1} G_{j} \\
 \end{aligned} \right.
 ```
+<!-- $$ -->
