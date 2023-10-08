@@ -24,7 +24,7 @@ $$
 由，标「*」处的公式便可，提前计算出所有位的进位值。
 
 $$
-\left\{ 
+% \left\{ 
 \begin{aligned}
     % c_{in,0} &= c_{in,0} \\
     % c_{in,1} &= P_{0} + G_{0} \cdot c_{in,0} \\
@@ -41,5 +41,5 @@ $$
     % & \ \;\! \vdots \\
     % c_{in,N} &= P_{N-1} + \sum_{i=0}^{N-2} P_{i} \cdot \prod_{j=i+1}^{N-1} G_{j} + c_{in,0} \cdot \prod_{j=0}^{N-1} G_{j} \\
 \end{aligned} 
-\right.
+% \right.
 $$
