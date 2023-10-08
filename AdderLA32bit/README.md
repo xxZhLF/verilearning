@@ -4,7 +4,7 @@ $$
 \begin{aligned}
     &\left\{ \begin{aligned}
         sum &= op_{1} \oplus op_{2} \oplus c_{in} \\
-        c_{out} &= op_{1} \cdot op_{2} + (op1 \oplus op2) \cdot c_{in}
+        c_{out} &= op_{1} \cdot op_{2} + (op_{1} \oplus op_{S}) \cdot c_{in}
     \end{aligned} \right. \\
     &\underset{
         G = op_{1} \cdot op_{2}
@@ -40,4 +40,10 @@ $$
     &\quad\vdots \\
     c_{in,N} &= P_{N-1} + \sum_{i=0}^{N-2} P_{i} \cdot \prod_{j=i+1}^{N-1} G_{j} + c_{in,0} \cdot \prod_{j=0}^{N-1} G_{j} \\
 \end{aligned} 
+$$
+
+$$
+\left\{
+asdf
+\right.
 $$
