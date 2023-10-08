@@ -10,6 +10,5 @@ FLGS += --trace
 
 SRCS := $(Testbehch)
 SRCS += $(TopModule)
-# SRCS += ../AdderFL1bit.v
 
 include ../COMMON.mk
