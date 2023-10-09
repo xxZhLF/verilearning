@@ -1,6 +1,6 @@
 `timescale 1ps/1ps
 
-`define SUB_DEBUG_ON
+// `define SUB_DEBUG_ON
 
 module Sub32bit_tb (
     // None

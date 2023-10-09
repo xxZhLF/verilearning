@@ -1,4 +1,4 @@
-`define SUB_DEBUG_ON
+// `define SUB_DEBUG_ON
 
 module Sub32bit(
     input  wire [31:0] op1,
