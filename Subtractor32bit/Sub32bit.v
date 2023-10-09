@@ -12,10 +12,10 @@ module Sub32bit(
 );
 
     wire [31:0] op1C, op2IC;
-    ModT2C modT2C_a(  // Complement of op1
+    ModT2C modT2C_a(  /* Complement of  op1 */ 
         .T(op1),
         .C(op1C)
-    ),     modT2C_b(  // Complement of -op2
+    ),     modT2C_b(  /* Complement of -op2 */ 
         .T({~op2I[31], op2I[30:0]}),
         .C(op2IC)
     );
@@ -23,19 +23,19 @@ module Sub32bit(
     ModC2T modC2T(
         .C(diffC),
         .T(diff)
-    );  // Truth of result
+    );  /* Truth of result */ 
 
     reg       ZERO;
     reg [1:0] NULL;
     always ZERO = 1'b0;
     wire [31:0] op2I, diffC;
-    AdderLA32bit adder0(  // op2 + cin
+    AdderLA32bit adder0(  /* op2 + cin */ 
         .op1(op2),
         .op2({28'h0000000, 3'b000, cin}),
         .cin(ZERO),
         .sum(op2I),
         .cout(NULL[0])
-    )           ,adder1(  // op1 - (op2 - cin)
+    ),           adder1(  /* op1 - (op2 + cin) */ 
         .op1(op1C), 
         .op2(op2IC), 
         .cin(ZERO), 
@@ -70,7 +70,7 @@ module ModT2C(
         .cin(ZERO), 
         .sum(datO), 
         .cout(NULL)
-    );
+    );  /* ~datI + 1 */
 
     assign C = datI != {28'h0000000, 3'b000} ? {sign, sign ? datO[30:0] : datI[30:0]} : 32'h00000000;
 
@@ -94,7 +94,8 @@ module ModC2T(
         .cin(ZERO), 
         .sum(datO), 
         .cout(NULL)
-    );
+    );  /* ~(datI - 1) 
+           ~ at next line */
 
     assign T = datI != {28'h0000000, 3'b000} ? {sign, sign ? ~datO[30:0] : datI[30:0]} : 32'h00000000;
 
