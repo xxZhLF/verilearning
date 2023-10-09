@@ -1,12 +1,12 @@
 `timescale 1ps/1ps    
 
-// `define DEBUG_ON
+// `define ADD_DEBUG_ON
 
 module AdderLA32bit_tb(
     // None
 );
 
-`ifdef DEBUG_ON
+`ifdef ADD_DEBUG_ON
     wire [31:0] debug;
 `endif 
 
@@ -37,7 +37,7 @@ module AdderLA32bit_tb(
         .cin(cin),
         .sum(sum),
         .cout(cout)
-`ifdef DEBUG_ON
+`ifdef ADD_DEBUG_ON
       , .debug(debug)
 `endif 
     );
@@ -49,7 +49,7 @@ module AdderLA32bit_tb(
         $dumpvars(2, cin);
         $dumpvars(3, sum);
         $dumpvars(4, cout);
-`ifdef DEBUG_ON
+`ifdef ADD_DEBUG_ON
         $dumpvars(5, debug);
 `endif 
     end

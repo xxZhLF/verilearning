@@ -1,4 +1,4 @@
-// `define DEBUG_ON
+// `define ADD_DEBUG_ON
 
 module AdderLA32bit (
     input  wire [31:0] op1,
@@ -6,7 +6,7 @@ module AdderLA32bit (
     input  wire        cin,
     output wire [31:0] sum,
     output wire        cout
-`ifdef DEBUG_ON
+`ifdef ADD_DEBUG_ON
   , output wire [31:0] debug
 `endif 
 );
@@ -36,7 +36,7 @@ module AdderLA32bit (
         end        
     endgenerate
 
-`ifdef DEBUG_ON
+`ifdef ADD_DEBUG_ON
     assign debug = cinner;
     // assign debug = P;
     // assign debug = G;
