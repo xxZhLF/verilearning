@@ -36,7 +36,7 @@ module Sub32bit(
         .sum(op2I),
         .cout(NULL[0])
     )           ,adder1(  // op1 - (op2 - cin)
-        .op1(op1), 
+        .op1(op1C), 
         .op2(op2IC), 
         .cin(ZERO), 
         .sum(diffC), 
