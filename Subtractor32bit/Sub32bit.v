@@ -20,11 +20,6 @@ module Sub32bit(
         .C(op2IC)
     );
 
-    ModC2T modC2T(
-        .C(diffC),
-        .T(diff)
-    );  /* Truth of result */ 
-
     reg       ZERO;
     reg [1:0] NULL;
     always ZERO = 1'b0;
@@ -42,6 +37,11 @@ module Sub32bit(
         .sum(diffC), 
         .cout(NULL[1])
     );
+
+    ModC2T modC2T(
+        .C(diffC),
+        .T(diff)
+    );  /* Truth of result */ 
 
     assign cout = diffC[31];
 
