@@ -1,4 +1,4 @@
-module AddFL1bit(
+module AdderFL1bit(
     input  wire op1,
     input  wire op2,
     input  wire cin,

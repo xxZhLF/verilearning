@@ -1,5 +1,5 @@
-TopModule := AddFL1bit
-Testbehch := AddFL1bit_tb
+TopModule := AdderFL1bit
+Testbehch := AdderFL1bit_tb
 
 OPutTo := obj_dir/
 
