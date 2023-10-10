@@ -20,22 +20,15 @@ module SubBR32bit(
         .C(op2IC)
     );
 
-    reg       ZERO;
-    reg [1:0] NULL;
-    always ZERO = 1'b0;
     wire [31:0] op2I, diffC;
-    AddLA32bit adder0(  /* op2 + bo */ 
+    Add32 adder0(  /* op2 + bo */ 
         .op1(op2),
         .op2({28'h0000000, 3'b000, bo}),
-        .cin(ZERO),
-        .sum(op2I),
-        .cout(NULL[0])
-    ),         adder1(  /* op1 - (op2 + bo) */ 
+        .sum(op2I)
+    ),    adder1(  /* op1 - op2 - bo */ 
         .op1(op1C), 
         .op2(op2IC), 
-        .cin(ZERO), 
-        .sum(diffC), 
-        .cout(NULL[1])
+        .sum(diffC)
     );
 
     ModC2T modC2T(
@@ -62,14 +55,11 @@ module ModT2C(
     assign {sign, datI} = T;
 
     wire [31:0] datO;
-    reg  ZERO, NULL;
-    always ZERO = 1'b0;
-    AddLA32bit adder(
+
+    Add32 adder(
         .op1({1'b0, ~datI}), 
         .op2(32'h00000001), 
-        .cin(ZERO), 
-        .sum(datO), 
-        .cout(NULL)
+        .sum(datO)
     );  /* ~datI + 1 */
 
     assign C = datI != {28'h0000000, 3'b000} ? {sign, sign ? datO[30:0] : datI[30:0]} : 32'h00000000;
@@ -86,14 +76,11 @@ module ModC2T(
     assign {sign, datI} = C;
 
     wire [31:0] datO;
-    reg  ZERO, NULL;
-    always ZERO = 1'b0;
-    AddLA32bit adder(
+
+    Add32 adder(
         .op1({1'b0, datI}), 
         .op2(32'hFFFFFFFF), 
-        .cin(ZERO), 
-        .sum(datO), 
-        .cout(NULL)
+        .sum(datO)
     );  /* ~(datI - 1) 
            ~ at next line */
 
