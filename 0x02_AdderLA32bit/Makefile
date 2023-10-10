@@ -1,5 +1,5 @@
-TopModule := AddLA32bit
-Testbehch := AddLA32bit_tb
+TopModule := AdderLA32bit
+Testbehch := AdderLA32bit_tb
 
 OPutTo := obj_dir/
 

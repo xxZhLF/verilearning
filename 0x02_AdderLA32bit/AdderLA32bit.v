@@ -1,6 +1,6 @@
 // `define ADD_DEBUG_ON
 
-module AddLA32bit (
+module AdderLA32bit (
     input  wire [31:0] op1,
     input  wire [31:0] op2,
     input  wire        cin,
