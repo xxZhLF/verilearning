@@ -7,8 +7,8 @@ FLGS := --cc
 FLGS += --top-module $(Testbehch)
 FLGS += --binary
 FLGS += --trace
-FLGS += -I../0x02_AdderLA32bit
-FLGS += -I../0x03_Add32
+FLGS += -I../0x0003_AdderLA32bit
+FLGS += -I../0x0004_Add32
 
 SRCS := $(Testbehch).v
 SRCS += $(TopModule).v
