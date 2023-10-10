@@ -12,7 +12,7 @@ module AddLA32bit_tb(
 
     reg  [31:0] op1, op2;
     reg         cin;
-    wire [31:0] sum, summ;
+    wire [31:0] sum;
     wire        cout;
     initial begin
         op1 = 32'h00000000;
@@ -42,12 +42,6 @@ module AddLA32bit_tb(
 `endif 
     );
 
-    Add32 wrapper(
-        .op1(op1),
-        .op2(op2),
-        .sum(summ)
-    );
-
     initial begin
         $dumpfile("AddLA32bit.vcd");
         $dumpvars(0, op1);
@@ -58,7 +52,6 @@ module AddLA32bit_tb(
 `ifdef ADD_DEBUG_ON
         $dumpvars(5, debug);
 `endif 
-        $dumpvars(6, summ);
     end
 
 endmodule
