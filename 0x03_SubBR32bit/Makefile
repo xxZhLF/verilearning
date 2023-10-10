@@ -1,5 +1,5 @@
-TopModule := SubBR32bit
-Testbehch := SubBR32bit_tb
+TopModule := Sub32
+Testbehch := Sub32_tb
 
 OPutTo := obj_dir/
 
@@ -13,6 +13,5 @@ SRCS := $(Testbehch).v
 SRCS += $(TopModule).v
 SRCS += AddLA32bit.v
 SRCS += Add32.v
-SRCS += Sub32.v
 
 include ../COMMON.mk
