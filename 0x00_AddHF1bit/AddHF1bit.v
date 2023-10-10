@@ -1,4 +1,4 @@
-module AdderHF1bit (
+module AddHF1bit (
      input wire in1,
      input wire in2,
     output wire out

@@ -1,5 +1,5 @@
-TopModule := AdderHF1bit
-Testbehch := AdderHF1bit_tb
+TopModule := AddHF1bit
+Testbehch := AddHF1bit_tb
 
 OPutTo := obj_dir/
 
@@ -12,7 +12,7 @@ FLGS += --exe
 # FLAGS += --binary
 FLGS += --trace
 
-SRCS := $(Testbehch)
-SRCS += $(TopModule)
+SRCS := $(Testbehch).v
+SRCS += $(TopModule).v
 
 include ../COMMON.mk
