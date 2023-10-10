@@ -1,0 +1,1 @@
+AdderLA32bit 的 Wrapper，隐藏了进位相关的 Port。
