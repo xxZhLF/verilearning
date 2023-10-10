@@ -10,5 +10,6 @@ FLGS += --trace
 
 SRCS := $(Testbehch).v
 SRCS += $(TopModule).v
+SRCS += Add32.v
 
 include ../COMMON.mk

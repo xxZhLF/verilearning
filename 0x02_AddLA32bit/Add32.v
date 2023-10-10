@@ -1,5 +1,3 @@
-`include "AddLA32bit.v"
-
 module Add32(
     input wire  [31:0] op1,
     input wire  [31:0] op2,

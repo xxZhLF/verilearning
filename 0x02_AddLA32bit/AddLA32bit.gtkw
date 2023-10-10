@@ -1,16 +1,17 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Tue Oct 10 02:30:31 2023
+[*] Tue Oct 10 04:06:01 2023
 [*]
 [dumpfile] "/home/xxzhou/verilearning/0x02_AddLA32bit/AddLA32bit.vcd"
-[dumpfile_mtime] "Tue Oct 10 02:27:53 2023"
-[dumpfile_size] 21614
+[dumpfile_mtime] "Tue Oct 10 04:05:06 2023"
+[dumpfile_size] 36225
 [savefile] "/home/xxzhou/verilearning/0x02_AddLA32bit/AddLA32bit.gtkw"
-[timestart] 0
+[timestart] 107
 [size] 1908 987
-[pos] -775 -226
-*-6.678622 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -458 -240
+*-3.678622 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
+[treeopen] TOP.AddLA32bit_tb.
 [sst_width] 214
 [signals_width] 102
 [sst_expanded] 1
@@ -25,10 +26,14 @@ TOP.AddLA32bit_tb.op2[31:0]
 TOP.AddLA32bit_tb.cin
 @200
 -
-@22
-TOP.AddLA32bit_tb.sum[31:0]
-@29
+@28
 [color] 3
 TOP.AddLA32bit_tb.cout
+@22
+TOP.AddLA32bit_tb.sum[31:0]
+@200
+-
+@22
+TOP.AddLA32bit_tb.wrapper.sum[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
