@@ -1,5 +1,5 @@
-TopModule := AdderLA32bit
-Testbehch := AdderLA32bit_tb
+TopModule := AddLA32bit
+Testbehch := AddLA32bit_tb
 
 OPutTo := obj_dir/
 
@@ -8,7 +8,7 @@ FLGS += --top-module $(Testbehch)
 FLGS += --binary
 FLGS += --trace
 
-SRCS := $(Testbehch)
-SRCS += $(TopModule)
+SRCS := $(Testbehch).v
+SRCS += $(TopModule).v
 
 include ../COMMON.mk
