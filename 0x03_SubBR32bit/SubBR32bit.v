@@ -1,11 +1,11 @@
 // `define SUB_DEBUG_ON
 
-module Sub32bit(
+module SubBR32bit(
     input  wire [31:0] op1,
     input  wire [31:0] op2,
-    input  wire        cin,
+    input  wire        bo,
     output wire [31:0] diff,
-    output wire        cout
+    output wire        bi
 `ifdef SUB_DEBUG_ON
   , output wire [31:0] debug
 `endif
@@ -24,13 +24,13 @@ module Sub32bit(
     reg [1:0] NULL;
     always ZERO = 1'b0;
     wire [31:0] op2I, diffC;
-    AdderLA32bit adder0(  /* op2 + cin */ 
+    AddLA32bit adder0(  /* op2 + bo */ 
         .op1(op2),
-        .op2({28'h0000000, 3'b000, cin}),
+        .op2({28'h0000000, 3'b000, bo}),
         .cin(ZERO),
         .sum(op2I),
         .cout(NULL[0])
-    ),           adder1(  /* op1 - (op2 + cin) */ 
+    ),         adder1(  /* op1 - (op2 + bo) */ 
         .op1(op1C), 
         .op2(op2IC), 
         .cin(ZERO), 
@@ -43,7 +43,7 @@ module Sub32bit(
         .T(diff)
     );  /* Truth of result */ 
 
-    assign cout = diffC[31];
+    assign bi = diffC[31];
 
 `ifdef SUB_DEBUG_ON
     assign debug = op1C;
@@ -64,7 +64,7 @@ module ModT2C(
     wire [31:0] datO;
     reg  ZERO, NULL;
     always ZERO = 1'b0;
-    AdderLA32bit adder(
+    AddLA32bit adder(
         .op1({1'b0, ~datI}), 
         .op2(32'h00000001), 
         .cin(ZERO), 
@@ -88,7 +88,7 @@ module ModC2T(
     wire [31:0] datO;
     reg  ZERO, NULL;
     always ZERO = 1'b0;
-    AdderLA32bit adder(
+    AddLA32bit adder(
         .op1({1'b0, datI}), 
         .op2(32'hFFFFFFFF), 
         .cin(ZERO), 
