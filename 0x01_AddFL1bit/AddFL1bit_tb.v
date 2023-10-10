@@ -1,6 +1,6 @@
 `timescale 10ps/1ps    
 
-module AdderFL1bit_tb(
+module AddFL1bit_tb(
     // None
 );
 
@@ -26,7 +26,7 @@ module AdderFL1bit_tb(
         end
     end
 
-    AdderFL1bit adder(
+    AddFL1bit adder(
         .op1(op1),
         .op2(op2),
         .cin(cin),
@@ -35,7 +35,7 @@ module AdderFL1bit_tb(
     );
 
     initial begin
-        $dumpfile("AdderFL1bit.vcd");
+        $dumpfile("AddFL1bit.vcd");
         $dumpvars(0, op1);
         $dumpvars(1, op2);
         $dumpvars(2, cin);
