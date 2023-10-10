@@ -24,7 +24,7 @@
 
 原码（T） -> 补码（C）：符号位保持不变，数据位按位取反后+1。
 
-关于补码：$N$bits二进制数$b$，$b_{2,T} + b_{2,C} = 2^{N}$
+关于补码：$N$bits二进制数$b$，$`b_{2,T} + b_{2,C} = 2^{N}`$
 ```math
 \begin{aligned}
                &\qquad\qquad\qquad\qquad\quad 1001_{2,T} = 9_{10} \\
