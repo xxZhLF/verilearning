@@ -1,18 +1,16 @@
-TopModule := AdderHF1bit
-Testbehch := AdderHF1bit_tb
+TopModule := Sub32bit
+Testbehch := Sub32bit_tb
 
 OPutTo := obj_dir/
 
 FLGS := --cc
 FLGS += --top-module $(Testbehch)
-FLGS += --timing
-FLGS += --build
-FLGS += --main
-FLGS += --exe
-# FLAGS += --binary
+FLGS += --binary
 FLGS += --trace
+FLGS += -I../AdderLA32bit
 
 SRCS := $(Testbehch)
 SRCS += $(TopModule)
+SRCS += AdderLA32bit.v
 
 include ../COMMON.mk
