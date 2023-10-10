@@ -1,20 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Tue Oct 10 03:08:07 2023
+[*] Tue Oct 10 04:09:56 2023
 [*]
 [dumpfile] "/home/xxzhou/verilearning/0x03_SubBR32bit/SubBR32bit.vcd"
-[dumpfile_mtime] "Tue Oct 10 03:07:00 2023"
-[dumpfile_size] 62603
+[dumpfile_mtime] "Tue Oct 10 04:09:32 2023"
+[dumpfile_size] 127515
 [savefile] "/home/xxzhou/verilearning/0x03_SubBR32bit/SubBR32bit.gtkw"
 [timestart] 0
 [size] 1908 987
-[pos] -271 -109
+[pos] -330 -98
 *-3.456229 14 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
+[treeopen] TOP.SubBR32bit_tb.
 [sst_width] 214
 [signals_width] 110
 [sst_expanded] 1
-[sst_vpaned_height] 288
+[sst_vpaned_height] 547
 @22
 [color] 1
 TOP.SubBR32bit_tb.op1[31:0]
@@ -25,10 +26,12 @@ TOP.SubBR32bit_tb.op2[31:0]
 TOP.SubBR32bit_tb.bo
 @200
 -
-@22
-TOP.SubBR32bit_tb.diff[31:0]
-@29
+@28
 [color] 3
 TOP.SubBR32bit_tb.bi
+@22
+TOP.SubBR32bit_tb.diff[31:0]
+@23
+TOP.SubBR32bit_tb.wrapper.diff[31:0]
 [pattern_trace] 1
 [pattern_trace] 0

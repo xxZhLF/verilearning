@@ -11,7 +11,7 @@ module SubBR32bit_tb (
 
     reg  [31:0] op1, op2;
     reg         bo;
-    wire [31:0] diff;
+    wire [31:0] diff, dif;
     wire        bi;
     initial begin
         op1 = 32'h00000000;
@@ -27,7 +27,14 @@ module SubBR32bit_tb (
         .bi(bi)
 `ifdef SUB_DEBUG_ON
       , .debug(debug)
-`endif     );
+`endif     
+    );
+
+    Sub32 wrapper(
+        .op1(op1),
+        .op2(op2),
+        .diff(dif)
+    );
 
     initial begin
         #5 op1 = 32'h00000007; op2 = 32'h00000004; bo = 1'b0;  /*  7 - 4 with bo = 0 */
