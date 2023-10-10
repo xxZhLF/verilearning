@@ -1,0 +1,16 @@
+TopModule := AdderCH32bit
+Testbehch := AdderCH32bit_tb
+
+OPutTo := obj_dir/
+
+FLGS := --cc
+FLGS += --top-module $(Testbehch)
+FLGS += --binary
+FLGS += --trace
+FLGS += -I../0x01_AdderFL1bit
+
+SRCS := $(Testbehch).v
+SRCS += $(TopModule).v
+SRCS += AdderFL1bit.v
+
+include ../COMMON.mk
