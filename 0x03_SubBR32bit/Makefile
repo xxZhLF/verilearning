@@ -9,8 +9,8 @@ FLGS += --binary
 FLGS += --trace
 FLGS += -I../0x02_AddLA32bit
 
-SRCS := $(Testbehch)
-SRCS += $(TopModule)
+SRCS := $(Testbehch).v
+SRCS += $(TopModule).v
 SRCS += AddLA32bit.v
 SRCS += Add32.v
 SRCS += Sub32.v
