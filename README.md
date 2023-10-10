@@ -26,7 +26,7 @@ wget https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 ---
 
 关于目录结构： \
-$`\qquad\qquad\quad`$ 0x\[$`A`$\]\[$`B`$\]\[$`C`$\]\[$`D`$\]_\[$`E`$\]
+$`\qquad\qquad\quad 0\textup{x}[A][B][C][D]_[E]`$
 - $`A`$: 保留
 - $`B`$: 功能目录
 - $`C`$: 逻辑功能
