@@ -7,7 +7,7 @@ module Add32(
     reg ZERO = 1'b0;
     reg NULL;
 
-    AddLA32bit adder(
+    AdderLA32bit adder(
         .op1(op1),
         .op2(op2),
         .cin(ZERO),
