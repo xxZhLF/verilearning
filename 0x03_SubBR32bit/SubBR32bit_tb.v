@@ -19,7 +19,7 @@ module SubBR32bit_tb (
         bo =  1'b0;
     end
 
-    SubBR32bit substractor(
+    SubBR32bit subtractor(
         .op1(op1),
         .op2(op2),
         .bo(bo),
