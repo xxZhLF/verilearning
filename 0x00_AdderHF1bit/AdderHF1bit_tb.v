@@ -1,6 +1,6 @@
 `timescale 10ps/1ps    
 
-module AddHF1bit_tb (
+module AdderHF1bit_tb (
     // None
 );
 
@@ -20,14 +20,14 @@ module AddHF1bit_tb (
         end
     end
 
-    AddHF1bit adder(
+    AdderHF1bit adder(
         .in1(in1), .in2(in2),
         .out(out)
     );
     
     initial begin
         $display("Finish");
-        $dumpfile("AddHF1bit.vcd");
+        $dumpfile("AdderHF1bit.vcd");
         $dumpvars(0, in1);
         $dumpvars(1, in2);
         $dumpvars(2, out);
