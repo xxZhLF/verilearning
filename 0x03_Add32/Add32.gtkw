@@ -1,0 +1,29 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Tue Oct 10 07:49:25 2023
+[*]
+[dumpfile] "/home/xxzhou/verilearning/0x03_Add32/Add32.vcd"
+[dumpfile_mtime] "Tue Oct 10 07:47:46 2023"
+[dumpfile_size] 19267
+[savefile] "/home/xxzhou/verilearning/0x03_Add32/Add32.gtkw"
+[timestart] 105
+[size] 1908 987
+[pos] -411 -20
+*0.295843 100 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[sst_width] 214
+[signals_width] 102
+[sst_expanded] 1
+[sst_vpaned_height] 288
+@25
+[color] 1
+TOP.Add32_tb.op1[31:0]
+[color] 1
+TOP.Add32_tb.op2[31:0]
+@200
+-
+@25
+[color] 5
+TOP.Add32_tb.sum[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
