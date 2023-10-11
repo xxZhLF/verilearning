@@ -1,4 +1,4 @@
-module ModT2C(
+module TCC(
     input  wire [31:0] T,
     output wire [31:0] C
 );
@@ -19,7 +19,7 @@ module ModT2C(
 
 endmodule
 
-module ModC2T(
+module CTC(
     input  wire [31:0] C,
     output wire [31:0] T
 );
