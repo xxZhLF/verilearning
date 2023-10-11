@@ -1,5 +1,5 @@
-TopModule := Mul32
-Testbehch := Mul32_tb
+TopModule := Mul32U
+Testbehch := Mul32U_tb
 
 OPutTo := obj_dir/
 

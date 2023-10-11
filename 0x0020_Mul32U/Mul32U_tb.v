@@ -1,6 +1,6 @@
 `timescale 1ps/1ps    
 
-module Mul32_tb(
+module Mul32U_tb(
     // None
 );
 
@@ -16,14 +16,14 @@ module Mul32_tb(
         #5 ;
     end
 
-    Mul32 multiplier(
+    Mul32U multiplier(
         .op1(op1),
         .op2(op2),
         .res(res)
     );
 
     initial begin
-        $dumpfile("Mul32.vcd");
+        $dumpfile("Mul32U.vcd");
         $dumpvars(0, op1);
         $dumpvars(1, op2);
         $dumpvars(3, res);
