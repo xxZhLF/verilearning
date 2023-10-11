@@ -3,7 +3,7 @@
 4-bit 二进制乘法的例子：
 
 ```math
-\begin{matrix}{ccccccccc|c}
+\begin{array}{ccccccccc|c}
            &   &   & 0\textup{x} & 1 & 0 & 0 & 1 & _{2} & =  9_{10} \\
     \times &   &   & 0\textup{x} & 0 & 1 & 1 & 1 & _{2} & =  7_{10} \\
          - & - & - &          -  & - & - & - & - &   -  & ----      \\
