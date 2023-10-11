@@ -1,3 +1,5 @@
+`include "Shift.v"
+
 module Mul32U (
     input  wire [31:0] op1,
     input  wire [31:0] op2,
@@ -11,6 +13,11 @@ module Mul32U (
     generate
         for (genvar i = 0; i < 32; ++i) begin
             assign vecL1[i] = op2[i] ^ 1'b0 ? op1EX << i : 64'h0000000000000000;
+            // ShiftL64 shift(
+            //     .n(op2[i] ^ 1'b0 ? i : 8'h40),
+            //     .in(op1EX),
+            //     .out(vecL1[i])
+            // );
         end
     endgenerate
 
