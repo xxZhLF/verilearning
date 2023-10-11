@@ -1,5 +1,6 @@
 BIN  := $(OPutTo)V$(Testbehch)
 WAVE := $(TopModule).vcd
+SAVE := $(TopModule).gtkw
 
 .PHONY: all
 all: 
@@ -11,7 +12,11 @@ run: $(BIN)
 
 .PHONY: show
 show: $(WAVE)
+ifeq ("$(wildcard $(SAVE))", "")
 	gtkwave $(WAVE)
+else
+	gtkwave $(WAVE) -a $(SAVE)
+endif
 
 .PHONY: clean
 clean:
