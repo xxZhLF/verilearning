@@ -3,6 +3,27 @@ module Mul32 (
     input  wire [31:0] op2,
     output wire [63:0] res
 );
+
+    wire [63:0] op1EX;
+    assign op1EX = {32'h00000000, op1};
+
+    wire [63:0] vecL1 [31:0];
+    generate
+        for (genvar i = 0; i < 32; ++i) begin
+            assign vecL1[i] = op2[i] ^ 1'b0 ? op1EX << i : 64'h0000000000000000;
+        end
+    endgenerate
+
+    wire [63:0] vecL2 [15:0];
+    generate
+        for (genvar i = 0; i < 16; ++i) begin
+            Add64 adder(
+                .op1(vecL1[i+0]),
+                .op2(vecL1[i+1]),
+                .sum(vecL2[i])
+            );
+        end
+    endgenerate
     
 endmodule
 
