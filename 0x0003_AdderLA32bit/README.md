@@ -1,5 +1,7 @@
 32-Bit 先行进位加法器（Carry-Lookahead Adder）
 
+逻辑区分：组合逻辑
+
 ```math
 \begin{aligned}
     &\left\{ \begin{aligned}
