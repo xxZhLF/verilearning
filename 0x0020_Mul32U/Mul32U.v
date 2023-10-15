@@ -1,4 +1,5 @@
 `include "Shift.v"
+`include "Add64.v"
 
 module Mul32U (
     input  wire [31:0] op1,
@@ -69,33 +70,6 @@ module Mul32U (
         .op1(vecL5[0]),
         .op2(vecL5[1]),
         .sum(res)
-    );
-
-endmodule
-
-module Add64(
-    input  wire [63:0] op1,
-    input  wire [63:0] op2,
-    output wire [63:0] sum
-);
-
-    reg  ZERO = 1'b0;
-    reg  NULL;
-    wire cinner;
-
-    AdderLA32bit adderL(
-        .op1(op1[31:0]),
-        .op2(op2[31:0]),
-        .cin(ZERO),
-        .sum(sum[31:0]),
-        .cout(cinner)
-    ); 
-    AdderLA32bit adderH(
-        .op1(op1[63:32]),
-        .op2(op2[63:32]),
-        .cin(cinner),
-        .sum(sum[63:32]),
-        .cout(NULL)
     );
 
 endmodule
