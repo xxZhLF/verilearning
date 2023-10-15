@@ -6,7 +6,7 @@
 
 $$
 \begin{array}{ccccccccc|c}
-           &   &   & 0\mathrm{x} & 1 & 0 & 0 & 1 & _{2} & =  9_{10} \\
+           &   &   & 0\testup{x} & 1 & 0 & 0 & 1 & _{2} & =  9_{10} \\
 \end{array}
 $$
 
