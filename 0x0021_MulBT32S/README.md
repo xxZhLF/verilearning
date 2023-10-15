@@ -20,7 +20,8 @@
 
 $$
 \begin{array}{ccccccccc|c}
-0 & 0 & 1 & 0 & 1 & 1 & 1 & 1 & \overset{\ast}{0} &    \\\hline
+0 & 0 & 1 & 0 & 1 & 1 & 1 & 1 & \overset{\ast}{0} &    \\
+\hline
   &   &   &   &   &   &   & 1 &                0  & -1 \\
 \end{array}
 $$
