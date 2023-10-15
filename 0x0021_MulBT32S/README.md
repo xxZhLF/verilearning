@@ -18,12 +18,29 @@
 
 当$`B = 47_{10} = 00101111_{2}`$时，
 
-<!-- $$ -->
-```math
-\begin{array}{ccccccccc|c}
-0 & 0 & 1 & 0 & 1 & 1 & 1 & 1 & \overset{\ast}{0} &    \\ 
+<!-- ```math -->
+$$
+\begin{array}{ccccccccc|r}
+     0 &      0 &      1 &      0 &      1 &      1 &      1 &      1 & \overset{\ast}{0} &    \\ 
 \hline
-  &   &   &   &   &   &   & 1 &                0  & -1 \\
+\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots &      1 &                0  & -1 \\
+\vdots & \vdots & \vdots & \vdots & \vdots & \vdots &      1 &      1 & \cdots            &  0 \\
+\vdots & \vdots & \vdots & \vdots & \vdots &      1 &      1 & \cdots & \cdots            &  0 \\
+\vdots & \vdots & \vdots & \vdots &      1 &      1 & \cdots & \cdots & \cdots            &  0 \\
+\vdots & \vdots & \vdots &      0 &      1 & \cdots & \cdots & \cdots & \cdots            &  1 \\
+\vdots & \vdots &      1 &      0 & \cdots & \cdots & \cdots & \cdots & \cdots            & -1 \\
+\vdots &      0 &      1 & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots            &  1 \\
+     0 &      0 & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots            &  0 \\
 \end{array}
-```
-<!-- $$ -->
+$$
+<!-- ``` -->
+
+Booth编码为：$`\overset{2^{7}} {0},  \
+              \overset{2^{6}}{ 1},  \
+              \overset{2^{5}}{-1},  \
+              \overset{2^{4}}{ 1},  \
+              \overset{2^{3}}{ 0},  \
+              \overset{2^{2}}{ 0},  \
+              \overset{2^{1}}{ 0},  \
+              \overset{2^{0}}{-1}`$ \
+验证：$`2^{7} - 2^{6} + 2^{5} - 2^{0} = 64 - 32 + 16 - 1 = 47_{10}`$
