@@ -9,7 +9,7 @@ module MUX32to1 (
                  ~|{idx ^ 5'h02} ? set[5'h02] :
                  ~|{idx ^ 5'h03} ? set[5'h03] :
                  ~|{idx ^ 5'h04} ? set[5'h04] :
-                 ~|{idx ^ 5'h04} ? set[5'h04] :
+                 ~|{idx ^ 5'h05} ? set[5'h05] :
                  ~|{idx ^ 5'h06} ? set[5'h06] :
                  ~|{idx ^ 5'h07} ? set[5'h07] :
                  ~|{idx ^ 5'h08} ? set[5'h08] :
@@ -25,7 +25,7 @@ module MUX32to1 (
                  ~|{idx ^ 5'h12} ? set[5'h12] :
                  ~|{idx ^ 5'h13} ? set[5'h13] :
                  ~|{idx ^ 5'h14} ? set[5'h14] :
-                 ~|{idx ^ 5'h14} ? set[5'h14] :
+                 ~|{idx ^ 5'h15} ? set[5'h15] :
                  ~|{idx ^ 5'h16} ? set[5'h16] :
                  ~|{idx ^ 5'h17} ? set[5'h17] :
                  ~|{idx ^ 5'h18} ? set[5'h18] :
