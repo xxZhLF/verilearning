@@ -18,22 +18,23 @@
 
 当$`B = 47_{10} = 00101111_{2}`$时，
 
-<!-- ```math -->
 $$
 \begin{array}{ccccccccc|r}
-     0 &      0 &      1 &      0 &      1 &      1 &      1 &      1 & \overset{\ast}{0} &    \\ 
+     0 & 0 & 1 & 0 & 1 & 1 & 1 & 1 & \overset{\ast}{0} &    \\
 \hline
-\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots &      1 &                0  & -1 \\
-\vdots & \vdots & \vdots & \vdots & \vdots & \vdots &      1 &      1 & \cdots            &  0 \\
-\vdots & \vdots & \vdots & \vdots & \vdots &      1 &      1 & \cdots & \cdots            &  0 \\
-\vdots & \vdots & \vdots & \vdots &      1 &      1 & \cdots & \cdots & \cdots            &  0 \\
-\vdots & \vdots & \vdots &      0 &      1 & \cdots & \cdots & \cdots & \cdots            &  1 \\
-\vdots & \vdots &      1 &      0 & \cdots & \cdots & \cdots & \cdots & \cdots            & -1 \\
-\vdots &      0 &      1 & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots            &  1 \\
-     0 &      0 & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots            &  0 \\
+       &   &   &   &   &   &   & 1 &                0  & -1 \\
+       &   &   &   &   &   & 1 & 1 &                   &  0 \\
+       &   &   &   &   & 1 & 1 &   &                   &  0 \\
+       &   &   &   & 1 & 1 &   &   &                   &  0 \\
+       &   &   & 0 & 1 &   &   &   &                   &  1 \\
+       &   & 1 & 0 &   &   &   &   &                   & -1 \\
+       & 0 & 1 &   &   &   &   &   &                   &  1 \\
+     0 & 0 &   &   &   &   &   &   &                   &  0 \\
 \end{array}
 $$
-<!-- ``` -->
+
+$`\ast`$标记的 $`0`$ 为手动添加，作用参考核心思想的例如。\
+*（从最低位开始按位求补）*
 
 Booth编码为：$`\overset{2^{7}} {0},  \
               \overset{2^{6}}{ 1},  \
@@ -44,3 +45,10 @@ Booth编码为：$`\overset{2^{7}} {0},  \
               \overset{2^{1}}{ 0},  \
               \overset{2^{0}}{-1}`$ \
 验证：$`2^{7} - 2^{6} + 2^{5} - 2^{0} = 64 - 32 + 16 - 1 = 47_{10}`$
+
+| $`b_{i}`$ | $`b_{i-1}`$ | W | 操作 |
+|:-:|:-:|--:|:--|
+| 0 | 0 |  0 | 左移 |
+| 0 | 1 | +1 | 左移，累加到部分积 |
+| 1 | 0 | -1 | 左移，从部分积扣除 |
+| 1 | 1 |  0 | 左移 |
