@@ -51,14 +51,14 @@ $`2^{n+1} = B_{T} + B_{C}`$。 \
 通用表达式：
 
 $$\begin{aligned}
-     B_{10} &= - b_{n-1} \cdot 2^{n-1} 
-               + b_{n-2} \cdot 2^{n-2} 
-               + b_{n-3} \cdot 2^{n-3} 
+     B_{10} &= - 2^{n-1} \cdot b_{n-1} 
+               + 2^{n-2} \cdot b_{n-2} 
+               + 2^{n-3} \cdot b_{n-3} 
                + \cdots
-               + b_{  2} \cdot 2^{  2}  
-               + b_{  1} \cdot 2^{  1}  
-               + b_{  0} \cdot 2^{  0}  
-               + b_{ -1}, \quad b_{-1} = 0 \qquad (\textup{I})
+               + 2^{  2} \cdot b_{  2}  
+               + 2^{  1} \cdot b_{  1}  
+               + 2^{  0} \cdot b_{  0}  
+               + b_{ -1},\quad b_{ -1} = 0 \qquad (\textup{I})
 \end{aligned}$$
 
 关于最高位为什么带负号：因为$`b_{n \sim 0}`$为$`B_{10}`$的补码，最高位为符号位。 \
@@ -121,6 +121,6 @@ $`1 \leftarrow 0`$ 编码为 $`-1`$。综上所述，Booth算法如下：
 
 $$
 \begin{aligned}
-     B_{10} &= -2 \times b_{n-1}
+     B_{10} &= (- 2 \times 2^{n-2} \cdot b_{n-1}) + 
 \end{aligned}
 $$
