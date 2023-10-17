@@ -72,7 +72,7 @@ $$\begin{aligned}
      B_{10} &=     - b_{n-1} \cdot 2^{n-1} \\
             &\quad + b_{n-2} \cdot 2^{n-2} + (b_{n-2} \cdot 2^{n-2} - b_{n-2} \cdot 2^{n-2}) \\
             &\quad + b_{n-3} \cdot 2^{n-3} + (b_{n-3} \cdot 2^{n-3} - b_{n-3} \cdot 2^{n-3}) \\
-            &\quad ~~ \vdots \\
+            &\quad ~ \vdots \\
             &\quad + b_{  2} \cdot 2^{  2} + (b_{  2} \cdot 2^{  2} - b_{  2} \cdot 2^{  2}) \\
             &\quad + b_{  1} \cdot 2^{  1} + (b_{  1} \cdot 2^{  1} - b_{  1} \cdot 2^{  1}) \\
             &\quad + b_{  0} \cdot 2^{  0} + (b_{  0} \cdot 2^{  0} - b_{  0} \cdot 2^{  0}) + b_{-1}
