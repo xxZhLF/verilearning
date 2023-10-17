@@ -69,28 +69,28 @@ $`\qquad\qquad
 对通用表达式$`(\textup{I})`$进行变形，得到表达式$`(\textup{II})`$。
 
 $$\begin{aligned}
-     B_{10} &=     - b_{n-1} \cdot 2^{n-1} \\
-            &\quad + b_{n-2} \cdot 2^{n-2} + (b_{n-2} \cdot 2^{n-2} - b_{n-2} \cdot 2^{n-2}) \\
-            &\quad + b_{n-3} \cdot 2^{n-3} + (b_{n-3} \cdot 2^{n-3} - b_{n-3} \cdot 2^{n-3}) \\
-            &\quad ~ \vdots \\
-            &\quad + b_{  2} \cdot 2^{  2} + (b_{  2} \cdot 2^{  2} - b_{  2} \cdot 2^{  2}) \\
-            &\quad + b_{  1} \cdot 2^{  1} + (b_{  1} \cdot 2^{  1} - b_{  1} \cdot 2^{  1}) \\
-            &\quad + b_{  0} \cdot 2^{  0} + (b_{  0} \cdot 2^{  0} - b_{  0} \cdot 2^{  0}) + b_{-1}
+     B_{10} &=     ~- b_{n-1} \cdot 2^{n-1} \\
+            &\quad ~+ b_{n-2} \cdot 2^{n-2} + (b_{n-2} \cdot 2^{n-2} - b_{n-2} \cdot 2^{n-2}) \\
+            &\quad ~+ b_{n-3} \cdot 2^{n-3} + (b_{n-3} \cdot 2^{n-3} - b_{n-3} \cdot 2^{n-3}) \\
+            &\quad ~~ \vdots \\
+            &\quad ~+ b_{  2} \cdot 2^{  2} + (b_{  2} \cdot 2^{  2} - b_{  2} \cdot 2^{  2}) \\
+            &\quad ~+ b_{  1} \cdot 2^{  1} + (b_{  1} \cdot 2^{  1} - b_{  1} \cdot 2^{  1}) \\
+            &\quad ~+ b_{  0} \cdot 2^{  0} + (b_{  0} \cdot 2^{  0} - b_{  0} \cdot 2^{  0}) + b_{-1}
 \\
-            &=   (- b_{n-1} \cdot 2^{n-1} + 2 \times b_{n-2} \cdot 2^{n-2})
-               + (- b_{n-2} \cdot 2^{n-2} + 2 \times b_{n-3} \cdot 2^{n-3})
-               + \\ 
+            &= ~  (- b_{n-1} \cdot 2^{n-1} + 2 \times b_{n-2} \cdot 2^{n-2})
+               ~+ (- b_{n-2} \cdot 2^{n-2} + 2 \times b_{n-3} \cdot 2^{n-3})
+               ~+ \\ 
             &\quad \cdots 
-               + (- b_{  2} \cdot 2^{  2} + 2 \times b_{  1} \cdot 2^{  1})
-               + (- b_{  1} \cdot 2^{  1} + 2 \times b_{  0} \cdot 2^{  0})
-               + (- b_{  0} \cdot 2^{  0} +          b_{ -1}) 
+               ~+ (- b_{  2} \cdot 2^{  2} + 2 \times b_{  1} \cdot 2^{  1})
+               ~+ (- b_{  1} \cdot 2^{  1} + 2 \times b_{  0} \cdot 2^{  0})
+               ~+ (- b_{  0} \cdot 2^{  0} +          b_{ -1}) 
 \\
-            &=   2^{n-1}(- b_{n-1} + b_{n-2})
-               + 2^{n-2}(- b_{n-2} + b_{n-3})
-               + \cdots
-               + 2^{  2}(- b_{  2} + b_{  1})
-               + 2^{  1}(- b_{  1} + b_{  0})
-               +        (- b_{  0} + b_{ -1}) \qquad (\textup{II})
+            &= ~  2^{n-1}(- b_{n-1} + b_{n-2})
+               ~+ 2^{n-2}(- b_{n-2} + b_{n-3})
+               ~+ \cdots
+               ~+ 2^{  2}(- b_{  2} + b_{  1})
+               ~+ 2^{  1}(- b_{  1} + b_{  0})
+               ~+        (- b_{  0} + b_{ -1}) \qquad (\textup{II})
 \end{aligned}$$
 
 由表达式$`(\textup{II})`$可以看出，从低位到高位扫描，
@@ -117,3 +117,10 @@ $`1 \leftarrow 0`$ 编码为 $`-1`$。综上所述，Booth算法如下：
 
 ### Booth算法・改（Radix-4）： 
 
+对通用表达式$`(\textup{I})`$进行变形，得到表达式$`(\textup{III})`$。
+
+$$
+\begin{aligned}
+     B_{10} &= -2
+\end{aligned}
+$$
