@@ -69,13 +69,13 @@ $`\qquad\qquad
 对通用表达式$`(\textup{I})`$进行变形，得到表达式$`(\textup{II})`$。
 
 $$\begin{aligned}
-     B_{10} &=     - b_{n-1} \cdot 2^{n-1} \\
-            & \quad + b_{n-2} \cdot 2^{n-2} + (b_{n-2} \cdot 2^{n-2} - b_{n-2} \cdot 2^{n-2}) \\
-            & \quad + b_{n-3} \cdot 2^{n-3} + (b_{n-3} \cdot 2^{n-3} - b_{n-3} \cdot 2^{n-3}) \\
-            & \quad ~ \vdots \\
-            & \quad + b_{  2} \cdot 2^{  2} + (b_{  2} \cdot 2^{  2} - b_{  2} \cdot 2^{  2}) \\
-            & \quad + b_{  1} \cdot 2^{  1} + (b_{  1} \cdot 2^{  1} - b_{  1} \cdot 2^{  1}) \\
-            & \quad + b_{  0} \cdot 2^{  0} + (b_{  0} \cdot 2^{  0} - b_{  0} \cdot 2^{  0}) + b_{-1}
+     B_{10} &=      - b_{n-1} \cdot 2^{n-1} \\
+            &~\quad + b_{n-2} \cdot 2^{n-2} + (b_{n-2} \cdot 2^{n-2} - b_{n-2} \cdot 2^{n-2}) \\
+            &~\quad + b_{n-3} \cdot 2^{n-3} + (b_{n-3} \cdot 2^{n-3} - b_{n-3} \cdot 2^{n-3}) \\
+            &~\quad ~ \vdots \\
+            &~\quad + b_{  2} \cdot 2^{  2} + (b_{  2} \cdot 2^{  2} - b_{  2} \cdot 2^{  2}) \\
+            &~\quad + b_{  1} \cdot 2^{  1} + (b_{  1} \cdot 2^{  1} - b_{  1} \cdot 2^{  1}) \\
+            &~\quad + b_{  0} \cdot 2^{  0} + (b_{  0} \cdot 2^{  0} - b_{  0} \cdot 2^{  0}) + b_{-1}
 \\
             &=   (- b_{n-1} \cdot 2^{n-1} + 2 \times b_{n-2} \cdot 2^{n-2})
                + (- b_{n-2} \cdot 2^{n-2} + 2 \times b_{n-3} \cdot 2^{n-3})
