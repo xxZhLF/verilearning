@@ -119,6 +119,8 @@ $`1 \leftarrow 0`$ 编码为 $`-1`$。综上所述，Booth算法如下：
 
 对通用表达式$`(\textup{I})`$进行变形，得到表达式$`(\textup{III})`$。
 
+<!-- $$ \hline $$  -> NG, 
+```math \hline ``` -> OK -->
 ```math
 \begin{aligned}
     &\begin{aligned}
@@ -141,11 +143,11 @@ $`1 \leftarrow 0`$ 编码为 $`-1`$。综上所述，Booth算法如下：
                   &+ 2 \times 2^{  1} \cdot b_{  1} - 2^{  1} \cdot b_{  1} \\
                   &+ 2 \times 2^{  0} \cdot b_{  0} - 2^{  0} \cdot b_{  0} + y_{-1}
     \end{aligned}  \right.\\
-    &\quad ~~\begin{array}{ccccccccccccccccccccccccccccccccccccc} 
-    ~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~ \\ \hline
+    &\quad ~~\begin{array}{cccccccccccccccccccccccccccccccccccc} 
+    ~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&~ \\ \hline
     \end{array} \\
     &\quad ~~ = 2^{n-2}(-2b_{n-1} + b_{n-2} + b_{n-3}) + 2^{n-4}(-2b_{n-3} + b_{n-4} + b_{n-5}) 
       + \cdots 
       + 2^{  2}(-2b_{  3} + b_{  2} + b_{  1}) + 2^{  0}(-2b_{  1} + b_{  0} + b_{ -1}) \qquad (\textup{III})
 \end{aligned}
-```
+``` 
