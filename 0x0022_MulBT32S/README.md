@@ -131,7 +131,7 @@ $$
                   &+ 2^{  1} \cdot b_{  1} + (2^{  1} \cdot b_{  1} - 2^{  1} \cdot b_{  1}) \\
                   &+ 2^{  0} \cdot b_{  0} + (2^{  0} \cdot b_{  0} - 2^{  0} \cdot b_{  0}) + y_{-1}
     \end{aligned} 
-    \qquad \left| \begin{aligned} \\ \\ \\ \\ \\ \\ \\ \\  \end{aligned} \right. \qquad
+    \qquad \left| \begin{aligned} ~\\ ~\\ ~\\ ~\\ ~\\ ~\\ ~\\ ~\\  \end{aligned} \right. \qquad
     \begin{aligned}
                 = &- 2 \times 2^{n-2} \cdot b_{n-1} + 2^{n-2} \cdot b_{n-1} \\
                   &+ 2 \times 2^{n-3} \cdot b_{n-3} - 2^{n-3} \cdot b_{n-3} \\
