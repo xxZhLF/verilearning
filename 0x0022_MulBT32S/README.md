@@ -79,7 +79,8 @@ $$\begin{aligned}
 \\
             &=   (- b_{n-1} \cdot 2^{n-1} + 2 \times b_{n-2} \cdot 2^{n-2})
                + (- b_{n-2} \cdot 2^{n-2} + 2 \times b_{n-3} \cdot 2^{n-3})
-               + \\ &\quad \cdots 
+               + \\ 
+            &\quad \cdots 
                + (- b_{  2} \cdot 2^{  2} + 2 \times b_{  1} \cdot 2^{  1})
                + (- b_{  1} \cdot 2^{  1} + 2 \times b_{  0} \cdot 2^{  0})
                + (- b_{  0} \cdot 2^{  0} +          b_{ -1}) 
