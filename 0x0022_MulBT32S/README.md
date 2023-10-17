@@ -68,16 +68,14 @@ $`\qquad\qquad
 
 对通用表达式$`(\textup{I})`$进行变形，得到表达式$`(\textup{II})`$。
 
-<!-- $$ -->
-```math
-\begin{aligned}
-     B_{10} &=     - b_{n-1} \cdot 2^{n-1} \\
-            &\quad + b_{n-2} \cdot 2^{n-2} + (b_{n-2} \cdot 2^{n-2} - b_{n-2} \cdot 2^{n-2}) \\
-            &\quad + b_{n-3} \cdot 2^{n-3} + (b_{n-3} \cdot 2^{n-3} - b_{n-3} \cdot 2^{n-3}) \\
-            &\quad ~ \vdots \\
-            &\quad + b_{  2} \cdot 2^{  2} + (b_{  2} \cdot 2^{  2} - b_{  2} \cdot 2^{  2}) \\
-            &\quad + b_{  1} \cdot 2^{  1} + (b_{  1} \cdot 2^{  1} - b_{  1} \cdot 2^{  1}) \\
-            &\quad + b_{  0} \cdot 2^{  0} + (b_{  0} \cdot 2^{  0} - b_{  0} \cdot 2^{  0}) + b_{-1}
+$$\begin{aligned}
+     B_{10} &=      - b_{n-1} \cdot 2^{n-1} \\
+            &\quad~ + b_{n-2} \cdot 2^{n-2} + (b_{n-2} \cdot 2^{n-2} - b_{n-2} \cdot 2^{n-2}) \\
+            &\quad~ + b_{n-3} \cdot 2^{n-3} + (b_{n-3} \cdot 2^{n-3} - b_{n-3} \cdot 2^{n-3}) \\
+            &\quad~ ~ \vdots \\
+            &\quad~ + b_{  2} \cdot 2^{  2} + (b_{  2} \cdot 2^{  2} - b_{  2} \cdot 2^{  2}) \\
+            &\quad~ + b_{  1} \cdot 2^{  1} + (b_{  1} \cdot 2^{  1} - b_{  1} \cdot 2^{  1}) \\
+            &\quad~ + b_{  0} \cdot 2^{  0} + (b_{  0} \cdot 2^{  0} - b_{  0} \cdot 2^{  0}) + b_{-1}
 \\
             &=   (- b_{n-1} \cdot 2^{n-1} + 2 \times b_{n-2} \cdot 2^{n-2})
                + (- b_{n-2} \cdot 2^{n-2} + 2 \times b_{n-3} \cdot 2^{n-3})
@@ -93,9 +91,7 @@ $`\qquad\qquad
                + 2^{  2}(- b_{  2} + b_{  1})
                + 2^{  1}(- b_{  1} + b_{  0})
                +        (- b_{  0} + b_{ -1}) \qquad (\textup{II})
-\end{aligned}
-```
-<!-- $$ -->
+\end{aligned}$$
 
 由表达式$`(\textup{II})`$可以看出，从低位到高位扫描，
 连续的 $`0`$ 或 $`1`$ 均被编码为 $`0`$， \
