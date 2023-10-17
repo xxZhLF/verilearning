@@ -2,7 +2,7 @@
 
 // `define ADD_DEBUG_ON
 
-module AdderLA32bit_tb(
+module AdderLC32bit_tb(
     // None
 );
 
@@ -31,7 +31,7 @@ module AdderLA32bit_tb(
         #5 ;
     end
 
-    AdderLA32bit adder(
+    AdderLC32bit adder(
         .op1(op1),
         .op2(op2),
         .cin(cin),
@@ -43,7 +43,7 @@ module AdderLA32bit_tb(
     );
 
     initial begin
-        $dumpfile("AdderLA32bit.vcd");
+        $dumpfile("AdderLC32bit.vcd");
         $dumpvars(0, op1);
         $dumpvars(1, op2);
         $dumpvars(2, cin);

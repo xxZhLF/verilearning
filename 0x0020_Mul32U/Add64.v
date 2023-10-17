@@ -8,14 +8,14 @@ module Add64(
     reg  NULL;
     wire cinner;
 
-    AdderLA32bit adderL(
+    AdderLC32bit adderL(
         .op1(op1[31:0]),
         .op2(op2[31:0]),
         .cin(ZERO),
         .sum(sum[31:0]),
         .cout(cinner)
     ); 
-    AdderLA32bit adderH(
+    AdderLC32bit adderH(
         .op1(op1[63:32]),
         .op2(op2[63:32]),
         .cin(cinner),
