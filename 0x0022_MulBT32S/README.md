@@ -171,7 +171,7 @@ $`\overset{2^{14}}{+1},  \
 
 对通用表达式$`(\textup{I})`$进行变形，得到表达式$`(\textup{III})`$。
 
-$$
+```math
 \begin{aligned}
     &\begin{aligned}
          B_{10} = &(- 2 \times 2^{n-2} \cdot b_{n-1}) + 2^{n-2} \cdot b_{n-1} \\
@@ -201,7 +201,7 @@ $$
       + \cdots 
       + 2^{  2}(-2b_{  3} + b_{  2} + b_{  1}) + 2^{  0}(-2b_{  1} + b_{  0} + b_{ -1}) \qquad (\textup{III})
 \end{aligned}
-$$
+``` 
 
 | $`b_{2i+1}`$ | $`b_{2i}`$ | $`b_{2i-1}`$ | $`e_{i+1}`$ | $`e_{i}`$ | W | $`\qquad\qquad`$操作 |
 |:-:|:-:|:-:|--:|--:|--:|:--|
