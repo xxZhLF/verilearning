@@ -135,7 +135,9 @@ $`1 \leftarrow 0`$ 编码为 $`-1`$。综上所述，Booth算法如下：
 - $`0 \leftarrow 1 \quad \Rightarrow    +1`$
 - $`1 \leftarrow 0 \quad \Rightarrow    -1`$
 
-$$
+<!-- $$ \hline $$  -> NG, 
+```math \hline ``` -> OK -->
+```math
 \begin{array}{ccccccccccccccccc|rr|r}
     0 & 0 & 1 & 1 & 1 & 0 & 1 & 0 & 0 & 1 & 0 & 1 & 1 & 1 & 0 & 0 & \overset{\ast}{0} &    &    &    \\
 \hline
@@ -148,7 +150,7 @@ $$
       &   & 1 & 1 & 1 &   &   &   &   &   &   &   &   &   &   &   &                   &  0 &  0 &  0 \\
     0 & 0 & 1 &   &   &   &   &   &   &   &   &   &   &   &   &   &                   &  0 & +1 & +1 \\
 \end{array}
-$$
+```
 
 当$`A = 15_{10} = 00001111_{2}`$时，$`15_{10} \times 14940_{10} = 224100_{10}`$
 
@@ -165,8 +167,6 @@ $`\overset{2^{14}}{+1},  \
 
 对通用表达式$`(\textup{I})`$进行变形，得到表达式$`(\textup{III})`$。
 
-<!-- $$ \hline $$  -> NG, 
-```math \hline ``` -> OK -->
 ```math
 \begin{aligned}
     &\begin{aligned}
