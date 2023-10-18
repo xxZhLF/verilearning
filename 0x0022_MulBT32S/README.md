@@ -49,8 +49,6 @@ $`\overset{2^{7}}{ 0},  \
 
 当$`A = 15_{10} = 00001111_{2}`$时，$`15_{10} \times 47_{10} = 705_{10}`$
 
-<!-- $$ \hline $$  -> NG, 
-```math \hline ``` -> OK -->
 $$
 \begin{array}{ccccccccccccccccc|lcr}
     + & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & A << 6 & = & 960_{10} \\
@@ -66,7 +64,8 @@ $`n`$位二进制数$`B`$的原码$`B_{2,T}`$与其补码$`B_{2,C}`$存在：
 $`2^{n+1} = B_{T} + B_{C}`$。 \
 通用表达式：
 
-$$\begin{aligned}
+$$
+\begin{aligned}
      B_{10} &= - 2^{n-1} \cdot b_{n-1} 
                + 2^{n-2} \cdot b_{n-2} 
                + 2^{n-3} \cdot b_{n-3} 
@@ -75,7 +74,8 @@ $$\begin{aligned}
                + 2^{  1} \cdot b_{  1}  
                + 2^{  0} \cdot b_{  0}  
                + b_{ -1},\quad b_{ -1} = 0 \qquad (\textup{I})
-\end{aligned}$$
+\end{aligned}
+$$
 
 关于最高位为什么带负号：因为$`b_{n \sim 0}`$为$`B_{10}`$的补码，最高位为符号位。 \
 例如：当$`B_{10} \!= -3`$时， \
@@ -84,7 +84,8 @@ $`\qquad\qquad
 
 对通用表达式$`(\textup{I})`$进行变形，得到表达式$`(\textup{II})`$。
 
-$$\begin{aligned}
+$$
+\begin{aligned}
      B_{10} &=    - 2^{n-1} \cdot b_{n-1} \\
             &~~~~ + 2^{n-2} \cdot b_{n-2} + (2^{n-2} \cdot b_{n-2} - 2^{n-2} \cdot b_{n-2}) \\
             &~~~~ + 2^{n-3} \cdot b_{n-3} + (2^{n-3} \cdot b_{n-3} - 2^{n-3} \cdot b_{n-3}) \\
@@ -107,7 +108,8 @@ $$\begin{aligned}
                + 2^{  2}(- b_{  2} + b_{  1})
                + 2^{  1}(- b_{  1} + b_{  0})
                +        (- b_{  0} + b_{ -1}) \qquad (\textup{II})
-\end{aligned}$$
+\end{aligned}
+$$
 
 由表达式$`(\textup{II})`$可以看出，从低位到高位扫描，
 连续的 $`0`$ 或 $`1`$ 均被编码为 $`0`$， \
@@ -169,7 +171,7 @@ $`\overset{2^{14}}{+1},  \
 
 对通用表达式$`(\textup{I})`$进行变形，得到表达式$`(\textup{III})`$。
 
-```math
+$$
 \begin{aligned}
     &\begin{aligned}
          B_{10} = &(- 2 \times 2^{n-2} \cdot b_{n-1}) + 2^{n-2} \cdot b_{n-1} \\
@@ -199,7 +201,7 @@ $`\overset{2^{14}}{+1},  \
       + \cdots 
       + 2^{  2}(-2b_{  3} + b_{  2} + b_{  1}) + 2^{  0}(-2b_{  1} + b_{  0} + b_{ -1}) \qquad (\textup{III})
 \end{aligned}
-``` 
+$$
 
 | $`b_{2i+1}`$ | $`b_{2i}`$ | $`b_{2i-1}`$ | $`e_{i+1}`$ | $`e_{i}`$ | W | $`\qquad\qquad`$操作 |
 |:-:|:-:|:-:|--:|--:|--:|:--|
