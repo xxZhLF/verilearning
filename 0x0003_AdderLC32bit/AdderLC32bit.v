@@ -14,7 +14,7 @@ module AdderLC32bit (
     // assign {cout, sum} = op1 + op2 + {24'h000000, 7'b00000000, cin};
 
     wire [31:0] P, G;
-    GrpPG grpGP(
+    GrpPG grpPG(
         .op1(op1),
         .op2(op2),
         .P(P),
@@ -32,7 +32,15 @@ module AdderLC32bit (
 
     generate
         for (genvar i = 0; i < 32; ++i) begin
-            assign sum[i] = op1[i] ^ op2[i] ^ cinner[i];
+            // assign sum[i] = op1[i] ^ op2[i] ^ cinner[i];
+            reg useless;
+            AdderFL1bit adderFL1bit(
+                .op1(op1[i]),
+                .op2(op2[i]),
+                .cin(cinner[i]),
+                .sum(sum[i]),
+                .cout(useless)
+            );
         end        
     endgenerate
 
