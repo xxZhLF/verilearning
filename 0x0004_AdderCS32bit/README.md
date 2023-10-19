@@ -1,7 +1,6 @@
 32-Bit 进位保存加法器（Carry Save Adder）
 
-$`15 + 51 + 149 = `$
-
+$`15 + 51 + 149 = 215`$
 $$
 \begin{array}{rcccccccc}
                             & 1 & 0 & 0 & 1 & 0 & 1 & 0 & 1 \\
@@ -10,6 +9,8 @@ $$
     \hline
                       Carry & 0 & 0 & 1 & 0 & 1 & 1 & 1 &   \\
     Sum \  without \  Carry & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 1 \\
+    \hline
+                            & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 \\
 \end{array}
 $$
 
