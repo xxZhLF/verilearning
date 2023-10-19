@@ -4,14 +4,14 @@ $`15 + 51 + 149 = 215`$
 
 $$
 \begin{array}{rcccccccl}
-                              & 1 & 0 & 0 & 1 & 0 & 1 & 0 & 1 \\
-                              & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 1 \\
-                            + & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 \\
+                               & 1 & 0 & 0 & 1 & 0 & 1 & 0 & 1 \\
+                               & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 1 \\
+                             + & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 \\
     \hline
                         Carry & 0 & 0 & 1 & 0 & 1 & 1 & 1 & 0 \\
-      Sum \  without \  Carry & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 1 \\
+       Sum \  without \  Carry & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 1 \\
     \hline
-    Sum ~\qquad~\qquad~\qquad & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 \\
+    Sum ~\qquad~\qquad~\qquad~ & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 \\
 \end{array}
 \begin{aligned} \\
     \leftarrow cin
