@@ -15,7 +15,7 @@ module TCC(
         .sum(datO)
     );  /* ~datI + 1 */
 
-    assign C = datI != {28'h0000000, 3'b000} ? {sign, sign ? datO[30:0] : datI[30:0]} : 32'h00000000;
+    assign C = ~|{datI ^ 31'b0} ? 32'h0 : {sign, sign ? datO[30:0] : datI[30:0]};
 
 endmodule
 
@@ -37,6 +37,6 @@ module CTC(
     );  /* ~(datI + -1) 
            ~ at next line */
 
-    assign T = datI != {28'h0000000, 3'b000} ? {sign, sign ? ~datO[30:0] : datI[30:0]} : 32'h00000000;
+    assign T = ~|{datI ^ 31'b0} ? 32'h0 : {sign, sign ? ~datO[30:0] : datI[30:0]};
 
 endmodule
