@@ -235,6 +235,8 @@ Radix-4 Booth 编码$`B''`$可以理解为，对 Radix-2 Booth 编码$`B'`$的�
 
 部分积的求和由进位保存加法器实现。
 
+$`sum = PP_{1} + PP_{2} + PP_{3} + PP_{4} + PP_{5} + PP_{6} + PP_{7} + PP_{8}`$
+
 ```
    PP1  PP2  PP3  PP4  PP5  PP6  PP7  PP8                                                    
    |    |    |    |    |    |    |    |                                                      
