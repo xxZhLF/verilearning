@@ -20,7 +20,11 @@ $$
        sum \  without \  Carry & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 1 \\
     \hline
     sum ~\qquad~\qquad~\qquad~ & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 \\
-\end{array}$$
+\end{array} 
+\begin{aligned} \\
+\leftarrow cin = 0
+\end{aligned}
+$$
 
 | $`x_{i}`$ | $`y_{i}`$ | $`z_{i}`$ | $`s_{i}`$ | $`c_{i}`$ |
 |:-:|:-:|:-:|:-:|:-:|
