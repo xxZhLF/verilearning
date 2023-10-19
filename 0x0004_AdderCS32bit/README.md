@@ -4,7 +4,8 @@ $`\begin{array}{ccrcccr}
     X & = & 149_{10} & = & 10010101_{2} & = & -170_{10}\\
     Y & = &  51_{10} & = & 00110011_{2} & = &   51_{10}\\
     Z & = &  15_{10} & = & 00001111_{2} & = &   15_{10}\\
-\end{array} \Rightarrow X + Y + Z = \left\{\begin{aligned}
+\end{array} \Rightarrow 
+X + Y + Z = 11010111_{2} = \left\{\begin{aligned}
      215_{10}& \qquad (\mathrm{True \ form}) \\
      -41_{10}& \qquad (\mathrm{Complement }) \\
 \end{aligned}\right.`$ 
