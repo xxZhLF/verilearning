@@ -7,14 +7,31 @@ module AdderCS32bit (
     output wire        cout
 );
 
-    wire [31:0] lcOP1, lcOP2;
+    wire coutL1, coutL2;
+
+    generate
+        wire [31:0] carry, sum_without_carry;
+        for (genvar i = 0; i < 32; ++i) begin
+            AdderCS1bit adderCS1bit(
+                .op1(op1[i]),
+                .op2(op2[i]),
+                .op3(op3[i]),
+                .sum(sum_without_carry[i]),
+                .cout(carry[i])
+            );
+        end
+        assign coutL1 = carry[31];
+    endgenerate
+
     AdderLC32bit adderLC32bit(
-        .op1(lcOP1),
-        .op2(lcOP2),
+        .op1(sum_without_carry),
+        .op2({carry[30:0], 1'b0}),
         .cin(cin),
         .sum(sum),
-        .cout(cout)
+        .cout(coutL2)
     );
+
+    assign cout = coutL1 | coutL2;
 
 endmodule
 
