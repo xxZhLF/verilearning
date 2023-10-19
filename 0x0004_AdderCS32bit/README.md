@@ -11,20 +11,11 @@ $$
                                & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 1 \\
                              + & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 \\
     \hline
-                         Carry & 0 & 0 & 1 & 0 & 1 & 1 & 1 & 0 \\
+                         Carry & 0 & 0 & 1 & 0 & 1 & 1 & 1 &   \\
        Sum \  without \  Carry & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 1 \\
     \hline
     Sum ~\qquad~\qquad~\qquad~ & 1 & 1 & 0 & 1 & 0 & 1 & 1 & 1 \\
-\end{array}
-\begin{aligned} \\
-    \leftarrow cin
-\end{aligned}$$
-
-<!-- 
-                  Carry
-Sum \  without \  Carry
-\leftarrow cin
- -->
+\end{array}$$
 
 $`sum = op_{1} + op_{2} + op_{3} + op_{4} + op_{5} + op_{6} + op_{7} + op_{8}`$
 
