@@ -1,6 +1,6 @@
 module ShiftL64 (
-    input wire  [ 7:0] n,
-    input wire  [63:0] in,
+    input  wire [ 7:0] n,
+    input  wire [63:0] in,
     output wire [63:0] out
 );
 
