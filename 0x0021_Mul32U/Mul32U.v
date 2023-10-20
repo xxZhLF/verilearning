@@ -33,7 +33,7 @@ module Mul32U (
     );
 
     reg [63:0] sum, tmp;
-    Add64 adder(
+    AddLC64 adder(
         .op1(itm),
         .op2(sum),
         .sum(tmp)

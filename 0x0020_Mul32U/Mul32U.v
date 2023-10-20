@@ -25,7 +25,7 @@ module Mul32U (
     wire [63:0] vecL2 [15:0];
     generate
         for (genvar i = 0; i < 16; ++i) begin
-            Add64 adder(
+            AddLC64 adder(
                 .op1(vecL1[i*2+0]),
                 .op2(vecL1[i*2+1]),
                 .sum(vecL2[i])
@@ -36,7 +36,7 @@ module Mul32U (
     wire [63:0] vecL3 [7:0];
     generate
         for (genvar i = 0; i < 8; ++i) begin
-            Add64 adder(
+            AddLC64 adder(
                 .op1(vecL2[i*2+0]),
                 .op2(vecL2[i*2+1]),
                 .sum(vecL3[i])
@@ -47,7 +47,7 @@ module Mul32U (
     wire [63:0] vecL4 [3:0];
     generate
         for (genvar i = 0; i < 4; ++i) begin
-            Add64 adder(
+            AddLC64 adder(
                 .op1(vecL3[i*2+0]),
                 .op2(vecL3[i*2+1]),
                 .sum(vecL4[i])
@@ -58,7 +58,7 @@ module Mul32U (
     wire [63:0] vecL5 [2:0];
     generate
         for (genvar i = 0; i < 2; ++i) begin
-            Add64 adder(
+            AddLC64 adder(
                 .op1(vecL4[i*2+0]),
                 .op2(vecL4[i*2+1]),
                 .sum(vecL5[i])
@@ -66,7 +66,7 @@ module Mul32U (
         end
     endgenerate
 
-    Add64 adder(
+    AddLC64 adder(
         .op1(vecL5[0]),
         .op2(vecL5[1]),
         .sum(res)
