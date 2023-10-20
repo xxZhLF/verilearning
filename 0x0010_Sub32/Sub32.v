@@ -12,10 +12,10 @@ module Sub32(
 );
 
     wire [31:0] op1C, op2C;
-    TCC32 tcC1(  /* Complement of op1 */ 
+    TCC32 t2c_1(  /* Complement of op1 */ 
         .T(op1),
         .C(op1C)
-    ), tcC2(  /* Complement of -op2 */ 
+    ),    t2c_2(  /* Complement of -op2 */ 
         .T({~op2[31], op2[30:0]}),
         .C(op2C)
     );
@@ -27,7 +27,7 @@ module Sub32(
         .sum(diffC)
     );
 
-    CTC32 ctC(
+    CTC32 c2t(
         .C(diffC),
         .T(diff)
     );  /* Truth of result */ 
