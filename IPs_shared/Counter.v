@@ -1,5 +1,3 @@
-`include "../0x0005_Add32/Add32.v"
-
 module Counter32(
     input  wire        rst,
     input  wire        clk,
