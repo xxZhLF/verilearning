@@ -1,7 +1,7 @@
-`include "Shift.v"
-`include "Add64.v"
-`include "Counter.v"
-`include "Multiplexer.v"
+`include "../IPs_shared/Shift.v"
+`include "../IPs_shared/Add64.v"
+`include "../IPs_shared/Counter.v"
+`include "../IPs_shared/Multiplexer.v"
 
 module Mul32U (
     input  wire        rst,

@@ -1,5 +1,5 @@
-`include "Shift.v"
-`include "Add64.v"
+`include "../IPs_shared/Shift.v"
+`include "../IPs_shared/Add64.v"
 
 module Mul32U (
     input  wire [31:0] op1,
