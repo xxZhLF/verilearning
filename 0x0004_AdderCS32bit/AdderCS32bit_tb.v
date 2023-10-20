@@ -7,7 +7,7 @@ module AdderCS32bit_tb(
     reg  [31:0] op1, op2, op3;
     reg         cin;
     wire [31:0] sum;
-    wire        cout;
+    wire [ 1:0] cout;
     initial begin
         op1 = 32'h00000000;
         op2 = 32'h00000000;
@@ -31,7 +31,7 @@ module AdderCS32bit_tb(
         #5;
     end
 
-    AdderCS32bit adder(
+    AdderCS32bit_terminator adder(
         .op1(op1),
         .op2(op2),
         .op3(op3),
