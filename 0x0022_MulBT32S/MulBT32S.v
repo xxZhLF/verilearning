@@ -149,13 +149,13 @@ module BoothEncoding (
 
     wire [63:0] t2cout;
     TCC64 t2c(
-        .T(shout),
+        .T({sb, shout[62:0]}),
         .C(t2cout)
     );
 
     wire [63:0] c2tout;
     CTC64 c2t(
-        .C(shout),
+        .C({sb, shout[62:0]}),
         .T(c2tout)
     );
 

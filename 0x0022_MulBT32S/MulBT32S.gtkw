@@ -1,18 +1,25 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Fri Oct 20 13:30:25 2023
+[*] Fri Oct 20 14:44:45 2023
 [*]
 [dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0022_MulBT32S/MulBT32S.vcd"
-[dumpfile_mtime] "Fri Oct 20 13:29:27 2023"
-[dumpfile_size] 1062753
+[dumpfile_mtime] "Fri Oct 20 14:42:57 2023"
+[dumpfile_size] 1067231
 [savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0022_MulBT32S/MulBT32S.gtkw"
-[timestart] 0
+[timestart] 4
 [size] 1428 819
-[pos] -6 -69
-*-1.745736 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -1
+*0.254264 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
+[treeopen] TOP.MulBT32S_tb.
+[treeopen] TOP.MulBT32S_tb.multiplier.
+[treeopen] TOP.MulBT32S_tb.multiplier.genblk1[0].
+[treeopen] TOP.MulBT32S_tb.multiplier.genblk1[0].genblk1.
+[treeopen] TOP.MulBT32S_tb.multiplier.genblk1[1].
+[treeopen] TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.
+[treeopen] TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.be.
 [sst_width] 214
-[signals_width] 102
+[signals_width] 126
 [sst_expanded] 1
 [sst_vpaned_height] 229
 @24
@@ -20,8 +27,26 @@
 TOP.MulBT32S_tb.op1[31:0]
 [color] 1
 TOP.MulBT32S_tb.op2[31:0]
-@25
+@421
 [color] 5
 TOP.MulBT32S_tb.res[63:0]
+@200
+-
+@28
+TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.be.grp[2:0]
+TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.be.gid[2:0]
+@22
+TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.be.op1[31:0]
+@28
+TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.be.shout[63:0]
+TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.be.t2cout[63:0]
+TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.be.pp[63:0]
+@200
+-
+@22
+TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.be.t2c.datI[62:0]
+@28
+TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.be.t2c.datO[63:0]
+TOP.MulBT32S_tb.multiplier.genblk1[1].genblk1.be.t2c.T[63:0]
 [pattern_trace] 1
 [pattern_trace] 0
