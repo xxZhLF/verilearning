@@ -39,18 +39,50 @@ module MulBT32S(
         end
     endgenerate
 
-    // generate
-    //     for (genvar i = 0; i < 6; ++i) begin
-    //         wire [63:0] c, s;
-    //         AdderCS64bit adderCS(
-    //             .op1(),
-    //             .op2(),
-    //             .op3(),
-    //             .sum(),
-    //             .carry(),
-    //         );
-    //     end
-    // endgenerate
+    wire [63:0] sum [8:0], carry[8:0];
+    AddCS64 adderCS_0(
+        .op1(PPs[0]),
+        .op2(PPs[1]),
+        .op3(PPs[2]),
+        .sum(sum[0]),
+        .carry(carry[0])
+    ), adderCS_1(
+        .op1(sum[0]),
+        .op2(carry[0]),
+        .op3(PPs[3]),
+        .sum(sum[1]),
+        .carry(carry[1])
+    ), adderCS_2(
+        .op1(sum[1]),
+        .op2(carry[1]),
+        .op3(PPs[4]),
+        .sum(sum[2]),
+        .carry(carry[2])
+    ), adderCS_3(
+        .op1(sum[2]),
+        .op2(carry[2]),
+        .op3(PPs[5]),
+        .sum(sum[3]),
+        .carry(carry[3])
+    ), adderCS_4(
+        .op1(sum[3]),
+        .op2(carry[3]),
+        .op3(PPs[6]),
+        .sum(sum[4]),
+        .carry(carry[4])
+    ), adderCS_5(
+        .op1(sum[4]),
+        .op2(carry[4]),
+        .op3(PPs[7]),
+        .sum(sum[5]),
+        .carry(carry[5])
+    );
+
+    AddLC64 adderLC(
+        .op1(sum[5]),
+        .op2(carry[5]),
+        .sum(res)
+    );
 
 endmodule
 

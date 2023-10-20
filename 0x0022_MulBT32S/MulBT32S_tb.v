@@ -12,7 +12,7 @@ module MulBT32S_tb(
     end
 
     initial begin
-        #5 op1 = 32'h00000009; op2 = 32'h00000007;
+        #5 op1 = 32'd15; op2 = 32'd14940;
         #5 ;
     end
 
