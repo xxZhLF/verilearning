@@ -1,3 +1,6 @@
+`ifndef MUL_32BIT_UNSIGNED_V_SEQUENTIAL
+`define MUL_32BIT_UNSIGNED_V_SEQUENTIAL
+
 `include "../IPs_shared/Shift.v"
 `include "../IPs_shared/Add64.v"
 `include "../IPs_shared/Counter.v"
@@ -50,3 +53,5 @@ module Mul32U (
     assign res = sum;
 
 endmodule
+
+`endif 
