@@ -1,5 +1,5 @@
-`ifndef ADDER_HF_1BIT_V
-`define ADDER_HF_1BIT_V
+`ifndef ADDER_HALF_1BIT_V
+`define ADDER_HALF_1BIT_V
 
 module AdderHF1bit (
      input wire in1,
