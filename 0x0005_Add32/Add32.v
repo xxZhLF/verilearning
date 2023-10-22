@@ -1,3 +1,6 @@
+`ifndef ADD_32BIT_V
+`define ADD_32BIT_V
+
 module Add32(
     input wire  [31:0] op1,
     input wire  [31:0] op2,
@@ -16,3 +19,5 @@ module Add32(
     );
 
 endmodule
+
+`endif 
