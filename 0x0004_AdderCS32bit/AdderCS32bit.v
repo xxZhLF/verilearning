@@ -1,3 +1,6 @@
+`ifndef ADDER_CARRY_SAVE_32BIT_V
+`define ADDER_CARRY_SAVE_32BIT_V
+
 module AdderCS32bit_terminator(
     input  wire [31:0] op1,
     input  wire [31:0] op2,
@@ -72,3 +75,5 @@ module AdderCS1bit(
     );
 
 endmodule
+
+`endif 
