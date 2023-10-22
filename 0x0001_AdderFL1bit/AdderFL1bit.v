@@ -1,3 +1,6 @@
+`ifndef ADDER_FULL_1BIT_V
+`define ADDER_FULL_1BIT_V
+
 module AdderFL1bit(
     input  wire op1,
     input  wire op2,
@@ -10,3 +13,5 @@ module AdderFL1bit(
     assign cout = (op1 & op2) | ((op1 ^ op2) & cin);
 
 endmodule
+
+`endif 
