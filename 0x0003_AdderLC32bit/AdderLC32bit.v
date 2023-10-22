@@ -1,3 +1,6 @@
+`ifndef ADDER_LOOKAHEAD_32BIT_V
+`define ADDER_LOOKAHEAD_32BIT_V
+
 // `define ADD_DEBUG_ON
 
 module AdderLC32bit (
@@ -783,3 +786,5 @@ module ModG(
     assign G = op1 & op2;
 
 endmodule
+
+`endif 
