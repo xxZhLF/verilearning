@@ -1,3 +1,6 @@
+`ifndef MUL_BOOTH_32BIT_SIGNED_V
+`define MUL_BOOTH_32BIT_SIGNED_V
+
 `include "../IPs_shared/Add64.v"
 `include "../IPs_shared/Shift.v"
 `include "../IPs_shared/TC_converter.v"
@@ -156,3 +159,5 @@ module BoothEncoding (
     assign pp = ~sb ? {sb, shout[62:0]} : {sb, t2cout[62:0]};
     
 endmodule
+
+`endif 
