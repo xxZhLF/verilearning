@@ -1,3 +1,6 @@
+`ifndef SUB_32BIT_V
+`define SUB_32BIT_V
+
 // `define SUB_DEBUG_ON
 
 `include "../IPs_shared/TC_converter.v"
@@ -37,3 +40,5 @@ module Sub32(
 `endif
 
 endmodule
+
+`endif 
