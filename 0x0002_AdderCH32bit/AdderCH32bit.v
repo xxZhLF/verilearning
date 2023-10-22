@@ -1,3 +1,6 @@
+`ifndef ADDER_CHAIN_32BIT_V
+`define ADDER_CHAIN_32BIT_V
+
 module AdderCH32bit (
     input  wire [31:0] op1,
     input  wire [31:0] op2,
@@ -24,3 +27,5 @@ module AdderCH32bit (
     endgenerate
     
 endmodule
+
+`endif 
