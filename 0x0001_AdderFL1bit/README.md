@@ -16,3 +16,5 @@
 sum = op1 **XOR** op2 **XOR** cin
 
 cout = (op1 **AND** op2) **OR** ((op1 **XOR** op2) **AND** cin)
+
+有序进位计算的深度为2，因此全加器整**体深度为2**。
