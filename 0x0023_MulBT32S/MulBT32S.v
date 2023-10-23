@@ -5,6 +5,8 @@
 `include "../IPs_shared/Shift.v"
 `include "../IPs_shared/TC_converter.v"
 
+`define WALLACE
+
 module MulBT32S(
     input  wire [31:0] op1,
     input  wire [31:0] op2,
@@ -41,6 +43,8 @@ module MulBT32S(
             end
         end
     endgenerate
+
+`ifndef WALLACE
 
     wire [63:0] sum [8:0], carry[8:0];
     AddCS64 adderCS_0(
@@ -86,6 +90,64 @@ module MulBT32S(
         .op2(sum[5]),
         .sum(res)
     );
+
+`else
+
+    wire [63:0] sumL1[1:0], carryL1[1:0];
+    AddCS64 adderCS_L0_0(
+        .op1(PPs[0]),
+        .op2(PPs[1]),
+        .op3(PPs[2]),
+        .sum(sumL1[0]),
+        .carry(carryL1[0])
+    ), adderCS_L0_1(
+        .op1(PPs[3]),
+        .op2(PPs[4]),
+        .op3(PPs[5]),
+        .sum(sumL1[1]),
+        .carry(carryL1[1])
+    );
+
+    wire [63:0] sumL2[1:0], carryL2[1:0];
+    AddCS64 adderCS_L2_0(
+        .op1(sumL1[0]),
+        .op2({carryL1[0][62:0], 1'b0}),
+        .op3(sumL1[1]),
+        .sum(sumL2[0]),
+        .carry(carryL2[0])
+    ), adderCS_L2_1(
+        .op1({carryL1[1][62:0], 1'b0}),
+        .op2(PPs[6]),
+        .op3(PPs[7]),
+        .sum(sumL2[1]),
+        .carry(carryL2[1])
+    );
+
+    wire [63:0] sumL3, carryL3;
+    AddCS64 adderCS_L3_0(
+        .op1(sumL2[0]),
+        .op2({carryL2[0][62:0], 1'b0}),
+        .op3(sumL2[1]),
+        .sum(sumL3),
+        .carry(carryL3)
+    );
+
+    wire [63:0] sumL4, carryL4;
+    AddCS64 adderCS_L4_0(
+        .op1(sumL3),
+        .op2({carryL3   [62:0], 1'b0}),
+        .op3({carryL2[1][62:0], 1'b0}),
+        .sum(sumL4),
+        .carry(carryL4)
+    );
+
+    AddLC64 adderLC(
+        .op1(sumL4),
+        .op2({carryL4[62:0], 1'b0}),
+        .sum(res)
+    );
+
+`endif 
 
 endmodule
 
