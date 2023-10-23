@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Sat Oct 21 03:56:29 2023
+[*] Mon Oct 23 08:28:36 2023
 [*]
-[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0022_MulBT32S/MulBT32S.vcd"
-[dumpfile_mtime] "Sat Oct 21 03:55:40 2023"
-[dumpfile_size] 672771
-[savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0022_MulBT32S/MulBT32S.gtkw"
-[timestart] 4
+[dumpfile] "/home/xxzhou/verilearning/0x0023_MulBT32S/MulBT32S.vcd"
+[dumpfile_mtime] "Mon Oct 23 08:25:42 2023"
+[dumpfile_size] 680852
+[savefile] "/home/xxzhou/verilearning/0x0023_MulBT32S/MulBT32S.gtkw"
+[timestart] 0
 [size] 1428 819
 [pos] -1 -1
-*-0.745736 7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-2.745736 7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.MulBT32S_tb.
 [treeopen] TOP.MulBT32S_tb.multiplier.
@@ -33,7 +33,7 @@
 [signals_width] 126
 [sst_expanded] 1
 [sst_vpaned_height] 229
-@24
+@421
 [color] 1
 TOP.MulBT32S_tb.op1[31:0]
 [color] 1
