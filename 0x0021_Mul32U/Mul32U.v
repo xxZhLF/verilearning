@@ -1,56 +1,79 @@
-`ifndef MUL_32BIT_UNSIGNED_V_SEQUENTIAL
-`define MUL_32BIT_UNSIGNED_V_SEQUENTIAL
+`ifndef MUL_32BIT_UNSIGNED_V_COMBINATORIAL
+`define MUL_32BIT_UNSIGNED_V_COMBINATORIAL
 
 `include "../IPs_shared/Shift.v"
 `include "../IPs_shared/Add64.v"
-`include "../IPs_shared/Counter.v"
-`include "../IPs_shared/Multiplexer.v"
 
 module Mul32U (
-    input  wire        rst,
-    input  wire        clk,
     input  wire [31:0] op1,
     input  wire [31:0] op2,
     output wire [63:0] res
 );
 
-    wire [31:0] cnt;
-    Counter32 counter(
-        .rst(rst),
-        .clk(clk),
-        .cnt(cnt)
-    );
+    wire [63:0] op1EX;
+    assign op1EX = {32'h00000000, op1};
 
-    wire flg;
-    MUX32to1 mux(
-        .idx(cnt[4:0]),
-        .set(op2),
-        .ele(flg)
-    );
-
-    wire [63:0] itm;
-    ShiftL64 shift(
-        .n(flg ^ 1'b0 ? cnt[7:0] : 8'h40),
-        .in({32'h00000000, op1}),
-        .out(itm)
-    );
-
-    reg [63:0] sum, tmp;
-    AddLC64 adder(
-        .op1(itm),
-        .op2(sum),
-        .sum(tmp)
-    );
-
-    always @(negedge rst or posedge clk) begin
-        if (rst) begin
-            sum <= 64'h0000000000000000; 
-        end else begin
-            sum <= tmp;
+    wire [63:0] vecL1 [31:0];
+    generate
+        for (genvar i = 0; i < 32; ++i) begin
+            // assign vecL1[i] = op2[i] ^ 1'b0 ? op1EX << i : 64'h0000000000000000;
+            ShiftL64 shift(
+                .n(op2[i] ^ 1'b0 ? i : 8'h40),
+                .in(op1EX),
+                .out(vecL1[i])
+            );
         end
-    end
+    endgenerate
 
-    assign res = sum;
+    wire [63:0] vecL2 [15:0];
+    generate
+        for (genvar i = 0; i < 16; ++i) begin
+            AddLC64 adder(
+                .op1(vecL1[i*2+0]),
+                .op2(vecL1[i*2+1]),
+                .sum(vecL2[i])
+            );
+        end
+    endgenerate
+
+    wire [63:0] vecL3 [7:0];
+    generate
+        for (genvar i = 0; i < 8; ++i) begin
+            AddLC64 adder(
+                .op1(vecL2[i*2+0]),
+                .op2(vecL2[i*2+1]),
+                .sum(vecL3[i])
+            );
+        end
+    endgenerate
+
+    wire [63:0] vecL4 [3:0];
+    generate
+        for (genvar i = 0; i < 4; ++i) begin
+            AddLC64 adder(
+                .op1(vecL3[i*2+0]),
+                .op2(vecL3[i*2+1]),
+                .sum(vecL4[i])
+            );
+        end
+    endgenerate
+
+    wire [63:0] vecL5 [2:0];
+    generate
+        for (genvar i = 0; i < 2; ++i) begin
+            AddLC64 adder(
+                .op1(vecL4[i*2+0]),
+                .op2(vecL4[i*2+1]),
+                .sum(vecL5[i])
+            );
+        end
+    endgenerate
+
+    AddLC64 adder(
+        .op1(vecL5[0]),
+        .op2(vecL5[1]),
+        .sum(res)
+    );
 
 endmodule
 
