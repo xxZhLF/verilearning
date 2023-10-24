@@ -5,7 +5,7 @@ module AddLC64(
 );
 
     reg  ZERO = 1'b0;
-    reg  NULL;
+    reg  USELESS;
     wire cinner;
 
     AdderLC32bit adderL(
@@ -20,7 +20,7 @@ module AddLC64(
         .op2(op2[63:32]),
         .cin(cinner),
         .sum(sum[63:32]),
-        .cout(NULL)
+        .cout(USELESS)
     );
 
 endmodule
