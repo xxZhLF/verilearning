@@ -21,8 +21,7 @@ module Sub32(
         .T(op2T)
     );
 
-    reg         ZERO, USELESS;
-    wire [31:0] diffC;
+    reg ZERO, USELESS;
     always ZERO = 1'b0;
     AdderLC32bit adder(  
         .op1(op1), 
