@@ -17,7 +17,7 @@ module Counter32(
 
     always @(negedge rst or posedge clk) begin
         if (rst) begin
-            __cnt <= 32'h00000000;
+            __cnt <= 32'hFFFFFFFF;
         end else begin
             __cnt <= ppcnt;
         end
