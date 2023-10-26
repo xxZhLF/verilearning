@@ -1,23 +1,26 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Thu Oct 26 09:05:23 2023
+[*] Thu Oct 26 15:10:40 2023
 [*]
-[dumpfile] "/home/xxzhou/verilearning/0x0030_Div32U/Div32U.vcd"
-[dumpfile_mtime] "Thu Oct 26 09:04:04 2023"
-[dumpfile_size] 213511
-[savefile] "/home/xxzhou/verilearning/0x0030_Div32U/Div32U.gtkw"
+[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0030_Div32U/Div32U.vcd"
+[dumpfile_mtime] "Thu Oct 26 15:04:39 2023"
+[dumpfile_size] 219439
+[savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0030_Div32U/Div32U.gtkw"
 [timestart] 0
-[size] 1908 987
-[pos] -500 16
-*-6.678622 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[size] 1428 819
+[pos] -1 -1
+*-3.678622 9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
+[treeopen] TOP.Div32U_tb.
+[treeopen] TOP.Div32U_tb.divider.
 [sst_width] 214
-[signals_width] 118
+[signals_width] 142
 [sst_expanded] 1
-[sst_vpaned_height] 288
+[sst_vpaned_height] 229
 @28
-TOP.Div32U_tb.clk
+TOP.Div32U_tb.off
 TOP.Div32U_tb.rst
+TOP.Div32U_tb.clk
 @22
 [color] 1
 TOP.Div32U_tb.dived[31:0]
@@ -27,5 +30,165 @@ TOP.Div32U_tb.divor[31:0]
 TOP.Div32U_tb.quoti[31:0]
 [color] 5
 TOP.Div32U_tb.remai[31:0]
+@200
+-
+@22
+TOP.Div32U_tb.divider.cnt[31:0]
+@200
+-
+@22
+TOP.Div32U_tb.divider.remaiREG[63:0]
+TOP.Div32U_tb.divider.divorREG[63:0]
+@200
+-
+@c00022
+TOP.Div32U_tb.divider.cmp.op1[63:0]
+@28
+(0)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(1)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(2)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(3)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(4)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(5)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(6)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(7)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(8)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(9)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(10)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(11)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(12)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(13)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(14)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(15)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(16)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(17)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(18)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(19)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(20)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(21)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(22)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(23)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(24)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(25)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(26)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(27)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(28)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(29)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(30)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(31)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(32)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(33)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(34)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(35)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(36)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(37)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(38)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(39)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(40)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(41)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(42)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(43)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(44)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(45)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(46)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(47)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(48)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(49)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(50)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(51)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(52)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(53)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(54)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(55)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(56)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(57)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(58)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(59)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(60)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(61)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(62)TOP.Div32U_tb.divider.cmp.op1[63:0]
+(63)TOP.Div32U_tb.divider.cmp.op1[63:0]
+@1401200
+-group_end
+@c00022
+TOP.Div32U_tb.divider.cmp.op2[63:0]
+@28
+(0)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(1)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(2)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(3)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(4)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(5)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(6)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(7)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(8)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(9)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(10)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(11)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(12)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(13)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(14)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(15)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(16)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(17)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(18)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(19)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(20)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(21)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(22)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(23)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(24)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(25)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(26)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(27)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(28)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(29)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(30)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(31)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(32)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(33)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(34)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(35)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(36)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(37)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(38)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(39)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(40)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(41)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(42)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(43)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(44)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(45)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(46)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(47)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(48)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(49)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(50)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(51)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(52)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(53)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(54)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(55)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(56)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(57)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(58)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(59)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(60)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(61)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(62)TOP.Div32U_tb.divider.cmp.op2[63:0]
+(63)TOP.Div32U_tb.divider.cmp.op2[63:0]
+@1401200
+-group_end
+@28
+TOP.Div32U_tb.divider.cmp.res[1:0]
+@200
+-
+@28
+TOP.Div32U_tb.divider.counter.rst
+TOP.Div32U_tb.divider.counter.clk
+@22
+TOP.Div32U_tb.divider.counter.cnt[31:0]
+@23
+TOP.Div32U_tb.divider.counter.ppcnt[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
