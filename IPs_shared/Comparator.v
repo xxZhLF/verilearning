@@ -1,14 +1,14 @@
 `ifndef IPs_SHARED_COMPARATOR_V
 `define IPs_SHARED_COMPARATOR_V
 
-`define OP1_GT_OP2 1'b01
-`define OP1_LT_OP2 1'b10
-`define OP1_EQ_OP2 1'b11
+`define OP1_GT_OP2 2'b01
+`define OP1_LT_OP2 2'b10
+`define OP1_EQ_OP2 2'b11
 
 module Cmp64U (
-    input  wire [63:0] op1;
-    input  wire [63:0] op2;
-    output wire [ 1:0] res;
+    input  wire [63:0] op1,
+    input  wire [63:0] op2,
+    output wire [ 1:0] res
 );
 
     assign res = op1[63] ^ op2[63] ? (op1[63] ^ 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
