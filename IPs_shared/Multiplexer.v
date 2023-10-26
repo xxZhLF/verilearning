@@ -1,3 +1,6 @@
+`ifndef IPs_SHARED_MULTIPLEXER_V
+`define IPs_SHARED_MULTIPLEXER_V
+
 module MUX32to1 (
     input  wire [ 4:0] idx,
     input  wire [31:0] set,
@@ -37,3 +40,5 @@ module MUX32to1 (
                  ~|{idx ^ 5'h1E} ? set[5'h1E] :
                  ~|{idx ^ 5'h1F} ? set[5'h1F] : 1'b0;
 endmodule
+
+`endif 

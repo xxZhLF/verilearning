@@ -1,3 +1,6 @@
+`ifndef IPs_SHARED_SHIFT_V
+`define IPs_SHARED_SHIFT_V
+
 module ShiftL64 (
     input  wire [ 7:0] n,
     input  wire [63:0] in,
@@ -70,3 +73,5 @@ module ShiftL64 (
                  ~|{n ^ 8'h3F} ? {in[   0], 63'b0} : 64'h0000000000000000;
 
 endmodule
+
+`endif 

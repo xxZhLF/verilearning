@@ -1,3 +1,6 @@
+`ifndef IPs_SHARED_TC_CONVERTER_V
+`define IPs_SHARED_TC_CONVERTER_V
+
 module TCC32(
     input  wire [31:0] T,
     output wire [31:0] C
@@ -83,3 +86,5 @@ module CTC64(
     assign T = {sign, sign ? ~datO[62:0] : datI[62:0]};
 
 endmodule
+
+`endif 

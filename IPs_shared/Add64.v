@@ -1,3 +1,6 @@
+`ifndef IPs_SHARED_ADD64_V
+`define IPs_SHARED_ADD64_V
+
 module AddLC64(
     input  wire [63:0] op1,
     input  wire [63:0] op2,
@@ -49,3 +52,5 @@ module AddCS64(
     );
 
 endmodule
+
+`endif

@@ -1,3 +1,6 @@
+`ifndef IPs_SHARED_SUB64_V
+`define IPs_SHARED_SUB64_V
+
 module Sub64(
     input  wire [63:0] op1,
     input  wire [63:0] op2,
@@ -25,3 +28,5 @@ module Sub64(
     );
 
 endmodule
+
+`endif 

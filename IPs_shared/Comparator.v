@@ -1,3 +1,6 @@
+`ifndef IPs_SHARED_COMPARATOR_V
+`define IPs_SHARED_COMPARATOR_V
+
 `define OP1_GT_OP2 1'b01
 `define OP1_LT_OP2 1'b10
 `define OP1_EQ_OP2 1'b11
@@ -74,3 +77,5 @@ module Cmp64U (
                  op1[ 0] ^ op2[ 0] ? (op1[ 0] ^ 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) : `OP1_EQ_OP2;
 
 endmodule
+
+`endif

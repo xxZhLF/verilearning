@@ -1,3 +1,6 @@
+`ifndef IPs_SHARED_COUNTER_V
+`define IPs_SHARED_COUNTER_V
+
 module Counter32(
     input  wire        rst,
     input  wire        clk,
@@ -23,3 +26,5 @@ module Counter32(
     assign cnt = __cnt; 
 
 endmodule
+
+`endif 
