@@ -3,6 +3,7 @@
 
 `include "../IPs_shared/Shift.v"
 `include "../IPs_shared/Add64.v"
+`include "WallaceTree.v"
 
 `define NL0 32
 `define NL1 10
@@ -33,6 +34,14 @@ module MulWL32U (
             );
         end
     endgenerate
+
+`ifdef WALLACE_TREE_4_MULTIPLIER_V
+
+    `WallaceTree32(PPs, res);
+
+`else
+
+    xxZhou: Here will raise a compile error, with out Macro use.
 
     wire [63:0] vecL1I [3*`NL1-1:0];
     wire [63:0] vecL1O [2*`NL1-1:0];
@@ -227,6 +236,8 @@ module MulWL32U (
         .op2(vecL8O[1]),
         .sum(res)
     );
+
+`endif 
 
 endmodule
 
