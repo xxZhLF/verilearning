@@ -1,7 +1,7 @@
 `ifndef IPs_SHARED_SHIFT_V
 `define IPs_SHARED_SHIFT_V
 
-`include "MacroFunc.v"
+`include "./MacroFunc.v"
 
 module ShiftL64 (
     input  wire [ 7:0] n,
