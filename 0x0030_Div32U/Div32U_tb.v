@@ -9,7 +9,7 @@ module Div32U_tb(
     reg  [31:0] quoti, remai;
 
     initial begin
-           off = 1'b1; clk = 1'b0;
+           off = 1'b1; rst = 1'b1; clk = 1'b0;
         #5 off = 1'b0;
     end
 
@@ -30,10 +30,20 @@ module Div32U_tb(
                 32'h00000020: begin
                     rst <= 1'b1; 
                     dived <= 32'h00000004; 
-                    divor <= 32'h80000007;
+                    divor <= 32'h00000007;
                 end
-                32'h00000021: $finish;
-                default:      rst <= 1'b0;
+                32'h00000040: begin
+                    rst <= 1'b1; 
+                    dived <= 32'h00000010; 
+                    divor <= 32'h00000004;
+                end
+                32'h00000060: begin
+                    rst <= 1'b1;
+                    dived <= 32'h00000000; 
+                    divor <= 32'h00000000;
+                    #10 $finish;
+                end
+                default: rst <= 1'b0;
             endcase
             cnt <= cnt + 1;
         end
