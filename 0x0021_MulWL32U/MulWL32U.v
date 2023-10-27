@@ -41,7 +41,7 @@ module MulWL32U (
 
 `else
 
-    xxZhou: Here will raise a compile error, with out Macro use.
+    xxZhou: Here will raise a compile error, without Macro usage.
 
     wire [63:0] vecL1I [3*`NL1-1:0];
     wire [63:0] vecL1O [2*`NL1-1:0];
