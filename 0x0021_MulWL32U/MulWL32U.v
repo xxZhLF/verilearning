@@ -5,6 +5,8 @@
 `include "../IPs_shared/Add64.v"
 `include "WallaceTree.v"
 
+`ifdef WALLACE_TREE_4_MULTIPLIER_V
+`else
 `define NL0 32
 `define NL1 10
 `define NL2 7
@@ -14,6 +16,7 @@
 `define NL6 1
 `define NL7 1
 `define NL8 1
+`endif 
 
 module MulWL32U (
     input  wire [31:0] op1,

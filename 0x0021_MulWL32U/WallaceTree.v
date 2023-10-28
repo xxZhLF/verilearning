@@ -1,6 +1,16 @@
 `ifndef WALLACE_TREE_4_MULTIPLIER_V
 `define WALLACE_TREE_4_MULTIPLIER_V
 
+`define NL0 32
+`define NL1 10
+`define NL2 7
+`define NL3 5
+`define NL4 3
+`define NL5 2
+`define NL6 1
+`define NL7 1
+`define NL8 1
+
 `define WallaceTree32(array, sum_of_array)          \
                                                     \
 wire [63:0] vecL1I [3*`NL1-1:0];                    \
