@@ -4,6 +4,7 @@
 `include "../IPs_shared/Counter.v"
 `include "../IPs_shared/Comparator.v"
 `include "../IPs_shared/Sub64.v"
+`include "../IPs_shared/Shift.v"
 
 module Div32U (
     input  wire        rst,
@@ -48,7 +49,7 @@ module Div32U (
             remaiREG <= remaiEXT;
             divorREG <= {1'b0, divorEXT[63:1]};
         end else begin
-            divorREG <= {1'b0, divorREG[63:1]};
+            divorREG <= {1'b0, divorREG[63:1]};;
             remaiREG <= `isEQ(cmp_res, `OP1_GT_OP2) ? remaiREG : sub_res;
         end
     end
