@@ -76,4 +76,77 @@ module ShiftL64 (
 
 endmodule
 
+module ShiftR64 (
+    input  wire [ 7:0] n,
+    input  wire [63:0] in,
+    output wire [63:0] out
+);
+
+    assign out = `isEQ(n, 8'h00) ? in : 
+                 `isEQ(n, 8'h01) ? { 1'b0, in[62:0]} :
+                 `isEQ(n, 8'h02) ? { 2'b0, in[61:0]} : 
+                 `isEQ(n, 8'h03) ? { 3'b0, in[60:0]} : 
+                 `isEQ(n, 8'h04) ? { 4'b0, in[59:0]} : 
+                 `isEQ(n, 8'h05) ? { 5'b0, in[58:0]} : 
+                 `isEQ(n, 8'h06) ? { 6'b0, in[57:0]} : 
+                 `isEQ(n, 8'h07) ? { 7'b0, in[56:0]} : 
+                 `isEQ(n, 8'h08) ? { 8'b0, in[55:0]} : 
+                 `isEQ(n, 8'h09) ? { 9'b0, in[54:0]} : 
+                 `isEQ(n, 8'h0A) ? {10'b0, in[53:0]} : 
+                 `isEQ(n, 8'h0B) ? {11'b0, in[52:0]} : 
+                 `isEQ(n, 8'h0C) ? {12'b0, in[51:0]} : 
+                 `isEQ(n, 8'h0D) ? {13'b0, in[50:0]} : 
+                 `isEQ(n, 8'h0E) ? {14'b0, in[49:0]} : 
+                 `isEQ(n, 8'h0F) ? {15'b0, in[48:0]} : 
+                 `isEQ(n, 8'h10) ? {16'b0, in[47:0]} : 
+                 `isEQ(n, 8'h11) ? {17'b0, in[46:0]} : 
+                 `isEQ(n, 8'h12) ? {18'b0, in[45:0]} : 
+                 `isEQ(n, 8'h13) ? {19'b0, in[44:0]} : 
+                 `isEQ(n, 8'h14) ? {20'b0, in[43:0]} : 
+                 `isEQ(n, 8'h15) ? {21'b0, in[42:0]} : 
+                 `isEQ(n, 8'h16) ? {22'b0, in[41:0]} : 
+                 `isEQ(n, 8'h17) ? {23'b0, in[40:0]} : 
+                 `isEQ(n, 8'h18) ? {24'b0, in[39:0]} : 
+                 `isEQ(n, 8'h19) ? {25'b0, in[38:0]} : 
+                 `isEQ(n, 8'h1A) ? {26'b0, in[37:0]} : 
+                 `isEQ(n, 8'h1B) ? {27'b0, in[36:0]} : 
+                 `isEQ(n, 8'h1C) ? {28'b0, in[35:0]} : 
+                 `isEQ(n, 8'h1D) ? {29'b0, in[34:0]} : 
+                 `isEQ(n, 8'h1E) ? {30'b0, in[33:0]} : 
+                 `isEQ(n, 8'h1F) ? {31'b0, in[32:0]} : 
+                 `isEQ(n, 8'h20) ? {32'b0, in[31:0]} : 
+                 `isEQ(n, 8'h21) ? {33'b0, in[30:0]} : 
+                 `isEQ(n, 8'h22) ? {34'b0, in[29:0]} : 
+                 `isEQ(n, 8'h23) ? {35'b0, in[28:0]} : 
+                 `isEQ(n, 8'h24) ? {36'b0, in[27:0]} : 
+                 `isEQ(n, 8'h25) ? {37'b0, in[26:0]} : 
+                 `isEQ(n, 8'h26) ? {38'b0, in[25:0]} : 
+                 `isEQ(n, 8'h27) ? {39'b0, in[24:0]} : 
+                 `isEQ(n, 8'h28) ? {40'b0, in[23:0]} : 
+                 `isEQ(n, 8'h29) ? {41'b0, in[22:0]} : 
+                 `isEQ(n, 8'h2A) ? {42'b0, in[21:0]} : 
+                 `isEQ(n, 8'h2B) ? {43'b0, in[20:0]} : 
+                 `isEQ(n, 8'h2C) ? {44'b0, in[19:0]} : 
+                 `isEQ(n, 8'h2D) ? {45'b0, in[18:0]} : 
+                 `isEQ(n, 8'h2E) ? {46'b0, in[17:0]} : 
+                 `isEQ(n, 8'h2F) ? {47'b0, in[16:0]} : 
+                 `isEQ(n, 8'h30) ? {48'b0, in[15:0]} : 
+                 `isEQ(n, 8'h31) ? {49'b0, in[14:0]} : 
+                 `isEQ(n, 8'h32) ? {50'b0, in[13:0]} : 
+                 `isEQ(n, 8'h33) ? {51'b0, in[12:0]} : 
+                 `isEQ(n, 8'h34) ? {52'b0, in[11:0]} : 
+                 `isEQ(n, 8'h35) ? {53'b0, in[10:0]} : 
+                 `isEQ(n, 8'h36) ? {54'b0, in[ 9:0]} : 
+                 `isEQ(n, 8'h37) ? {55'b0, in[ 8:0]} : 
+                 `isEQ(n, 8'h38) ? {56'b0, in[ 7:0]} : 
+                 `isEQ(n, 8'h39) ? {57'b0, in[ 6:0]} : 
+                 `isEQ(n, 8'h3A) ? {58'b0, in[ 5:0]} : 
+                 `isEQ(n, 8'h3B) ? {59'b0, in[ 4:0]} : 
+                 `isEQ(n, 8'h3C) ? {60'b0, in[ 3:0]} : 
+                 `isEQ(n, 8'h3D) ? {61'b0, in[ 2:0]} : 
+                 `isEQ(n, 8'h3E) ? {62'b0, in[ 1:0]} : 
+                 `isEQ(n, 8'h3F) ? {63'b0, in[   0]} : 64'h0000000000000000;
+
+endmodule
+
 `endif 
