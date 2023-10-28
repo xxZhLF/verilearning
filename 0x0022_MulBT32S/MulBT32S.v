@@ -206,7 +206,7 @@ module BoothEncoding (
                       (((~|{grp ^ 3'b101}) | (~|{grp ^ 3'b110})) & (~|{gid ^ 3'd7})) ? {1'b1, 8'h0E} : /* -1 * (op1 << 2i) = op1 <<  2i*/ {1'bZ, 8'hZZ};
 
     wire [63:0] shout;
-    ShiftL64 shift(
+    ShiftL64U shift(
         .n(nb),
         .in(op1EX),
         .out(shout)

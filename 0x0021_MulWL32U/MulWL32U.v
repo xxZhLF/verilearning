@@ -30,7 +30,7 @@ module MulWL32U (
     wire [63:0] PPs [`NL0-1:0];
     generate
         for (genvar i = 0; i < `NL0; ++i) begin
-            ShiftL64 shift(
+            ShiftL64U shift(
                 .n(op2[i] ^ 1'b0 ? i : 8'h40),
                 .in(op1EX),
                 .out(PPs[i])

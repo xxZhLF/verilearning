@@ -9,6 +9,7 @@ FLGS += --binary
 FLGS += --trace
 FLGS += -I../0x0001_AdderFL1bit
 FLGS += -I../0x0003_AdderLC32bit
+FLGS += -I../IPs_shared
 
 SRCS := $(Testbehch).v
 SRCS += $(TopModule).v
