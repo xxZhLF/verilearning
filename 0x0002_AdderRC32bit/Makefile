@@ -1,5 +1,5 @@
-TopModule := AdderCH32bit
-Testbehch := AdderCH32bit_tb
+TopModule := AdderRC32bit
+Testbehch := AdderRC32bit_tb
 
 OPutTo := obj_dir/
 

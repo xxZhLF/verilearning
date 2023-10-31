@@ -1,4 +1,4 @@
-32-Bit 链式加法器（Chain-Adder）
+32-Bit 脉动进位加法器（Ripple-Carry Adder）
 
 逻辑区分：组合逻辑
 

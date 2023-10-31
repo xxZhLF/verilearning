@@ -1,6 +1,6 @@
 `timescale 1ps/1ps    
 
-module AdderCH32bit_tb(
+module AdderRC32bit_tb(
     // None
 );
 
@@ -25,7 +25,7 @@ module AdderCH32bit_tb(
         #5 ;
     end
 
-    AdderCH32bit adder(
+    AdderRC32bit adder(
         .op1(op1),
         .op2(op2),
         .cin(cin),
@@ -34,7 +34,7 @@ module AdderCH32bit_tb(
     );
 
     initial begin
-        $dumpfile("AdderCH32bit.vcd");
+        $dumpfile("AdderRC32bit.vcd");
         $dumpvars(0, op1);
         $dumpvars(1, op2);
         $dumpvars(2, cin);

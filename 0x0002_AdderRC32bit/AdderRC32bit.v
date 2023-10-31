@@ -1,7 +1,7 @@
-`ifndef ADDER_CHAIN_32BIT_V
-`define ADDER_CHAIN_32BIT_V
+`ifndef ADDER_RIPPLE_CARRY_32BIT_V
+`define ADDER_RIPPLE_CARRY_32BIT_V
 
-module AdderCH32bit (
+module AdderRC32bit (
     input  wire [31:0] op1,
     input  wire [31:0] op2,
     input  wire        cin,
