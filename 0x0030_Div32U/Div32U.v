@@ -4,7 +4,6 @@
 `include "../IPs_shared/Counter.v"
 `include "../IPs_shared/Comparator.v"
 `include "../IPs_shared/Sub64.v"
-`include "../IPs_shared/Shift.v"
 
 module Div32U (
     input  wire        rst,
