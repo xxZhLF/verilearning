@@ -1,6 +1,8 @@
 `ifndef IPs_SHARED_TC_CONVERTER_V
 `define IPs_SHARED_TC_CONVERTER_V
 
+`include "MacroFunc.v"
+
 module TCC32(
     input  wire [31:0] T,
     output wire [31:0] C
@@ -61,7 +63,7 @@ module TCC64(
         .sum(datO)
     );  /* ~datI + 1 */
 
-    assign C = {sign, sign ? datO[62:0] : datI[62:0]};
+    assign C = `isZERO(datI) ? 64'h0 : {sign, sign ? datO[62:0] : datI[62:0]};
 
 endmodule
 
@@ -83,7 +85,7 @@ module CTC64(
     );  /* ~(datI + -1) 
            ~ at next line */
 
-    assign T = {sign, sign ? ~datO[62:0] : datI[62:0]};
+    assign T = `isZERO(datI) ? 64'h0 : {sign, sign ? ~datO[62:0] : datI[62:0]};
 
 endmodule
 
