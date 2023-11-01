@@ -26,7 +26,7 @@ module Sub32(
     AdderLC32bit adder(  
         .op1(op1), 
         .op2(op2[31] ? {1'b0, op2T[30:0]} : op2C), 
-        .cin(),
+        .cin(ZERO),
         .sum(diff),
         .cout(USELESS)
     );
