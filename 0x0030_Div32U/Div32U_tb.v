@@ -6,7 +6,7 @@ module Div32U_tb(
     reg         off, rst, clk;
     reg  [31:0] cnt;
     reg  [31:0] dived, divor;
-    reg  [31:0] quoti, remai;
+    wire [31:0] quoti, remai;
 
     initial begin
            off = 1'b1; rst = 1'b1; clk = 1'b0;
