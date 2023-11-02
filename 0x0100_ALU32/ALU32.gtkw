@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Wed Nov  1 14:47:18 2023
+[*] Thu Nov  2 02:56:46 2023
 [*]
-[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0100_ALU32/ALU32.vcd"
-[dumpfile_mtime] "Wed Nov  1 14:46:49 2023"
-[dumpfile_size] 23496
-[savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0100_ALU32/ALU32.gtkw"
+[dumpfile] "/home/xxzhou/verilearning/0x0100_ALU32/ALU32.vcd"
+[dumpfile_mtime] "Thu Nov  2 02:56:07 2023"
+[dumpfile_size] 23803
+[savefile] "/home/xxzhou/verilearning/0x0100_ALU32/ALU32.gtkw"
 [timestart] 0
-[size] 1428 819
+[size] 1908 987
 [pos] -1 -1
-*-2.286304 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-2.286304 9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [sst_width] 214
 [signals_width] 102
 [sst_expanded] 1
-[sst_vpaned_height] 229
+[sst_vpaned_height] 288
 @22
 [color] 1
 TOP.ALU32_tb.op1[31:0]
@@ -22,8 +22,18 @@ TOP.ALU32_tb.op1[31:0]
 TOP.ALU32_tb.op2[31:0]
 @28
 TOP.ALU32_tb.ctl[1:0]
-@23
+@22
 [color] 5
 TOP.ALU32_tb.res[31:0]
+@c00029
+[color] 5
+TOP.ALU32_tb.flgs[3:0]
+@29
+(0)TOP.ALU32_tb.flgs[3:0]
+(1)TOP.ALU32_tb.flgs[3:0]
+(2)TOP.ALU32_tb.flgs[3:0]
+(3)TOP.ALU32_tb.flgs[3:0]
+@1401201
+-group_end
 [pattern_trace] 1
 [pattern_trace] 0
