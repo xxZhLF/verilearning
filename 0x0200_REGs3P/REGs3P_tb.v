@@ -36,7 +36,7 @@ module REGs3P_tb(
     end
 
     always @(negedge clk) begin
-        if (_cnt < 8'h40) begin
+        if (_cnt % 8'h02 == 8'b1) begin
             data_i0 = 32'b1 << {_cnt / 8'h02}[4:0];
         end
     end
