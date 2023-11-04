@@ -16,3 +16,8 @@ SRCS += AdderFL1bit.v
 SRCS += AdderLC32bit.v
 
 include ../COMMON.mk
+
+.PHONY: c_float
+c_float:
+	gcc -o float float.c
+	./float
