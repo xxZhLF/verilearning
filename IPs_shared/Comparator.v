@@ -8,8 +8,8 @@
 `define OP1_EQ_OP2 2'b11
 
 module Cmp32U (
-    input  wire [63:0] op1,
-    input  wire [63:0] op2,
+    input  wire [31:0] op1,
+    input  wire [31:0] op2,
     output wire [ 1:0] res
 );
 
