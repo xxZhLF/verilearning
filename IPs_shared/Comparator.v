@@ -7,6 +7,47 @@
 `define OP1_LT_OP2 2'b10
 `define OP1_EQ_OP2 2'b11
 
+module Cmp32U (
+    input  wire [63:0] op1,
+    input  wire [63:0] op2,
+    output wire [ 1:0] res
+);
+
+    assign res = op1[31] ^ op2[31] ? (op1[31] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[30] ^ op2[30] ? (op1[30] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[29] ^ op2[29] ? (op1[29] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[28] ^ op2[28] ? (op1[28] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[27] ^ op2[27] ? (op1[27] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[26] ^ op2[26] ? (op1[26] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[25] ^ op2[25] ? (op1[25] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[24] ^ op2[24] ? (op1[24] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[23] ^ op2[23] ? (op1[23] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[22] ^ op2[22] ? (op1[22] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[21] ^ op2[21] ? (op1[21] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[20] ^ op2[20] ? (op1[20] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[19] ^ op2[19] ? (op1[19] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[18] ^ op2[18] ? (op1[18] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[17] ^ op2[17] ? (op1[17] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[16] ^ op2[16] ? (op1[16] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[15] ^ op2[15] ? (op1[15] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[14] ^ op2[14] ? (op1[14] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[13] ^ op2[13] ? (op1[13] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[12] ^ op2[12] ? (op1[12] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[11] ^ op2[11] ? (op1[11] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[10] ^ op2[10] ? (op1[10] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[ 9] ^ op2[ 9] ? (op1[ 9] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[ 8] ^ op2[ 8] ? (op1[ 8] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[ 7] ^ op2[ 7] ? (op1[ 7] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[ 6] ^ op2[ 6] ? (op1[ 6] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[ 5] ^ op2[ 5] ? (op1[ 5] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[ 4] ^ op2[ 4] ? (op1[ 4] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[ 3] ^ op2[ 3] ? (op1[ 3] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[ 2] ^ op2[ 2] ? (op1[ 2] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[ 1] ^ op2[ 1] ? (op1[ 1] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) :
+                 op1[ 0] ^ op2[ 0] ? (op1[ 0] & 1'b1 ? `OP1_GT_OP2 : `OP1_LT_OP2) : `OP1_EQ_OP2;
+
+endmodule
+
 module Cmp64U (
     input  wire [63:0] op1,
     input  wire [63:0] op2,
