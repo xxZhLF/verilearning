@@ -1,8 +1,19 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <math.h>
 
 #define LSB 0xFC
 #define MSB 0xCF
+
+#define calc_float(a, b) \
+    { \
+        union { \
+            float f; \
+            unsigned int u; \
+        } _ = { .f = a + b }; \
+        for (unsigned char j = sizeof(float) * 8 - 1; j != 0xFF; --j){ \
+            printf("%c", (_.u >> j) & 1 ? '1' : '0'); if (j == 31 || j == 23) printf(","); \
+        }   printf(" = 0x%08X = %7.2f = %7.2f + %7.2f\n", _.u, _.f, a, b); \
+    }
 
 unsigned char endian_check(){
     unsigned int v = 0xFC;
@@ -36,8 +47,26 @@ int main(int argc, char* argv[]){
         } _ = { .f = array[i] };
         for (unsigned char j = sizeof(float) * 8 - 1; j != 0xFF; --j){
             printf("%c", (_.u >> j) & 1 ? '1' : '0'); if (j == 31 || j == 23) printf(",");
-        }   printf(" = 0x%08X = %6.2f \n", _.u, _.f);
+        }   printf(" = 0x%08X = %7.2f \n", _.u, _.f);
     }
+
+    calc_float(array[0], array[2]);
+    calc_float(array[1], array[2]);
+    calc_float(array[1], array[3]);
+    calc_float(array[0], array[3]);
+    calc_float(array[4], array[5]);
+    calc_float(array[6], array[7]);
+    calc_float(array[4], array[6]);
+    calc_float(array[5], array[7]);
+
+    printf("\n");
+    char* dl = "+---------+----------------------------+";
+    char* hd = "| 2^{-n}  | Value                      |";
+    printf("%s\n%s\n", dl, hd);
+    for (unsigned int i = 1; i <= 23; ++i){printf("%s\n", dl);
+        printf("| 2^(-%-2d) | %.24f |\n", i, 1.0 / pow(2, i));
+    }   printf("%s\n", dl);
+
 
     return 0;
 }

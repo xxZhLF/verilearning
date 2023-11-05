@@ -7,6 +7,7 @@ FLGS := --cc
 FLGS += --top-module $(Testbehch)
 FLGS += --binary
 FLGS += --trace
+FLGS += -I../IPs_shared
 FLGS += -I../0x0001_AdderFL1bit
 FLGS += -I../0x0003_AdderLC32bit
 
@@ -19,5 +20,5 @@ include ../COMMON.mk
 
 .PHONY: c_float
 c_float:
-	gcc -o float float.c
+	gcc float.c -o float -lm
 	./float

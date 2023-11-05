@@ -1,0 +1,43 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sun Nov  5 14:39:23 2023
+[*]
+[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0006_Add32F/Add32F.vcd"
+[dumpfile_mtime] "Sun Nov  5 14:32:28 2023"
+[dumpfile_size] 2293
+[savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0006_Add32F/Add32F.gtkw"
+[timestart] 0
+[size] 1428 819
+[pos] -1 -1
+*-1.745736 8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.Add32F_tb.
+[treeopen] TOP.Add32F_tb.adder.
+[treeopen] TOP.Add32F_tb.adder.analyzer.
+[sst_width] 214
+[signals_width] 142
+[sst_expanded] 1
+[sst_vpaned_height] 229
+@22
+TOP.Add32F_tb.adder.decompo0.float[31:0]
+@28
+TOP.Add32F_tb.adder.decompo0.fraction[31:0]
+TOP.Add32F_tb.adder.decompo0.exponent[31:0]
+TOP.Add32F_tb.adder.decompo0.sign
+@200
+-
+@22
+TOP.Add32F_tb.adder.decompo1.float[31:0]
+@28
+TOP.Add32F_tb.adder.decompo1.fraction[31:0]
+TOP.Add32F_tb.adder.decompo1.exponent[31:0]
+TOP.Add32F_tb.adder.decompo1.sign
+@200
+-
+@29
+TOP.Add32F_tb.adder.analyzer.cmp.op1[31:0]
+TOP.Add32F_tb.adder.analyzer.cmp.op2[31:0]
+@28
+TOP.Add32F_tb.adder.analyzer.cmp.res[1:0]
+[pattern_trace] 1
+[pattern_trace] 0
