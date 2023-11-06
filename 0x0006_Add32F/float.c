@@ -4,6 +4,11 @@
 #define LSB 0xFC
 #define MSB 0xCF
 
+#define IEEE754l(fraction) \
+    ((0b00000000100000000000000000000000 | fraction) << 8)
+#define IEEE754s(fraction) \
+    (0b00000000011111111111111111111111 & (fraction >> 8))
+
 #define calc_float(a, b) \
     { \
         union { \
@@ -23,9 +28,25 @@ float calc_IEEE754(float _a_, float _b_){
             unsigned int exponent :  8; /* bit[30:23] */
             unsigned int     sign :  1; /* bit[31]    */
         } u;
-    } a = { .f = _a_ }, b = { .f = _b_ };
-
-    return _a_ + _b_;    
+    } a = { .f = _a_ }, b = { .f = _b_ }, c;
+    unsigned int frac_a = IEEE754l(a.u.fraction);
+    unsigned int frac_b = IEEE754l(b.u.fraction);
+    unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
+    if (a.u.exponent > b.u.exponent){
+        unsigned int frac_c1 = IEEE754s(frac_a + (frac_b >> nbs));
+        unsigned int frac_c2 = IEEE754s(frac_a - (frac_b >> nbs));
+        printf("%08X + (%08X >> %d) = %08X\n", frac_a, frac_b, nbs, frac_c1);
+        c.u.sign = a.u.sign ^ b.u.sign;
+        c.u.exponent = a.u.exponent;
+        c.u.fraction = c.u.sign ? frac_c1 : frac_c2;
+    } else {
+        unsigned int frac_c1 = IEEE754s((frac_a >> nbs) + frac_b);
+        unsigned int frac_c2 = IEEE754s((frac_a >> nbs) - frac_b);
+        c.u.sign = a.u.sign ^ b.u.sign;
+        c.u.exponent = b.u.exponent;
+        c.u.fraction = c.u.sign ? frac_c1 : frac_c2;
+    }
+    return c.f;    
 }
 
 unsigned char endian_check(){
