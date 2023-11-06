@@ -9,11 +9,24 @@
         union { \
             float f; \
             unsigned int u; \
-        } _ = { .f = a + b }; \
+        } _ = { .f = calc_IEEE754(a, b) }; \
         for (unsigned char j = sizeof(float) * 8 - 1; j != 0xFF; --j){ \
             printf("%c", (_.u >> j) & 1 ? '1' : '0'); if (j == 31 || j == 23) printf(","); \
         }   printf(" = 0x%08X = %7.2f = %7.2f + %7.2f\n", _.u, _.f, a, b); \
     }
+
+float calc_IEEE754(float _a_, float _b_){
+    union {
+        float f;
+        struct {
+            unsigned int fraction : 23; /* bit[22: 0] */
+            unsigned int exponent :  8; /* bit[30:23] */
+            unsigned int     sign :  1; /* bit[31]    */
+        } u;
+    } a = { .f = _a_ }, b = { .f = _b_ };
+
+    return _a_ + _b_;    
+}
 
 unsigned char endian_check(){
     unsigned int v = 0xFC;
