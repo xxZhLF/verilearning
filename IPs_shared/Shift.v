@@ -3,6 +3,88 @@
 
 `include "./MacroFunc.v"
 
+module ShiftL32U (
+    input  wire [ 7:0] n,
+    input  wire [31:0] in,
+    output wire [31:0] out
+);
+
+    assign out = `isEQ(n, 8'h00) ? in : 
+                 `isEQ(n, 8'h01) ? {in[30:0],  1'b0} :
+                 `isEQ(n, 8'h02) ? {in[29:0],  2'b0} : 
+                 `isEQ(n, 8'h03) ? {in[28:0],  3'b0} : 
+                 `isEQ(n, 8'h04) ? {in[27:0],  4'b0} : 
+                 `isEQ(n, 8'h05) ? {in[26:0],  5'b0} : 
+                 `isEQ(n, 8'h06) ? {in[25:0],  6'b0} : 
+                 `isEQ(n, 8'h07) ? {in[24:0],  7'b0} : 
+                 `isEQ(n, 8'h08) ? {in[23:0],  8'b0} : 
+                 `isEQ(n, 8'h09) ? {in[22:0],  9'b0} : 
+                 `isEQ(n, 8'h0A) ? {in[21:0], 10'b0} : 
+                 `isEQ(n, 8'h0B) ? {in[20:0], 11'b0} : 
+                 `isEQ(n, 8'h0C) ? {in[19:0], 12'b0} : 
+                 `isEQ(n, 8'h0D) ? {in[18:0], 13'b0} : 
+                 `isEQ(n, 8'h0E) ? {in[17:0], 14'b0} : 
+                 `isEQ(n, 8'h0F) ? {in[16:0], 15'b0} : 
+                 `isEQ(n, 8'h10) ? {in[15:0], 16'b0} : 
+                 `isEQ(n, 8'h11) ? {in[14:0], 17'b0} : 
+                 `isEQ(n, 8'h12) ? {in[13:0], 18'b0} : 
+                 `isEQ(n, 8'h13) ? {in[12:0], 19'b0} : 
+                 `isEQ(n, 8'h14) ? {in[11:0], 20'b0} : 
+                 `isEQ(n, 8'h15) ? {in[10:0], 21'b0} : 
+                 `isEQ(n, 8'h16) ? {in[ 9:0], 22'b0} : 
+                 `isEQ(n, 8'h17) ? {in[ 8:0], 23'b0} : 
+                 `isEQ(n, 8'h18) ? {in[ 7:0], 24'b0} : 
+                 `isEQ(n, 8'h19) ? {in[ 6:0], 25'b0} : 
+                 `isEQ(n, 8'h1A) ? {in[ 5:0], 26'b0} : 
+                 `isEQ(n, 8'h1B) ? {in[ 4:0], 27'b0} : 
+                 `isEQ(n, 8'h1C) ? {in[ 3:0], 28'b0} : 
+                 `isEQ(n, 8'h1D) ? {in[ 2:0], 29'b0} : 
+                 `isEQ(n, 8'h1E) ? {in[ 1:0], 30'b0} : 
+                 `isEQ(n, 8'h20) ? {in[ 0:0], 31'b0} : 32'h00000000;
+
+endmodule
+
+module ShiftR32U (
+    input  wire [ 7:0] n,
+    input  wire [31:0] in,
+    output wire [31:0] out
+);
+
+    assign out = `isEQ(n, 8'h00) ? in : 
+                 `isEQ(n, 8'h01) ? { 1'b0, in[31: 1]} :
+                 `isEQ(n, 8'h02) ? { 2'b0, in[31: 2]} : 
+                 `isEQ(n, 8'h03) ? { 3'b0, in[31: 3]} : 
+                 `isEQ(n, 8'h04) ? { 4'b0, in[31: 4]} : 
+                 `isEQ(n, 8'h05) ? { 5'b0, in[31: 5]} : 
+                 `isEQ(n, 8'h06) ? { 6'b0, in[31: 6]} : 
+                 `isEQ(n, 8'h07) ? { 7'b0, in[31: 7]} : 
+                 `isEQ(n, 8'h08) ? { 8'b0, in[31: 8]} : 
+                 `isEQ(n, 8'h09) ? { 9'b0, in[31: 9]} : 
+                 `isEQ(n, 8'h0A) ? {10'b0, in[31:10]} : 
+                 `isEQ(n, 8'h0B) ? {11'b0, in[31:11]} : 
+                 `isEQ(n, 8'h0C) ? {12'b0, in[31:12]} : 
+                 `isEQ(n, 8'h0D) ? {13'b0, in[31:13]} : 
+                 `isEQ(n, 8'h0E) ? {14'b0, in[31:14]} : 
+                 `isEQ(n, 8'h0F) ? {15'b0, in[31:15]} : 
+                 `isEQ(n, 8'h10) ? {16'b0, in[31:16]} : 
+                 `isEQ(n, 8'h11) ? {17'b0, in[31:17]} : 
+                 `isEQ(n, 8'h12) ? {18'b0, in[31:18]} : 
+                 `isEQ(n, 8'h13) ? {19'b0, in[31:19]} : 
+                 `isEQ(n, 8'h14) ? {20'b0, in[31:20]} : 
+                 `isEQ(n, 8'h15) ? {21'b0, in[31:21]} : 
+                 `isEQ(n, 8'h16) ? {22'b0, in[31:22]} : 
+                 `isEQ(n, 8'h17) ? {23'b0, in[31:23]} : 
+                 `isEQ(n, 8'h18) ? {24'b0, in[31:24]} : 
+                 `isEQ(n, 8'h19) ? {25'b0, in[31:25]} : 
+                 `isEQ(n, 8'h1A) ? {26'b0, in[31:26]} : 
+                 `isEQ(n, 8'h1B) ? {27'b0, in[31:27]} : 
+                 `isEQ(n, 8'h1C) ? {28'b0, in[31:28]} : 
+                 `isEQ(n, 8'h1D) ? {29'b0, in[31:29]} : 
+                 `isEQ(n, 8'h1E) ? {30'b0, in[31:30]} : 
+                 `isEQ(n, 8'h1F) ? {31'b0, in[31:31]} : 32'h00000000;
+
+endmodule
+
 module ShiftL64U (
     input  wire [ 7:0] n,
     input  wire [63:0] in,
@@ -72,7 +154,7 @@ module ShiftL64U (
                  `isEQ(n, 8'h3C) ? {in[ 3:0], 60'b0} : 
                  `isEQ(n, 8'h3D) ? {in[ 2:0], 61'b0} : 
                  `isEQ(n, 8'h3E) ? {in[ 1:0], 62'b0} : 
-                 `isEQ(n, 8'h3F) ? {in[   0], 63'b0} : 64'h0000000000000000;
+                 `isEQ(n, 8'h3F) ? {in[ 0:0], 63'b0} : 64'h0000000000000000;
 
 endmodule
 
@@ -145,7 +227,7 @@ module ShiftR64U (
                  `isEQ(n, 8'h3C) ? {60'b0, in[63:60]} : 
                  `isEQ(n, 8'h3D) ? {61'b0, in[63:61]} : 
                  `isEQ(n, 8'h3E) ? {62'b0, in[63:62]} : 
-                 `isEQ(n, 8'h3F) ? {63'b0, in[63   ]} : 64'h0000000000000000;
+                 `isEQ(n, 8'h3F) ? {63'b0, in[63:63]} : 64'h0000000000000000;
 
 endmodule
 
