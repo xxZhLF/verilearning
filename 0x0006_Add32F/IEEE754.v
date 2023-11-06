@@ -14,8 +14,8 @@ module IEEE754_decompo(
 
     assign sign = float[31];
 
-    assign fraction = { 8'b0, 1'b1, float[22: 0]};
-    assign exponent = {24'b0,       float[30:23]};
+    assign fraction = {1'b1, float[22: 0],  8'b0};
+    assign exponent = {      24'b0, float[30:23]};
 
 endmodule
 
