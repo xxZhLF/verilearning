@@ -3,7 +3,7 @@
 
 `include "../IPs_shared/Comparator.v"
 `include "../IPs_shared/MacroFunc.v"
-`include "../0x0010_Sub32T/Sub32.v"
+`include "../0x0003_AdderLC32bit/AdderLC32bit.v"
 
 module IEEE754_decompo(
     input  wire [31:0] float,
@@ -34,8 +34,8 @@ endmodule
 module IEEE754_analyzer(
     input  wire [31:0] exp1,
     input  wire [31:0] exp2,
-    output wire        sft_frac,
-    output wire [ 5:0] sft_nbit
+    output wire [31:0] sft_nbit,
+    output wire        sft_frac
 );
 
     wire [ 1:0] cmp_res;
@@ -45,13 +45,18 @@ module IEEE754_analyzer(
         .res(cmp_res)
     );
 
-    // 无符号减法（追加Sub32U定义）
-    wire [31:0] sub_diff;
-    Sub32 substractor(
-        .op1(`isEQ(cmp_res, `OP1_GT_OP2) ? exp1 : exp2),
-        .op2(`isEQ(cmp_res, `OP1_GT_OP2) ? exp2 : exp1),
-        .diff(sub_diff)
+    reg         USELESS;
+    AdderLC32bit subtractor(
+        .op1(`isEQ(cmp_res, `OP1_GT_OP2) ?  exp1 :  exp2),
+        .op2(`isEQ(cmp_res, `OP1_GT_OP2) ? ~exp2 : ~exp1),
+        .cin(1'b1),
+        .sum(sft_nbit),
+        .cout(USELESS)
     );
+
+    assign sft_frac = `isEQ(cmp_res, `OP1_GT_OP2) ? 1'b1 : 1'b0;
+    /*(exp1 > exp2) => (frac2 << exp1-exp2) => (sft_frac = 1'b1)
+      (exp1 < exp2) => (frac1 << exp2-exp1) => (sft_frac = 1'b0)*/
 
 endmodule
 
