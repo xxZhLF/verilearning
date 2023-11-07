@@ -30,31 +30,4 @@ module IEEE754_compose(
 
 endmodule
 
-
-module IEEE754_analyzer(
-    input  wire [31:0] exp1,
-    input  wire [31:0] exp2,
-    output wire [31:0] sft_nbit,
-    output wire        sft_frac
-);
-
-    wire [ 1:0] cmp_res;
-    Cmp32U cmp(
-        .op1(exp1),
-        .op2(exp2),
-        .res(cmp_res)
-    );
-
-    Sub32 subtractor(
-        .op1(`isEQ(cmp_res, `OP1_GT_OP2) ? exp1 : exp2),
-        .op2(`isEQ(cmp_res, `OP1_GT_OP2) ? exp2 : exp1),
-        .diff(sft_nbit)
-    );
-
-    assign sft_frac = `isEQ(cmp_res, `OP1_GT_OP2) ? 1'b1 : 1'b0;
-    /*(exp1 > exp2) => (frac2 << exp1-exp2) => (sft_frac = 1'b1)
-      (exp1 < exp2) => (frac1 << exp2-exp1) => (sft_frac = 1'b0)*/
-
-endmodule
-
 `endif 

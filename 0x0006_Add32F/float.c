@@ -15,7 +15,7 @@
     ((((unsigned int)1 << 31) & (unsigned int)fraction) == 0 ? (((unsigned int)(fraction) << 1) >> 1) : \
                                                             (((~((unsigned int)(fraction) - 1)) << 1) >> 1))
 
-#define calc_float(a, b) \
+#define show_calc(a, b) \
     { \
         union { \
             float f; \
@@ -87,14 +87,14 @@ int main(int argc, char* argv[]){
         }   printf(" = 0x%08X = %7.2f \n", _.u, _.f);
     }
 
-    calc_float(array[0], array[2]);
-    calc_float(array[1], array[2]);
-    calc_float(array[1], array[3]);
-    calc_float(array[0], array[3]);
-    calc_float(array[4], array[5]);
-    calc_float(array[6], array[7]);
-    calc_float(array[4], array[6]);
-    calc_float(array[5], array[7]);
+    show_calc(array[0], array[2]);
+    show_calc(array[1], array[2]);
+    show_calc(array[1], array[3]);
+    show_calc(array[0], array[3]);
+    show_calc(array[4], array[5]);
+    show_calc(array[6], array[7]);
+    show_calc(array[4], array[6]);
+    show_calc(array[5], array[7]);
 
     printf("\n");
     char* l1 = "+--------------------------------------+";
