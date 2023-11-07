@@ -37,35 +37,28 @@ module Add32F(
         .sft_nbs(sft_nbs)
     );
 
+    wire [31:0] sum_frac;
     IEEE754_fraction_process processor_f(
+        .sign(s),
         .frac(f),
         .sft_tgt(sft_tgt),
-        .sft_nbs(sft_nbs)
+        .sft_nbs(sft_nbs),
+        .frac3rd(sum_frac)
     );
 
-    // reg         USELESS;
-    // wire [31:0] f_sum;
-    // AdderLC32bit adder(
-    //     .op1(sft_frac ? f[0] : f[1]),
-    //     .op2(sft_out),
-    //     .cin(1'b0),
-    //     .sum(f_sum),
-    //     .cout(USELESS)
-    // );
-
-    // IEEE754_compose compose(
-    //     .fraction(f_sum),
-    //     .exponent(~sft_frac ? e[1] : e[0]),
-    //     .float(sum)
-    // );
+    IEEE754_compose compose(
+        .fraction(sum_frac),
+        .exponent(sft_tgt ? e[0] : e[1]),
+        .float(sum)
+    );
 
 endmodule
 
 module IEEE754_exponent_process(
     input  wire [31:0] exp1,
     input  wire [31:0] exp2,
-    output wire        sft_tgt,
-    output wire [31:0] sft_nbs
+    output wire        sft_tgt, /* exp1 > exp2 ? 1'b1 : 1'b0 */
+    output wire [31:0] sft_nbs  /* Number of Bits to Shift */
 );
 
     wire [ 1:0] cmp_res;
@@ -88,20 +81,45 @@ module IEEE754_exponent_process(
 endmodule
 
 module IEEE754_fraction_process(
+    input  wire        sign[1:0],
     input  wire [31:0] frac[1:0],
     input              sft_tgt,
-    input  wire [31:0] sft_nbs
+    input  wire [31:0] sft_nbs,
+    output wire [31:0] frac3rd
 );
 
+    wire [31:0] prepro [1:0];
+    assign prepro[0] = {sign[0], frac[0][23:0], 7'b0};
+    assign prepro[1] = {sign[1], frac[1][23:0], 7'b0};
+
     wire [31:0] frac1, frac2;
-    assign frac1 = ~sft_tgt ? frac[0] : frac[1];
-    ShiftL32U shift(
+    assign frac1 = sft_tgt ? prepro[0] : prepro[1];
+    ShiftR32U shift(
         .n(sft_nbs[7:0]),
-        .in(sft_tgt ? frac[1] : frac[0]),
+        .in(sft_tgt ? prepro[1] : prepro[0]),
         .out(frac2)
     );
 
+    wire [31:0] frac1C, frac2C;
+    TCC32 t2c_0(
+        .T(frac1),
+        .C(frac1C)
+    ), t2c_1(
+        .T(frac2),
+        .C(frac2C)
+    );
 
+    wire [31:0] frac3C;
+    Add32 adder(
+        .op1(frac1C),
+        .op2(frac2C),
+        .sum(frac3C)
+    );
+
+    CTC32 c2t(
+        .C(frac3C),
+        .T(frac3rd)
+    );
 
 endmodule
 
