@@ -44,11 +44,12 @@
     number_of_bits_to_shift(fraction) > 0 ? (unsigned int)fraction >> 0 + number_of_bits_to_shift(fraction) : \
                                             (unsigned int)fraction << 0 - number_of_bits_to_shift(fraction)
 
-#define IEEE754_decode(fraction) \
-    ((0b00000000100000000000000000000000 | (unsigned int)(fraction)) << 8)
+#define IEEE754_decode(fraction) (\
+    (0b00000000100000000000000000000000 | (unsigned int)(fraction)) << 8 \
+)
 
 #define IEEE754_encode(fraction) \
-     (0b00000000011111111111111111111111 & smart_shift_4_encoder(fraction))
+    (0b00000000011111111111111111111111 & smart_shift_4_encoder(fraction))
 
 #define Complement_of_2(sign, fraction) ( \
         ((unsigned int)sign << 31) \
