@@ -4,10 +4,16 @@
 #define LSB 0xFC
 #define MSB 0xCF
 
-#define IEEE754l(fraction) \
-    ((0b00000000100000000000000000000000 | fraction) << 8)
-#define IEEE754s(fraction) \
-    (0b00000000011111111111111111111111 & (fraction >> 8))
+#define IEEE754_decode(fraction) \
+    ((0b00000000100000000000000000000000 | (unsigned int)(fraction)) << 8)
+#define IEEE754_encode(fraction) \
+     (0b00000000011111111111111111111111 & ((unsigned int)(fraction) >> 7))
+#define Complement_of_2(sign, fraction) \
+    (((unsigned int)sign << 31) | (unsigned int)sign == 0 ? ((unsigned int)(fraction) >> 1) : \
+                                                          (~((unsigned int)(fraction) >> 1) + 1))
+#define Complement2TrueCode(fraction) \
+    ((((unsigned int)1 << 31) & (unsigned int)fraction) == 0 ? (((unsigned int)(fraction) << 1) >> 1) : \
+                                                            (((~((unsigned int)(fraction) - 1)) << 1) >> 1))
 
 #define calc_float(a, b) \
     { \
@@ -29,22 +35,19 @@ float calc_IEEE754(float _a_, float _b_){
             unsigned int     sign :  1; /* bit[31]    */
         } u;
     } a = { .f = _a_ }, b = { .f = _b_ }, c;
-    unsigned int frac_a = IEEE754l(a.u.fraction);
-    unsigned int frac_b = IEEE754l(b.u.fraction);
+    unsigned int frac_a = IEEE754_decode(a.u.fraction);
+    unsigned int frac_b = IEEE754_decode(b.u.fraction);
     unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
     if (a.u.exponent > b.u.exponent){
-        unsigned int frac_c1 = IEEE754s(frac_a + (frac_b >> nbs));
-        unsigned int frac_c2 = IEEE754s(frac_a - (frac_b >> nbs));
-        printf("%08X + (%08X >> %d) = %08X\n", frac_a, frac_b, nbs, frac_c1);
-        c.u.sign = a.u.sign ^ b.u.sign;
+        unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
+        c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c));
         c.u.exponent = a.u.exponent;
-        c.u.fraction = c.u.sign ? frac_c1 : frac_c2;
+        c.u.sign = frac_c >> 31;
     } else {
-        unsigned int frac_c1 = IEEE754s((frac_a >> nbs) + frac_b);
-        unsigned int frac_c2 = IEEE754s((frac_a >> nbs) - frac_b);
-        c.u.sign = a.u.sign ^ b.u.sign;
-        c.u.exponent = b.u.exponent;
-        c.u.fraction = c.u.sign ? frac_c1 : frac_c2;
+        unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
+        c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c));
+        c.u.exponent = a.u.exponent;
+        c.u.sign = frac_c >> 31;
     }
     return c.f;    
 }
@@ -94,9 +97,10 @@ int main(int argc, char* argv[]){
     calc_float(array[5], array[7]);
 
     printf("\n");
+    char* l1 = "+--------------------------------------+";
+    char* hd = "|               CONTRAST               |";
     char* dl = "+---------+----------------------------+";
-    char* hd = "| 2^{-n}  | Value                      |";
-    printf("%s\n%s\n", dl, hd);
+    printf("%s\n%s\n", l1, hd);
     for (unsigned int i = 1; i <= 23; ++i){printf("%s\n", dl);
         printf("| 2^(-%-2d) | %.24f |\n", i, 1.0 / pow(2, i));
     }   printf("%s\n", dl);
