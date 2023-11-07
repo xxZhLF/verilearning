@@ -11,7 +11,7 @@ module Sub32(
     AdderLC32bit subtractor(  
         .op1( op1), 
         .op2(~op2), 
-        .cin(1'b0),
+        .cin(1'b1),
         .sum(diff),
         .cout(USELESS)
     );
