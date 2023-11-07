@@ -3,7 +3,7 @@
 
 `include "../IPs_shared/Comparator.v"
 `include "../IPs_shared/MacroFunc.v"
-`include "../0x0003_AdderLC32bit/AdderLC32bit.v"
+`include "../0x0012_Sub32U/Sub32.v"
 
 module IEEE754_decompo(
     input  wire [31:0] float,
@@ -45,13 +45,10 @@ module IEEE754_analyzer(
         .res(cmp_res)
     );
 
-    reg         USELESS;
-    AdderLC32bit subtractor(
-        .op1(`isEQ(cmp_res, `OP1_GT_OP2) ?  exp1 :  exp2),
-        .op2(`isEQ(cmp_res, `OP1_GT_OP2) ? ~exp2 : ~exp1),
-        .cin(1'b1),
-        .sum(sft_nbit),
-        .cout(USELESS)
+    Sub32 subtractor(
+        .op1(`isEQ(cmp_res, `OP1_GT_OP2) ? exp1 : exp2),
+        .op2(`isEQ(cmp_res, `OP1_GT_OP2) ? exp2 : exp1),
+        .diff(sft_nbit)
     );
 
     assign sft_frac = `isEQ(cmp_res, `OP1_GT_OP2) ? 1'b1 : 1'b0;
