@@ -1,7 +1,7 @@
 `ifndef ADD_32BIT_FLOAT_V
 `define ADD_32BIT_FLOAT_V
 
-`include "IEEE754.v"
+`include "../IPs_shared/IEEE754.v"
 `include "../IPs_shared/Shift.v"
 `include "../0x0003_AdderLC32bit/AdderLC32bit.v"
 
