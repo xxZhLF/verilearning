@@ -6,46 +6,47 @@
 
 #define number_of_bits_to_shift(fraction) \
 ( \
-    ((unsigned int)1 << 31) & (unsigned int)fraction ? (signed)(31 - 23) : \
-    ((unsigned int)1 << 30) & (unsigned int)fraction ? (signed)(30 - 23) : \
-    ((unsigned int)1 << 29) & (unsigned int)fraction ? (signed)(29 - 23) : \
-    ((unsigned int)1 << 28) & (unsigned int)fraction ? (signed)(28 - 23) : \
-    ((unsigned int)1 << 27) & (unsigned int)fraction ? (signed)(27 - 23) : \
-    ((unsigned int)1 << 26) & (unsigned int)fraction ? (signed)(26 - 23) : \
-    ((unsigned int)1 << 25) & (unsigned int)fraction ? (signed)(25 - 23) : \
-    ((unsigned int)1 << 24) & (unsigned int)fraction ? (signed)(24 - 23) : \
-    ((unsigned int)1 << 23) & (unsigned int)fraction ? (signed)(23 - 23) : \
-    ((unsigned int)1 << 22) & (unsigned int)fraction ? (signed)(22 - 23) : \
-    ((unsigned int)1 << 21) & (unsigned int)fraction ? (signed)(21 - 23) : \
-    ((unsigned int)1 << 20) & (unsigned int)fraction ? (signed)(20 - 23) : \
-    ((unsigned int)1 << 19) & (unsigned int)fraction ? (signed)(19 - 23) : \
-    ((unsigned int)1 << 18) & (unsigned int)fraction ? (signed)(18 - 23) : \
-    ((unsigned int)1 << 17) & (unsigned int)fraction ? (signed)(17 - 23) : \
-    ((unsigned int)1 << 16) & (unsigned int)fraction ? (signed)(16 - 23) : \
-    ((unsigned int)1 << 15) & (unsigned int)fraction ? (signed)(15 - 23) : \
-    ((unsigned int)1 << 14) & (unsigned int)fraction ? (signed)(14 - 23) : \
-    ((unsigned int)1 << 13) & (unsigned int)fraction ? (signed)(13 - 23) : \
-    ((unsigned int)1 << 12) & (unsigned int)fraction ? (signed)(12 - 23) : \
-    ((unsigned int)1 << 11) & (unsigned int)fraction ? (signed)(11 - 23) : \
-    ((unsigned int)1 << 10) & (unsigned int)fraction ? (signed)(10 - 23) : \
-    ((unsigned int)1 <<  9) & (unsigned int)fraction ? (signed)( 9 - 23) : \
-    ((unsigned int)1 <<  8) & (unsigned int)fraction ? (signed)( 8 - 23) : \
-    ((unsigned int)1 <<  7) & (unsigned int)fraction ? (signed)( 7 - 23) : \
-    ((unsigned int)1 <<  6) & (unsigned int)fraction ? (signed)( 6 - 23) : \
-    ((unsigned int)1 <<  5) & (unsigned int)fraction ? (signed)( 5 - 23) : \
-    ((unsigned int)1 <<  4) & (unsigned int)fraction ? (signed)( 4 - 23) : \
-    ((unsigned int)1 <<  3) & (unsigned int)fraction ? (signed)( 3 - 23) : \
-    ((unsigned int)1 <<  2) & (unsigned int)fraction ? (signed)( 2 - 23) : \
-    ((unsigned int)1 <<  1) & (unsigned int)fraction ? (signed)( 1 - 23) : \
-    ((unsigned int)1 <<  0) & (unsigned int)fraction ? (signed)( 0 - 23) : 0 \
+/*  ((unsigned int)1 << 31) & (unsigned int)fraction ? ------------ : Sign Bit */ \
+    ((unsigned int)1 << 30) & (unsigned int)fraction ? (signed)( 0) : \
+    ((unsigned int)1 << 29) & (unsigned int)fraction ? (signed)( 1) : \
+    ((unsigned int)1 << 28) & (unsigned int)fraction ? (signed)( 2) : \
+    ((unsigned int)1 << 27) & (unsigned int)fraction ? (signed)( 3) : \
+    ((unsigned int)1 << 26) & (unsigned int)fraction ? (signed)( 4) : \
+    ((unsigned int)1 << 25) & (unsigned int)fraction ? (signed)( 5) : \
+    ((unsigned int)1 << 24) & (unsigned int)fraction ? (signed)( 6) : \
+    ((unsigned int)1 << 23) & (unsigned int)fraction ? (signed)( 7) : \
+    ((unsigned int)1 << 22) & (unsigned int)fraction ? (signed)( 8) : \
+    ((unsigned int)1 << 21) & (unsigned int)fraction ? (signed)( 9) : \
+    ((unsigned int)1 << 20) & (unsigned int)fraction ? (signed)(10) : \
+    ((unsigned int)1 << 19) & (unsigned int)fraction ? (signed)(11) : \
+    ((unsigned int)1 << 18) & (unsigned int)fraction ? (signed)(12) : \
+    ((unsigned int)1 << 17) & (unsigned int)fraction ? (signed)(13) : \
+    ((unsigned int)1 << 16) & (unsigned int)fraction ? (signed)(14) : \
+    ((unsigned int)1 << 15) & (unsigned int)fraction ? (signed)(15) : \
+    ((unsigned int)1 << 14) & (unsigned int)fraction ? (signed)(16) : \
+    ((unsigned int)1 << 13) & (unsigned int)fraction ? (signed)(17) : \
+    ((unsigned int)1 << 12) & (unsigned int)fraction ? (signed)(18) : \
+    ((unsigned int)1 << 11) & (unsigned int)fraction ? (signed)(19) : \
+    ((unsigned int)1 << 10) & (unsigned int)fraction ? (signed)(20) : \
+    ((unsigned int)1 <<  9) & (unsigned int)fraction ? (signed)(21) : \
+    ((unsigned int)1 <<  8) & (unsigned int)fraction ? (signed)(22) : \
+    ((unsigned int)1 <<  7) & (unsigned int)fraction ? (signed)(23) : \
+    ((unsigned int)1 <<  6) & (unsigned int)fraction ? (signed)(24) : \
+    ((unsigned int)1 <<  5) & (unsigned int)fraction ? (signed)(25) : \
+    ((unsigned int)1 <<  4) & (unsigned int)fraction ? (signed)(26) : \
+    ((unsigned int)1 <<  3) & (unsigned int)fraction ? (signed)(27) : \
+    ((unsigned int)1 <<  2) & (unsigned int)fraction ? (signed)(28) : \
+    ((unsigned int)1 <<  1) & (unsigned int)fraction ? (signed)(29) : \
+    ((unsigned int)1 <<  0) & (unsigned int)fraction ? (signed)(30) : 31 \
 )
 
 #define smart_shift_4_encoder(fraction) \
-    number_of_bits_to_shift(fraction) > 0 ? (unsigned int)fraction >> 0 + number_of_bits_to_shift(fraction) : \
-                                            (unsigned int)fraction << 0 - number_of_bits_to_shift(fraction)
+    /* Sign bit at 31 => Highest data bit at 30 => right shift 7 bits */  \
+    (((unsigned int)fraction << number_of_bits_to_shift(fraction)) >> 7)
 
-#define IEEE754_decode(fraction) (\
-    (0b00000000100000000000000000000000 | (unsigned int)(fraction)) << 8 \
+#define IEEE754_decode(fraction) ( \
+    /* Without sign bit => Highest data bit at 31 => left shift 8 bits */ \
+    (0b00000000100000000000000000000000 | (unsigned int)(fraction)) << 8  \
 )
 
 #define IEEE754_encode(fraction) \
@@ -92,12 +93,12 @@ float calc_IEEE754(float _a_, float _b_){
     if (a.u.exponent > b.u.exponent){
         unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
         c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c));
-        c.u.exponent = a.u.exponent - (8 - number_of_bits_to_shift(Complement2TrueCode(frac_c)) - 1);
+        c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c));
         c.u.sign = frac_c >> 31;
     } else {
         unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
         c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c));
-        c.u.exponent = b.u.exponent - (8 - number_of_bits_to_shift(Complement2TrueCode(frac_c)) - 1);
+        c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c));
         c.u.sign = frac_c >> 31;
     }
     return c.f;    
