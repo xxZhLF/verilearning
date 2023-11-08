@@ -10,13 +10,13 @@ module Sub32F_tb (
         fd = $fopen("data.tb", "r");
         if (fd == 0) begin
             $display("* WARNING: Test Data is NOT Exist!");
-            $display("* SUGGEST: Run \"make genTestData\" to generate, Please.");
+            $display("* SUGGEST: Run \"make c_sim\" to generate, Please.");
             $finish;
         end
 
         while(!$feof(fd)) begin
             reg  [31:0] a, b, c;
-            $fscanf(fd, "%h + %h = %h", a, b, c);
+            $fscanf(fd, "%h - %h = %h", a, b, c);
             op1 = a; op2 = b; chk = c; #5;
             if (c == diff) begin
                 $display("[OK] %h - %H = %h",      op1, op2, diff     );
