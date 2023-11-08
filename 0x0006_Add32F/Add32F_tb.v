@@ -2,16 +2,32 @@ module Add32F_tb (
     // None
 );
 
-    reg  [31:0] op1, op2;
+    integer fd;
+    reg  [31:0] mem [8*3-1:0];
+    reg  [31:0] op1, op2, chk;
     wire [31:0] sum;
-    initial begin
-        op1 = 32'h00000000;
-        op2 = 32'h00000000;
-    end
 
     initial begin
-        #5 op1 = 32'h3F333333; op2 = 32'h3D23D70A;
-        #5 ;
+        fd = $fopen("data.tb", "r");
+        if (fd == 0) begin
+            $display("WARNING: Test Data is NOT Exist!");
+            $display("SUGGEST: Run \"make c_float\" to generate, Please.");
+            $finish;
+        end
+
+        while(!$feof(fd)) begin
+            reg  [31:0] a, b, c;
+            $fscanf(fd, "%h + %h = %h", a, b, c);
+            op1 = a; op2 = b; chk = c; #5;
+            if (c == sum) begin
+                $display("[OK] %h + %H = %h",      op1, op2, sum     );
+            end else begin
+                $display("[NG] %h + %h = %h (%h)", op1, op2, sum, chk);
+            end
+        end
+
+        $fclose(fd);
+        $finish;
     end
 
     Add32F adder(

@@ -24,5 +24,5 @@ include ../COMMON.mk
 
 .PHONY: c_float
 c_float:
-	gcc float.c -o float -lm
+	gcc float.c -o float
 	./float

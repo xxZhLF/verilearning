@@ -48,12 +48,19 @@ module Add32F(
     );
 
     wire [ 7:0] exponent_cooked; 
-    wire [31:0] fraction_cooked;
+    wire [22:0] fraction_cooked;
     IEEE754_smart_shift smart_shift(
         .exponent_i(sft_tgt ? e[0] : e[1]),
         .fraction_i(fraction_raw),
         .exponent_o(exponent_cooked),
         .fraction_o(fraction_cooked)
+    );
+
+    IEEE754_compose compose(
+        .sign(fraction_raw[31]),
+        .exponent(exponent_cooked),
+        .fraction(fraction_cooked),
+        .float(sum)
     );
 
 endmodule
@@ -134,10 +141,49 @@ module IEEE754_smart_shift(
     input  wire [ 7:0] exponent_i,
     input  wire [31:0] fraction_i,
     output wire [ 7:0] exponent_o,
-    output wire [31:0] fraction_o
+    output wire [22:0] fraction_o
 );
 
+    wire [ 7:0] nbs;
+    assign {nbs, fraction_o} = fraction_i[30] ? {8'd0,  fraction_i[29:7]} : 
+                               fraction_i[29] ? {8'd1,  fraction_i[28:6]} :
+                               fraction_i[28] ? {8'd2,  fraction_i[27:5]} :
+                               fraction_i[27] ? {8'd3,  fraction_i[26:4]} :
+                               fraction_i[26] ? {8'd4,  fraction_i[25:3]} :
+                               fraction_i[25] ? {8'd5,  fraction_i[24:2]} :
+                               fraction_i[24] ? {8'd6,  fraction_i[23:1]} :
+                               fraction_i[23] ? {8'd7,  fraction_i[22:0]} :
+                               fraction_i[22] ? {8'd8,  fraction_i[21:0],  1'b0} :
+                               fraction_i[21] ? {8'd9,  fraction_i[20:0],  2'b0} :
+                               fraction_i[20] ? {8'd10, fraction_i[19:0],  3'b0} :
+                               fraction_i[19] ? {8'd11, fraction_i[18:0],  4'b0} :
+                               fraction_i[18] ? {8'd12, fraction_i[17:0],  5'b0} :
+                               fraction_i[17] ? {8'd13, fraction_i[16:0],  6'b0} :
+                               fraction_i[16] ? {8'd14, fraction_i[15:0],  7'b0} :
+                               fraction_i[15] ? {8'd15, fraction_i[14:0],  8'b0} :
+                               fraction_i[14] ? {8'd16, fraction_i[13:0],  9'b0} :
+                               fraction_i[13] ? {8'd17, fraction_i[12:0], 10'b0} :
+                               fraction_i[12] ? {8'd18, fraction_i[11:0], 11'b0} :
+                               fraction_i[11] ? {8'd19, fraction_i[10:0], 12'b0} :
+                               fraction_i[10] ? {8'd20, fraction_i[ 9:0], 13'b0} :
+                               fraction_i[ 9] ? {8'd21, fraction_i[ 8:0], 14'b0} :
+                               fraction_i[ 8] ? {8'd22, fraction_i[ 7:0], 15'b0} :
+                               fraction_i[ 7] ? {8'd23, fraction_i[ 6:0], 16'b0} :
+                               fraction_i[ 6] ? {8'd24, fraction_i[ 5:0], 17'b0} :
+                               fraction_i[ 5] ? {8'd25, fraction_i[ 4:0], 18'b0} :
+                               fraction_i[ 4] ? {8'd26, fraction_i[ 3:0], 19'b0} :
+                               fraction_i[ 3] ? {8'd27, fraction_i[ 2:0], 20'b0} :
+                               fraction_i[ 2] ? {8'd28, fraction_i[ 1:0], 21'b0} :
+                               fraction_i[ 1] ? {8'd29, fraction_i[   0], 22'b0} :
+                               fraction_i[ 0] ? {8'd30,                   23'b0} : {exponent_i, 23'b0};
 
+    wire [31:0] diff;
+    Sub32 subtractor(
+        .op1({24'b0, exponent_i}),
+        .op2({24'b0, nbs}),
+        .diff(diff)
+    );
+    assign exponent_o = diff[7:0];
 
 endmodule
 

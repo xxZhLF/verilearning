@@ -67,18 +67,27 @@
             (~((unsigned int)(fraction) - 1)) \
 )
 
-#define show_calc(a, b) \
-    { \
-        union { \
-            float f; \
-            unsigned int u; \
-        } _ = { .f = calc_IEEE754(a, b) }; \
-        for (unsigned char j = sizeof(float) * 8 - 1; j != 0xFF; --j){ \
-            printf("%c", (_.u >> j) & 1 ? '1' : '0'); if (j == 31 || j == 23) printf(","); \
-        }   printf(" = 0x%08X = %7.2f = %7.2f + %7.2f (Error of CPU: %.20f)\n", _.u, _.f, a, b, fabs(_.f - (a + b))); \
-    }
+#define show_float(n, end) do { \
+    union { \
+        float f; \
+        unsigned int u; \
+    } _ = { .f = n }; \
+    for (unsigned char j = sizeof(float) * 8 - 1; j != 0xFF; --j){ \
+        printf("%c", (_.u >> j) & 1 ? '1' : '0'); if (j == 31 || j == 23) printf(","); \
+    }   printf(" = 0x%08X = %7.2f %c", _.u, _.f, end);\
+} while (0)
 
-float calc_IEEE754(float _a_, float _b_){
+#define show_calc_add(a, b) do {\
+    float c = calc_IEEE754(a, b, '+'); \
+    show_float(c, ' '); \
+    printf("= %7.2f + %7.2f (Error of CPU: %.20f)\n", a, b, fabs(c - (a + b))); \
+    fprintf(fp, "%08X + %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
+} while(0)
+
+#define Prepare4Show() FILE* fp = fopen("data.tb", "w")
+#define CleanUp4Show() fclose(fp)
+
+float calc_IEEE754(float _a_, float _b_, char op){
     union {
         float f;
         struct {
@@ -89,17 +98,32 @@ float calc_IEEE754(float _a_, float _b_){
     } a = { .f = _a_ }, b = { .f = _b_ }, c;
     unsigned int frac_a = IEEE754_decode(a.u.fraction);
     unsigned int frac_b = IEEE754_decode(b.u.fraction);
-    unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
-    if (a.u.exponent > b.u.exponent){
-        unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
-        c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c));
-        c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c));
-        c.u.sign = frac_c >> 31;
-    } else {
-        unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
-        c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c));
-        c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c));
-        c.u.sign = frac_c >> 31;
+    switch (op) {
+        case '+':
+            unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
+            if (a.u.exponent > b.u.exponent){
+                unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
+                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c));
+                c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c));
+                c.u.sign = frac_c >> 31;
+            } else {
+                unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
+                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c));
+                c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c));
+                c.u.sign = frac_c >> 31;
+            }
+            break;
+        case '-':
+            printf("Sub: Unsupported");
+            break;
+        case '*':
+            printf("Mul: Unsupported");
+            break;
+        case '/':
+            printf("Div: Unsupported");
+            break;
+        default:
+            break;
     }
     return c.f;    
 }
@@ -134,23 +158,21 @@ int main(int argc, char* argv[]){
     float array[] = {0.7, -0.7, 0.04, -0.04, 77.44, 33.66, -44.77, -66.33};
 
     for (unsigned char i = 0; i < sizeof(array) / sizeof(float); ++i){
-        union {
-            float f;
-            unsigned int u;
-        } _ = { .f = array[i] };
-        for (unsigned char j = sizeof(float) * 8 - 1; j != 0xFF; --j){
-            printf("%c", (_.u >> j) & 1 ? '1' : '0'); if (j == 31 || j == 23) printf(",");
-        }   printf(" = 0x%08X = %7.2f \n", _.u, _.f);
-    }
+        show_float(array[i], '\n');
+    }   printf("\n");
 
-    show_calc(array[0], array[2]);
-    show_calc(array[1], array[2]);
-    show_calc(array[1], array[3]);
-    show_calc(array[0], array[3]);
-    show_calc(array[4], array[5]);
-    show_calc(array[6], array[7]);
-    show_calc(array[4], array[6]);
-    show_calc(array[5], array[7]);
+    Prepare4Show();
+
+    show_calc_add(array[0], array[2]);
+    show_calc_add(array[1], array[2]);
+    show_calc_add(array[1], array[3]);
+    show_calc_add(array[0], array[3]);
+    show_calc_add(array[4], array[5]);
+    show_calc_add(array[6], array[7]);
+    show_calc_add(array[4], array[6]);
+    show_calc_add(array[7], array[5]);
+
+    CleanUp4Show();
 
     return 0;
 }
