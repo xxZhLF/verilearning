@@ -22,8 +22,8 @@ SRCS += Sub32.v
 
 include ../COMMON.mk
 
-.PHONY: genTestData
-genTestData:
-	gcc genTestData.c -o genTestData
-	./genTestData
-	rm c_sgenTestDataim
+.PHONY: c_sim
+c_sim:
+	gcc c_sim.c -o c_sim
+	./c_sim
+	rm c_sim
