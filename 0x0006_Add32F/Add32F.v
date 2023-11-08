@@ -34,8 +34,8 @@ module Add32F(
     IEEE754_exponent_process processor_e(
         .exp1(e[0]),
         .exp2(e[1]),
-        .sft_tgt(sft_tgt),
-        .sft_nbs(sft_nbs)
+        .sft_tgt(sft_tgt), /* e[0] > e[1] ? 1'b1 : 1'b0 */
+        .sft_nbs(sft_nbs)  /* abs(e[0] - e[1])          */
     );
 
     wire [31:0] fraction_raw;
@@ -102,17 +102,29 @@ module IEEE754_fraction_process(
     output wire [31:0] frac3rd
 );
 
-    wire [31:0] prepro [1:0];
-    assign prepro[0] = {sign[0], frac[0], 7'b0};
-    assign prepro[1] = {sign[1], frac[1], 7'b0};
+    /* sft_tgt is 1'b1 means:
+               expornet[0] > expornet[1] 
+               fraction[1] should be shifted
+       sft_tgt is 1'b0 means:
+               expornet[0] < expornet[1] 
+               fraction[0] should be shifted
+    */
 
-    wire [31:0] frac1, frac2;
-    assign frac1 = sft_tgt ? prepro[0] : prepro[1];
+    wire [31:0] fracEX [1:0];
+    assign fracEX[0] = {frac[0], 8'b0};
+    assign fracEX[1] = {frac[1], 8'b0};
+
+    wire [31:0] fracSFT, fracNotSFT;
+    assign fracNotSFT = sft_tgt ? fracEX[0] : fracEX[1];
     ShiftR32U shift(
         .n(sft_nbs[7:0]),
-        .in(sft_tgt ? prepro[1] : prepro[0]),
-        .out(frac2)
+        .in(sft_tgt ? fracEX[1] : fracEX[0]),
+        .out(fracSFT)
     );
+
+    wire [31:0] frac1, frac2;
+    assign frac1 = {sft_tgt ? sign[1] : sign[0], fracSFT[31:1]};
+    assign frac2 = {sft_tgt ? sign[0] : sign[1], fracNotSFT[31:1]};
 
     wire [31:0] frac1C, frac2C;
     TCC32 t2c_0(
@@ -144,41 +156,42 @@ module IEEE754_smart_shift(
     output wire [22:0] fraction_o
 );
 
-    wire [ 7:0] nbs;
-    assign {nbs, fraction_o} = fraction_i[30] ? {8'd0,  fraction_i[29:7]} : 
-                               fraction_i[29] ? {8'd1,  fraction_i[28:6]} :
-                               fraction_i[28] ? {8'd2,  fraction_i[27:5]} :
-                               fraction_i[27] ? {8'd3,  fraction_i[26:4]} :
-                               fraction_i[26] ? {8'd4,  fraction_i[25:3]} :
-                               fraction_i[25] ? {8'd5,  fraction_i[24:2]} :
-                               fraction_i[24] ? {8'd6,  fraction_i[23:1]} :
-                               fraction_i[23] ? {8'd7,  fraction_i[22:0]} :
-                               fraction_i[22] ? {8'd8,  fraction_i[21:0],  1'b0} :
-                               fraction_i[21] ? {8'd9,  fraction_i[20:0],  2'b0} :
-                               fraction_i[20] ? {8'd10, fraction_i[19:0],  3'b0} :
-                               fraction_i[19] ? {8'd11, fraction_i[18:0],  4'b0} :
-                               fraction_i[18] ? {8'd12, fraction_i[17:0],  5'b0} :
-                               fraction_i[17] ? {8'd13, fraction_i[16:0],  6'b0} :
-                               fraction_i[16] ? {8'd14, fraction_i[15:0],  7'b0} :
-                               fraction_i[15] ? {8'd15, fraction_i[14:0],  8'b0} :
-                               fraction_i[14] ? {8'd16, fraction_i[13:0],  9'b0} :
-                               fraction_i[13] ? {8'd17, fraction_i[12:0], 10'b0} :
-                               fraction_i[12] ? {8'd18, fraction_i[11:0], 11'b0} :
-                               fraction_i[11] ? {8'd19, fraction_i[10:0], 12'b0} :
-                               fraction_i[10] ? {8'd20, fraction_i[ 9:0], 13'b0} :
-                               fraction_i[ 9] ? {8'd21, fraction_i[ 8:0], 14'b0} :
-                               fraction_i[ 8] ? {8'd22, fraction_i[ 7:0], 15'b0} :
-                               fraction_i[ 7] ? {8'd23, fraction_i[ 6:0], 16'b0} :
-                               fraction_i[ 6] ? {8'd24, fraction_i[ 5:0], 17'b0} :
-                               fraction_i[ 5] ? {8'd25, fraction_i[ 4:0], 18'b0} :
-                               fraction_i[ 4] ? {8'd26, fraction_i[ 3:0], 19'b0} :
-                               fraction_i[ 3] ? {8'd27, fraction_i[ 2:0], 20'b0} :
-                               fraction_i[ 2] ? {8'd28, fraction_i[ 1:0], 21'b0} :
-                               fraction_i[ 1] ? {8'd29, fraction_i[   0], 22'b0} :
-                               fraction_i[ 0] ? {8'd30,                   23'b0} : {exponent_i, 23'b0};
+    wire [ 7:0] nbs;           /* |Where is 2^0| ? |nbs |  |fo = fi << nbs |   */
+    assign {nbs, fraction_o} = /* fraction_i[31] ? Sign Bit NOT Subject      : */
+                                  fraction_i[30] ? {8'd0,  fraction_i[29:7]} : 
+                                  fraction_i[29] ? {8'd1,  fraction_i[28:6]} :
+                                  fraction_i[28] ? {8'd2,  fraction_i[27:5]} :
+                                  fraction_i[27] ? {8'd3,  fraction_i[26:4]} :
+                                  fraction_i[26] ? {8'd4,  fraction_i[25:3]} :
+                                  fraction_i[25] ? {8'd5,  fraction_i[24:2]} :
+                                  fraction_i[24] ? {8'd6,  fraction_i[23:1]} :
+                                  fraction_i[23] ? {8'd7,  fraction_i[22:0]} :
+                                  fraction_i[22] ? {8'd8,  fraction_i[21:0],  1'b0} :
+                                  fraction_i[21] ? {8'd9,  fraction_i[20:0],  2'b0} :
+                                  fraction_i[20] ? {8'd10, fraction_i[19:0],  3'b0} :
+                                  fraction_i[19] ? {8'd11, fraction_i[18:0],  4'b0} :
+                                  fraction_i[18] ? {8'd12, fraction_i[17:0],  5'b0} :
+                                  fraction_i[17] ? {8'd13, fraction_i[16:0],  6'b0} :
+                                  fraction_i[16] ? {8'd14, fraction_i[15:0],  7'b0} :
+                                  fraction_i[15] ? {8'd15, fraction_i[14:0],  8'b0} :
+                                  fraction_i[14] ? {8'd16, fraction_i[13:0],  9'b0} :
+                                  fraction_i[13] ? {8'd17, fraction_i[12:0], 10'b0} :
+                                  fraction_i[12] ? {8'd18, fraction_i[11:0], 11'b0} :
+                                  fraction_i[11] ? {8'd19, fraction_i[10:0], 12'b0} :
+                                  fraction_i[10] ? {8'd20, fraction_i[ 9:0], 13'b0} :
+                                  fraction_i[ 9] ? {8'd21, fraction_i[ 8:0], 14'b0} :
+                                  fraction_i[ 8] ? {8'd22, fraction_i[ 7:0], 15'b0} :
+                                  fraction_i[ 7] ? {8'd23, fraction_i[ 6:0], 16'b0} :
+                                  fraction_i[ 6] ? {8'd24, fraction_i[ 5:0], 17'b0} :
+                                  fraction_i[ 5] ? {8'd25, fraction_i[ 4:0], 18'b0} :
+                                  fraction_i[ 4] ? {8'd26, fraction_i[ 3:0], 19'b0} :
+                                  fraction_i[ 3] ? {8'd27, fraction_i[ 2:0], 20'b0} :
+                                  fraction_i[ 2] ? {8'd28, fraction_i[ 1:0], 21'b0} :
+                                  fraction_i[ 1] ? {8'd29, fraction_i[   0], 22'b0} :
+                                  fraction_i[ 0] ? {8'd30,                   23'b0} : {exponent_i, 23'b0};
 
-    wire [31:0] diff;
-    Sub32 subtractor(
+    wire [31:0] diff; /* f << n */
+    Sub32 subtractor( /* e -  n */
         .op1({24'b0, exponent_i}),
         .op2({24'b0, nbs}),
         .diff(diff)

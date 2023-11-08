@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Wed Nov  8 06:34:59 2023
+[*] Wed Nov  8 08:08:58 2023
 [*]
 [dumpfile] "/home/xxzhou/verilearning/0x0006_Add32F/Add32F.vcd"
-[dumpfile_mtime] "Wed Nov  8 06:33:15 2023"
-[dumpfile_size] 142148
+[dumpfile_mtime] "Wed Nov  8 07:59:03 2023"
+[dumpfile_size] 156844
 [savefile] "/home/xxzhou/verilearning/0x0006_Add32F/Add32F.gtkw"
 [timestart] 0
 [size] 1908 987
 [pos] -1 -1
-*-2.745736 18 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-1.745736 4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.Add32F_tb.
 [treeopen] TOP.Add32F_tb.adder.
@@ -53,9 +53,13 @@ TOP.Add32F_tb.adder.processor_f.frac[0][23:0]
 [color] 5
 TOP.Add32F_tb.adder.processor_f.frac[1][23:0]
 [color] 1
-TOP.Add32F_tb.adder.processor_f.prepro[0][31:0]
+TOP.Add32F_tb.adder.processor_f.fracEX[0][31:0]
 [color] 5
-TOP.Add32F_tb.adder.processor_f.prepro[1][31:0]
+TOP.Add32F_tb.adder.processor_f.fracEX[1][31:0]
+[color] 3
+TOP.Add32F_tb.adder.processor_f.fracSFT[31:0]
+[color] 3
+TOP.Add32F_tb.adder.processor_f.fracNotSFT[31:0]
 [color] 1
 TOP.Add32F_tb.adder.processor_f.frac1[31:0]
 [color] 5
@@ -64,6 +68,8 @@ TOP.Add32F_tb.adder.processor_f.frac2[31:0]
 TOP.Add32F_tb.adder.processor_f.frac1C[31:0]
 [color] 5
 TOP.Add32F_tb.adder.processor_f.frac2C[31:0]
+TOP.Add32F_tb.adder.processor_f.frac3C[31:0]
+@29
 TOP.Add32F_tb.adder.processor_f.frac3rd[31:0]
 @200
 -

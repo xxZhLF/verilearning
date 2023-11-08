@@ -10,8 +10,8 @@ module Add32F_tb (
     initial begin
         fd = $fopen("data.tb", "r");
         if (fd == 0) begin
-            $display("WARNING: Test Data is NOT Exist!");
-            $display("SUGGEST: Run \"make c_float\" to generate, Please.");
+            $display("* WARNING: Test Data is NOT Exist!");
+            $display("* SUGGEST: Run \"make c_float\" to generate, Please.");
             $finish;
         end
 
