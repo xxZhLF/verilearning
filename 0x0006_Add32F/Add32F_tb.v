@@ -3,7 +3,6 @@ module Add32F_tb (
 );
 
     integer fd;
-    reg  [31:0] mem [8*3-1:0];
     reg  [31:0] op1, op2, chk;
     wire [31:0] sum;
 
