@@ -122,16 +122,16 @@ module IEEE754_fraction_process(
         .out(fracSFT)
     );
 
-    wire [31:0] frac1, frac2;
-    assign frac1 = {sft_tgt ? sign[1] : sign[0], fracSFT[31:1]};
-    assign frac2 = {sft_tgt ? sign[0] : sign[1], fracNotSFT[31:1]};
+    wire [31:0] frac1T, frac2T;
+    assign frac1T = {sft_tgt ? sign[1] : sign[0], fracSFT[31:1]};
+    assign frac2T = {sft_tgt ? sign[0] : sign[1], fracNotSFT[31:1]};
 
     wire [31:0] frac1C, frac2C;
     TCC32 t2c_0(
-        .T(frac1),
+        .T(frac1T),
         .C(frac1C)
     ),    t2c_1(
-        .T(frac2),
+        .T(frac2T),
         .C(frac2C)
     );
 
