@@ -6,7 +6,7 @@
 
 #define number_of_bits_to_shift(fraction) \
 ( \
-/*  ((unsigned int)1 << 31) & (unsigned int)fraction ? ------------ : Sign Bit */ \
+  /*((unsigned int)1 << 31) & (unsigned int)fraction ? Sign Bit     :*/ \
     ((unsigned int)1 << 30) & (unsigned int)fraction ? (signed)( 0) : \
     ((unsigned int)1 << 29) & (unsigned int)fraction ? (signed)( 1) : \
     ((unsigned int)1 << 28) & (unsigned int)fraction ? (signed)( 2) : \

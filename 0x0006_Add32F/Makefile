@@ -22,7 +22,8 @@ SRCS += Sub32.v
 
 include ../COMMON.mk
 
-.PHONY: c_float
-c_float:
-	gcc float.c -o float
-	./float
+.PHONY: c_sim
+c_sim:
+	gcc c_sim.c -o c_sim
+	./c_sim
+	rm c_sim
