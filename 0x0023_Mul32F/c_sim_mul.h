@@ -19,6 +19,26 @@ unsigned char endian_check(){
     (0b00000000100000000000000000000000 | (unsigned int)(fraction)) << 8  \
 )
 
+#define show_float(n, end) do { \
+    union { \
+        float f; \
+        unsigned int u; \
+    } _ = { .f = n }; \
+    for (unsigned char j = sizeof(float) * 8 - 1; j != 0xFF; --j){ \
+        printf("%c", (_.u >> j) & 1 ? '1' : '0'); if (j == 31 || j == 23) printf(","); \
+    }   printf(" = 0x%08X = %7.2f %c", _.u, _.f, end);\
+} while (0)
+
+#define show_calc_add(a, b) do {\
+    float c = calc_IEEE754(a, b, '*'); \
+    show_float(c, ' '); \
+    printf("= %7.2f + %7.2f (Error to CPU: %.20f)\n", a, b, fabs(c - (a * b))); \
+    fprintf(fp, "%08X + %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
+} while(0)
+
+#define Prepare4Show() FILE* fp = fopen("data.tb", "w")
+#define CleanUp4Show() fclose(fp)
+
 float calc_IEEE754(float _a_, float _b_, char op){
     union {
         float f;
@@ -32,16 +52,16 @@ float calc_IEEE754(float _a_, float _b_, char op){
     unsigned int frac_b = IEEE754_decode(b.u.fraction);
     switch (op) {
         case '+':
-            printf("Mul: UnSupported");
+            printf("Mul: UnSupported\n");
             break;
         case '-':
-            printf("Mul: UnSupported");
+            printf("Mul: UnSupported\n");
             break;
         case '*':
-            printf("Mul: UnSupported");
+            c.f = a.f * b.f;
             break;
         case '/':
-            printf("Div: UnSupported");
+            printf("Div: UnSupported\n");
             break;
         default:
             break;
