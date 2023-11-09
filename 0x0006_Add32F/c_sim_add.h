@@ -4,6 +4,16 @@
 #define LSB 0xFC
 #define MSB 0xCF
 
+unsigned char endian_check(){
+    unsigned int v = 0xFC;
+    unsigned char *p = (unsigned char *)&v;
+    if (*p == 0xFC){
+        return LSB;
+    } else {
+        return MSB;
+    }
+}
+
 #define number_of_bits_to_shift(fraction) \
 ( \
   /*((unsigned int)1 << 31) & (unsigned int)fraction ? Sign Bit     :*/ \
@@ -134,14 +144,4 @@ float calc_IEEE754(float _a_, float _b_, char op){
             break;
     }
     return c.f;    
-}
-
-unsigned char endian_check(){
-    unsigned int v = 0xFC;
-    unsigned char *p = (unsigned char *)&v;
-    if (*p == 0xFC){
-        return LSB;
-    } else {
-        return MSB;
-    }
 }
