@@ -37,7 +37,7 @@ module CTC32(
 
     Add32 adder(
         .op1({1'b0, datI}), 
-        .op2(32'hFFFFFFFF), // -1
+        .op2(32'h7FFFFFFF), // -1 (31-Bit)
         .sum(datO)
     );  /* ~(datI + -1) 
            ~ at next line */
@@ -80,7 +80,7 @@ module CTC64(
 
     AddLC64 adder(
         .op1({1'b0, datI}), 
-        .op2(64'hFFFFFFFFFFFFFFFF), // -1
+        .op2(64'h7FFFFFFFFFFFFFFF), // -1 (31-Bit)
         .sum(datO)
     );  /* ~(datI + -1) 
            ~ at next line */
