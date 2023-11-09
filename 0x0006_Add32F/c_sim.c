@@ -1,4 +1,4 @@
-#include "c_sim_add.h"
+#include "./c_sim_add.h"
 
 int main(int argc, char* argv[]){
 
