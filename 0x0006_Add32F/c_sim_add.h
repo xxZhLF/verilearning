@@ -52,9 +52,10 @@ unsigned char endian_check(){
 
 #define smart_shift_4_encoder(fraction) (\
     /* Sign bit at 31 => Highest data bit at 30 => right shift 7 bits */  \
-    (((unsigned int)fraction << number_of_bits_to_shift(fraction)) >> 7) \
-    + ((unsigned int)1 & (unsigned int)fraction ? 0 : 1) \
+    (((unsigned int)fraction << number_of_bits_to_shift(fraction)) >> 7) + \
+    (((unsigned int)fraction & ((unsigned int)1 << (6 + number_of_bits_to_shift(fraction)))) ? 1 : 0) \
 )
+
 #define IEEE754_decode(fraction) ( \
     /* Without sign bit => Highest data bit at 31 => left shift 8 bits */ \
     (0b00000000100000000000000000000000 | (unsigned int)(fraction)) << 8  \
@@ -66,16 +67,15 @@ unsigned char endian_check(){
 #define Complement_of_2(sign, fraction) ( \
         ((unsigned int)sign << 31) \
     | \
-        ((unsigned int)sign == 0 ?  ((unsigned int)(fraction) >> 1) : \
-                                  (~((unsigned int)(fraction) >> 1) + 1)) \
+        ((unsigned int)sign == 0 ?  ((unsigned int)fraction >> 1) : \
+                                  (~((unsigned int)fraction >> 1) + 1)) \
 )
 
-#define Complement2TrueCode(fraction) ( \
-    (       ((unsigned int)1 << 31) \
-        & \
-            (unsigned int)fraction \
-    ) == 0 ?   (unsigned int)(fraction) : \
-            (~((unsigned int)(fraction) - 1)) \
+#define Complement2TrueCode(sign, fraction) ( \
+        ((unsigned int)sign << 31) \
+    | \
+        ((unsigned int)sign == 0 ?  ((unsigned int)fraction >> 1) : \
+                                  ~(((unsigned int)fraction >> 1) - 1)) \
 )
 
 #define show_float(n, end) do { \
@@ -91,14 +91,14 @@ unsigned char endian_check(){
 #define show_calc_add(a, b) do {\
     float c = calc_IEEE754(a, b, '+'); \
     show_float(c, ' '); \
-    printf("= %7.2f + %7.2f (Error to CPU: %.20f)\n", a, b, fabs(c - (a + b))); \
+    printf("= %7.2f + %7.2f (Error to CPU: %.30f)\n", a, b, fabs(c - (a + b))); \
     fprintf(fp, "%08X + %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
 #define show_calc_sub(a, b) do {\
     float c = calc_IEEE754(a, b, '-'); \
     show_float(c, ' '); \
-    printf("= %7.2f - %7.2f (Error to CPU: %.20f)\n", a, b, fabs(c - (a - b))); \
+    printf("= %7.2f - %7.2f (Error to CPU: %.30f)\n", a, b, fabs(c - (a - b))); \
     fprintf(fp, "%08X - %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
@@ -121,13 +121,13 @@ float calc_IEEE754(float _a_, float _b_, char op){
             unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
             if (a.u.exponent > b.u.exponent){
                 unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
-                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c));
-                c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c));
+                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c >> 31, frac_c << 1));
+                c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c >> 31, frac_c << 1));
                 c.u.sign = frac_c >> 31;
             } else {
                 unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
-                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c));
-                c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c));
+                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c >> 31, frac_c << 1));
+                c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c >> 31, frac_c << 1));
                 c.u.sign = frac_c >> 31;
             }
             break;
