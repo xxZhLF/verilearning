@@ -32,7 +32,7 @@ unsigned char endian_check(){
 #define show_calc_add(a, b) do {\
     float c = calc_IEEE754(a, b, '*'); \
     show_float(c, ' '); \
-    printf("= %7.2f + %7.2f (Error to CPU: %.20f)\n", a, b, fabs(c - (a * b))); \
+    printf("= %7.2f * %7.2f (Error to CPU: %.20f)\n", a, b, fabs(c - (a * b))); \
     fprintf(fp, "%08X + %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
