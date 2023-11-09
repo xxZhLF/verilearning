@@ -26,14 +26,15 @@ unsigned char endian_check(){
     } _ = { .f = n }; \
     for (unsigned char j = sizeof(float) * 8 - 1; j != 0xFF; --j){ \
         printf("%c", (_.u >> j) & 1 ? '1' : '0'); if (j == 31 || j == 23) printf(","); \
-    }   printf(" = 0x%08X = %7.2f %c", _.u, _.f, end);\
+    }   printf("(0x%08X)%c", _.u, end);\
 } while (0)
 
-#define show_calc_add(a, b) do {\
+#define show_calc_mul(a, b) do {\
     float c = calc_IEEE754(a, b, '*'); \
-    show_float(c, ' '); \
-    printf("= %7.2f * %7.2f (Error to CPU: %.20f)\n", a, b, fabs(c - (a * b))); \
-    fprintf(fp, "%08X + %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
+    show_float(a, '\n'); show_float(b, '\n'); show_float(c, '\n'); \
+    printf("(%f)@T * (%f)@M = (%f)@B\n", a, b, c); \
+    printf("Error to CPU: %.30f\n\n", fabs(c - (a * b))); \
+    fprintf(fp, "%08X * %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
 #define Prepare4Show() FILE* fp = fopen("data.tb", "w")
