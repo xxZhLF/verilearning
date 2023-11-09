@@ -135,10 +135,10 @@ float calc_IEEE754(float _a_, float _b_, char op){
             c.f = calc_IEEE754(a.f, b.f, '+');
             break;
         case '*':
-            printf("Mul: UnSupported");
+            printf("Mul: UnSupported\n");
             break;
         case '/':
-            printf("Div: UnSupported");
+            printf("Div: UnSupported\n");
             break;
         default:
             break;
