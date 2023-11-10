@@ -50,10 +50,13 @@ unsigned char endian_check(){
     ((unsigned int)1 <<  0) & (unsigned int)fraction ? (signed)(30) : 31 \
 )
 
+#define rounding_bias(fraction) ( \
+    ((unsigned int)fraction & ((unsigned int)1 << (6 + number_of_bits_to_shift(fraction)))) ? 1 : 0 \
+)
+
 #define smart_shift_4_encoder(fraction) (\
     /* Sign bit at 31 => Highest data bit at 30 => right shift 7 bits */  \
-    (((unsigned int)fraction << number_of_bits_to_shift(fraction)) >> 7) + \
-    (((unsigned int)fraction & ((unsigned int)1 << (6 + number_of_bits_to_shift(fraction)))) ? 1 : 0) \
+    (((unsigned int)fraction << number_of_bits_to_shift(fraction)) >> 7) + rounding_bias(fraction) \
 )
 
 #define IEEE754_decode(fraction) ( \
