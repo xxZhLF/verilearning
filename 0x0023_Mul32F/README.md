@@ -16,12 +16,12 @@ $$
     \textup{fraction}(5.734794) &= \overset{Real}{\textup{fraction}}(0.07) \times \overset{Real}{\textup{fraction}}(8192.5625) \\
                             &= 1.01101111000000000110100_{2} \times 1.00000000000001001000000_{2} \\
                             &= \begin{aligned}
-                                   \begin{array}{}
+                                   \begin{array}{c cccccccccccccccccccccccc}
                                               & 1 & 0 & 1 & 1 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 0 & 0 \\
                                        \times & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
                                        \hline
                                    \end{array}& \\ 
-                                   \begin{array}{}
+                                   \begin{array}{c cccccccccccccccccccccccccccccccccccccccccccccccc}
                                               &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   & 1 & 0 & 1 & 1 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 0 & 0 &   &   &   &   &   &   \\
                                               &   &   &   &   &   &   &   &   &   &   &   &   &   &   & 1 & 0 & 1 & 1 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 0 & 0 &   &   &   &   &   &   &   &   &   \\
                                             + & 1 & 0 & 1 & 1 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 0 & 0 &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   \\ 
