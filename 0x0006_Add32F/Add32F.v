@@ -30,29 +30,32 @@ module Add32F(
         .sign(s[1])
     );
 
-    wire        sft_tgt;
-    wire [ 7:0] sft_nbs;
+    wire [ 1:0] exp1_vs_exp2;
+    wire [ 7:0] frac_sft_nbs;
     IEEE754_exponent_process processor_e(
         .exp1(e[0]),
         .exp2(e[1]),
-        .sft_tgt(sft_tgt), /* e[0] > e[1] ? 1'b1 : 1'b0 */
-        .sft_nbs(sft_nbs)  /* abs(e[0] - e[1])          */
+        .exp1_vs_exp2(exp1_vs_exp2),
+        .frac_sft_nbs(frac_sft_nbs) 
     );
 
+    wire        fracoverflow;
     wire [31:0] fraction_raw;
     IEEE754_fraction_process processor_f(
         .sign(s),
         .frac(f),
-        .sft_tgt(sft_tgt), /* Which fraction need to shift */
-        .sft_nbs(sft_nbs), /*   hoW many bit need to shift */
+        .exp1_vs_exp2(exp1_vs_exp2), 
+        .frac_sft_nbs(frac_sft_nbs), 
+        .frac_of(fracoverflow),
         .frac3rd(fraction_raw)
     );
 
     wire [ 7:0] exponent_cooked; 
     wire [22:0] fraction_cooked;
     IEEE754_smart_shift smart_shift(
-        .exponent_i(sft_tgt ? e[0] : e[1]),
+        .exponent_i(`isEQ(exp1_vs_exp2, `OP1_GT_OP2) ? e[0] : e[1]),
         .fraction_i(fraction_raw),
+        .overflow_i(fracoverflow),
         .exponent_o(exponent_cooked),
         .fraction_o(fraction_cooked)
     );
@@ -69,8 +72,8 @@ endmodule
 module IEEE754_exponent_process(
     input  wire [ 7:0] exp1,
     input  wire [ 7:0] exp2,
-    output wire        sft_tgt, /* exp1 > exp2 ? 1'b1 : 1'b0 */
-    output wire [ 7:0] sft_nbs  /* Number of Bits to Shift   */
+    output wire [ 1:0] exp1_vs_exp2,
+    output wire [ 7:0] frac_sft_nbs
 );
 
     wire [ 1:0] cmp_res;
@@ -80,36 +83,41 @@ module IEEE754_exponent_process(
         .res(cmp_res)
     );
 
-    wire [31:0] diff;
+    wire [31:0] nbs;
     Sub32 subtractor(
         .op1(`isEQ(cmp_res, `OP1_GT_OP2) ? {24'b0, exp1} : {24'b0, exp2}),
         .op2(`isEQ(cmp_res, `OP1_GT_OP2) ? {24'b0, exp2} : {24'b0, exp1}),
-        .diff(diff)
+        .diff(nbs)
     );
 
-    assign sft_tgt = `isEQ(cmp_res, `OP1_GT_OP2) ? 1'b1 : 1'b0;
-    /* (exp1 > exp2) => (frac2 << exp1-exp2) => (sft_frac = 1'b1) 
-       (exp1 < exp2) => (frac1 << exp2-exp1) => (sft_frac = 1'b0) */
-
-    assign sft_nbs = diff[7:0];
+    assign {exp1_vs_exp2, frac_sft_nbs} = {cmp_res, nbs[7:0]};
 
 endmodule
 
 module IEEE754_fraction_process(
     input  wire        sign[1:0],
     input  wire [23:0] frac[1:0],
-    input              sft_tgt,
-    input  wire [ 7:0] sft_nbs,
+    input  wire [ 1:0] exp1_vs_exp2,
+    input  wire [ 7:0] frac_sft_nbs,
+    output wire        frac_of,
     output wire [31:0] frac3rd
 );
 
+    wire [ 1:0] frac1_vs_frac2;
+    Cmp32U cmp(
+        .op1({8'b0, frac[0]}),
+        .op2({8'b0, frac[1]}),
+        .res(frac1_vs_frac2)
+    );
+
     /* sft_tgt is 1'b1 means:
-               expornet[0] > expornet[1] 
+               expornet[0] >  expornet[1] 
                fraction[1] should be shifted
        sft_tgt is 1'b0 means:
-               expornet[0] < expornet[1] 
+               expornet[0] <= expornet[1] 
                fraction[0] should be shifted
-    */
+    */wire sft_tgt;
+    assign sft_tgt = `isEQ(exp1_vs_exp2, `OP1_GT_OP2);
 
     wire [31:0] fracEX [1:0];
     assign fracEX[0] = {frac[0], 8'b0};
@@ -118,7 +126,7 @@ module IEEE754_fraction_process(
     wire [31:0] fracSFT, fracNotSFT;
     assign fracNotSFT = sft_tgt ? fracEX[0] : fracEX[1];
     ShiftR32U shift(
-        .n(sft_nbs[7:0]),
+        .n(frac_sft_nbs[7:0]),
         .in(sft_tgt ? fracEX[1] : fracEX[0]),
         .out(fracSFT)
     );
@@ -141,18 +149,27 @@ module IEEE754_fraction_process(
         .op1(frac1C),
         .op2(frac2C),
         .sum(frac3C)
-    );
+    );  
+
+    wire sign3, overflow;
+    assign sign3 = `isEQ(exp1_vs_exp2, `OP1_GT_OP2) ? sign[0] :
+                   `isEQ(exp1_vs_exp2, `OP1_LT_OP2) ? sign[1] : `isEQ(frac1_vs_frac2, `OP1_GT_OP2) ? sign[0] : sign[1];
+    assign overflow = sign3 ^ frac3C[31];
 
     CTC32 c2t(
-        .C(frac3C),
+        .C(overflow ? {sign3, frac3C[31:1]} : frac3C),
         .T(frac3rd)
     );
+
+    assign frac_of = overflow;
+
 
 endmodule
 
 module IEEE754_smart_shift(
     input  wire [ 7:0] exponent_i,
     input  wire [31:0] fraction_i,
+    input  wire        overflow_i,
     output wire [ 7:0] exponent_o,
     output wire [22:0] fraction_o
 );
@@ -198,10 +215,17 @@ module IEEE754_smart_shift(
         .op1({24'b0, exponent_i}),
         .op2({24'b0, nbs}),
         .diff(exponent)
-    );  assign exponent_o = exponent[7:0];
+    );
+
+    wire [31:0] exponent_2;
+    Add32 adderE(
+        .op1(exponent),
+        .op2({31'b0, overflow_i}),
+        .sum(exponent_2)
+    );  assign exponent_o = exponent_2[7:0];
 
     wire [31:0] fraction_r;
-    Add32 adder(
+    Add32 adderF(
         .op1(fraction),
         .op2({31'b0, rbt}),
         .sum(fraction_r)
