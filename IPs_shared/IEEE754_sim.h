@@ -148,19 +148,26 @@ float calc_IEEE754(float _a_, float _b_, char op){
         case '+':
             unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
             if (a.u.exponent > b.u.exponent){
+                c.u.sign = a.u.sign;
                 unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
-                unsigned int overflow = frac_c >> 31 != a.u.sign;
+                unsigned int overflow = frac_c >> 31 != c.u.sign;
                 frac_c = overflow ? frac_c >> 1 : frac_c;
                 c.u.fraction = IEEE754_encode(Complement2TrueCode(a.u.sign, frac_c << 1), 0x00000000);
                 c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(a.u.sign, frac_c << 1)) + overflow;
-                c.u.sign = frac_c >> 31;
-            } else {
+            } else if (a.u.exponent < b.u.exponent) {
+                c.u.sign = b.u.sign;
                 unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
-                unsigned int overflow = frac_c >> 31 != a.u.sign;
+                unsigned int overflow = frac_c >> 31 != c.u.sign;
                 frac_c = overflow ? frac_c >> 1 : frac_c;
                 c.u.fraction = IEEE754_encode(Complement2TrueCode(b.u.sign, frac_c << 1), 0x00000000);
                 c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(b.u.sign, frac_c << 1)) + overflow;
-                c.u.sign = frac_c >> 31;
+            } else {
+                c.u.sign = a.u.fraction > b.u.fraction ? a.u.sign : b.u.sign;
+                unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
+                unsigned int overflow = frac_c >> 31 != c.u.sign;
+                frac_c = overflow ? frac_c >> 1 : frac_c;
+                c.u.fraction = IEEE754_encode(Complement2TrueCode(b.u.sign, frac_c << 1), 0x00000000);
+                c.u.exponent = b.u.exponent + overflow;
             }
             break;
         case '-':
