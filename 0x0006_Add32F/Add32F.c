@@ -1,16 +1,8 @@
-#include "./c_sim_add.h"
+#include "../IPs_shared/IEEE754_sim.h"
 
 int main(int argc, char* argv[]){
 
-    printf("\n");
-    char* l1 = "+--------------------------------------+";
-    char* hd = "|               CONTRAST               |";
-    char* dl = "+---------+----------------------------+";
-    printf("%s\n%s\n", l1, hd);
-    for (unsigned int i = 1; i <= 23; ++i){printf("%s\n", dl);
-        printf("| 2^(-%-2d) | %.24f |\n", i, 1.0 / (1 << i));
-    }   printf("%s\n", dl);
-    printf("\n");
+    show_contrastbl();
 
     if (LSB != endian_check()){
         printf("Error: This machin is Big Endian! \n");
@@ -20,7 +12,7 @@ int main(int argc, char* argv[]){
     float array[] = {0.7, -0.7, 0.04, -0.04, 77.44, 33.66, -44.77, -66.33};
 
     for (unsigned char i = 0; i < sizeof(array) / sizeof(float); ++i){
-        show_float(array[i], '\n');
+        show_FLOAT2BIN(array[i], '\n');
     }   printf("\n");
 
     Prepare4Show();

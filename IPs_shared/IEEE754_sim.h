@@ -14,6 +14,18 @@ unsigned char endian_check(){
     }
 }
 
+#define show_contrastbl() do { \
+    printf("\n"); \
+    char* l1 = "+--------------------------------------+"; \
+    char* hd = "|               CONTRAST               |"; \
+    char* dl = "+---------+----------------------------+"; \
+    printf("%s\n%s\n", l1, hd); \
+    for (unsigned int i = 1; i <= 23; ++i){printf("%s\n", dl); \
+        printf("| 2^(-%-2d) | %.24f |\n", i, 1.0 / (1 << i)); \
+    }   printf("%s\n", dl); \
+    printf("\n"); \
+} while(0)
+
 #define number_of_bits_to_shift(fraction) \
 ( \
   /*((unsigned int)1 << 31) & (unsigned int)fraction ? Sign Bit     :*/ \
@@ -81,7 +93,7 @@ unsigned char endian_check(){
                                   ~(((unsigned int)fraction >> 1) - 1)) \
 )
 
-#define show_float(n, end) do { \
+#define show_FLOAT2BIN(n, end) do { \
     union { \
         float f; \
         unsigned int u; \
@@ -93,16 +105,24 @@ unsigned char endian_check(){
 
 #define show_calc_add(a, b) do {\
     float c = calc_IEEE754(a, b, '+'); \
-    show_float(c, ' '); \
+    show_FLOAT2BIN(c, ' '); \
     printf("= %7.2f + %7.2f (Error to CPU: %.30f)\n", a, b, fabs(c - (a + b))); \
     fprintf(fp, "%08X + %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
 #define show_calc_sub(a, b) do {\
     float c = calc_IEEE754(a, b, '-'); \
-    show_float(c, ' '); \
+    show_FLOAT2BIN(c, ' '); \
     printf("= %7.2f - %7.2f (Error to CPU: %.30f)\n", a, b, fabs(c - (a - b))); \
     fprintf(fp, "%08X - %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
+} while(0)
+
+#define show_calc_mul(a, b) do {\
+    float c = calc_IEEE754(a, b, '*'); \
+    show_float(a, '\n'); show_float(b, '\n'); show_float(c, '\n'); \
+    printf("(%f)@T * (%f)@M = (%f)@B\n", a, b, c); \
+    printf("Error to CPU: %.30f\n\n", fabs(c - (a * b))); \
+    fprintf(fp, "%08X * %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
 #define Prepare4Show() FILE* fp = fopen("data.tb", "w")
@@ -139,7 +159,7 @@ float calc_IEEE754(float _a_, float _b_, char op){
             c.f = calc_IEEE754(a.f, b.f, '+');
             break;
         case '*':
-            printf("Mul: UnSupported\n");
+            c.f = a.f * b.f;
             break;
         case '/':
             printf("Div: UnSupported\n");
