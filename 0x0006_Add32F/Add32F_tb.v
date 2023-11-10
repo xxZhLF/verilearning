@@ -16,7 +16,7 @@ module Add32F_tb (
 
         while(!$feof(fd)) begin
             reg  [31:0] a, b, c;
-            $fscanf(fd, "%h + %h = %h", a, b, c);
+            $fscanf(fd, "%h + %h = %h\n", a, b, c);
             op1 = a; op2 = b; chk = c; #5;
             if (c == sum) begin
                 $display("[OK] %h + %H = %h",      op1, op2, sum     );
