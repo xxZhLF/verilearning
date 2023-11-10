@@ -100,7 +100,7 @@ unsigned char endian_check(){
     } _ = { .f = n }; \
     for (unsigned char j = sizeof(float) * 8 - 1; j != 0xFF; --j){ \
         printf("%c", (_.u >> j) & 1 ? '1' : '0'); if (j == 31 || j == 23) printf(","); \
-    }   printf(" = 0x%08X = %10.4f %c", _.u, _.f, end);\
+    }   printf(" = 0x%08X = %12.6f %c", _.u, _.f, end);\
 } while (0)
 
 #define show_calc_add(a, b) do {\
@@ -160,6 +160,12 @@ float calc_IEEE754(float _a_, float _b_, char op){
             break;
         case '*':
             c.f = a.f * b.f;
+            c.u.sign = a.u.sign ^ b.u.sign;
+            c.u.exponent = a.u.exponent + b.u.exponent - (unsigned char )127;
+            unsigned long int frac_c = (unsigned long int)frac_a 
+                                     * (unsigned long int)frac_b;
+            frac_c = frac_c >> 32;  /* Calc errors arise here */
+            c.u.fraction = IEEE754_encode((unsigned int)frac_c);
             break;
         case '/':
             printf("Div: UnSupported\n");
