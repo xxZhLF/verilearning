@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
     show_calc_add(array[6], array[7]);
     show_calc_add(array[4], array[6]);
     show_calc_add(array[7], array[5]);
-    show_calc_add(array[8], array[9]); show_FLOAT2BIN(0.00049, '\n');
+    show_calc_add(array[8], array[9]);
 
     CleanUp4Show();
 

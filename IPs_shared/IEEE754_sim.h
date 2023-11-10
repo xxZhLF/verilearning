@@ -72,11 +72,6 @@ unsigned char endian_check(){
 
 #define smart_shift_4_encoder(fraction, discard) (\
     /* Sign bit at 31 => Highest data bit at 30 => right shift 7 bits */  \
-    /* printf("%08X << %d = %08X (%08X) <= %d \n", fraction, \
-                                                number_of_bits_to_shift(fraction), \
-                                                recover_function_from_discard(fraction, discard, number_of_bits_to_shift(fraction)), \
-                                                discard, \
-                                                rounding_bias(recover_function_from_discard(fraction, discard, number_of_bits_to_shift(fraction)))), */\
     (recover_function_from_discard(fraction, discard, number_of_bits_to_shift(fraction)) >> 7) + \
     rounding_bias(recover_function_from_discard(fraction, discard, number_of_bits_to_shift(fraction))) \
 )
@@ -154,16 +149,17 @@ float calc_IEEE754(float _a_, float _b_, char op){
             unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
             if (a.u.exponent > b.u.exponent){
                 unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
-                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c >> 31, frac_c << 1), 0x00000000);
-                c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c >> 31, frac_c << 1));
+                unsigned int overflow = frac_c >> 31 != a.u.sign;
+                frac_c = overflow ? frac_c >> 1 : frac_c;
+                c.u.fraction = IEEE754_encode(Complement2TrueCode(a.u.sign, frac_c << 1), 0x00000000);
+                c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(a.u.sign, frac_c << 1)) + overflow;
                 c.u.sign = frac_c >> 31;
-                // printf("A : %08X (%08X) \n", frac_a, Complement_of_2(a.u.sign, frac_a));
-                // printf("B : %08X >> %d = %08X(%08X) \n", frac_b, nbs, frac_b >> nbs, Complement_of_2(b.u.sign, frac_b >> nbs));
-                // printf("C : %08X \n", frac_c);
             } else {
                 unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
-                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c >> 31, frac_c << 1), 0x00000000);
-                c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c >> 31, frac_c << 1));
+                unsigned int overflow = frac_c >> 31 != a.u.sign;
+                frac_c = overflow ? frac_c >> 1 : frac_c;
+                c.u.fraction = IEEE754_encode(Complement2TrueCode(b.u.sign, frac_c << 1), 0x00000000);
+                c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(b.u.sign, frac_c << 1)) + overflow;
                 c.u.sign = frac_c >> 31;
             }
             break;
