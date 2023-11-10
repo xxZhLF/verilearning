@@ -9,7 +9,8 @@ int main(int argc, char* argv[]){
         return -1;
     }
 
-    float array[] = {0.7, -0.7, 0.04, -0.04, 77.44, 33.66, -44.77, -66.33};
+    float array[] = {0.7, -0.7, 0.04, -0.04, 77.44, 33.66, -44.77, -66.33, 
+                     0.000400, 0.000090};
 
     for (unsigned char i = 0; i < sizeof(array) / sizeof(float); ++i){
         show_FLOAT2BIN(array[i], '\n');
@@ -25,6 +26,7 @@ int main(int argc, char* argv[]){
     show_calc_add(array[6], array[7]);
     show_calc_add(array[4], array[6]);
     show_calc_add(array[7], array[5]);
+    show_calc_add(array[8], array[9]);
 
     CleanUp4Show();
 
