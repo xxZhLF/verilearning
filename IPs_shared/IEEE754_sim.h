@@ -28,47 +28,57 @@ unsigned char endian_check(){
 
 #define number_of_bits_to_shift(fraction) \
 ( \
-  /*((unsigned int)1 << 31) & (unsigned int)fraction ? Sign Bit     :*/ \
-    ((unsigned int)1 << 30) & (unsigned int)fraction ? (signed)( 0) : \
-    ((unsigned int)1 << 29) & (unsigned int)fraction ? (signed)( 1) : \
-    ((unsigned int)1 << 28) & (unsigned int)fraction ? (signed)( 2) : \
-    ((unsigned int)1 << 27) & (unsigned int)fraction ? (signed)( 3) : \
-    ((unsigned int)1 << 26) & (unsigned int)fraction ? (signed)( 4) : \
-    ((unsigned int)1 << 25) & (unsigned int)fraction ? (signed)( 5) : \
-    ((unsigned int)1 << 24) & (unsigned int)fraction ? (signed)( 6) : \
-    ((unsigned int)1 << 23) & (unsigned int)fraction ? (signed)( 7) : \
-    ((unsigned int)1 << 22) & (unsigned int)fraction ? (signed)( 8) : \
-    ((unsigned int)1 << 21) & (unsigned int)fraction ? (signed)( 9) : \
-    ((unsigned int)1 << 20) & (unsigned int)fraction ? (signed)(10) : \
-    ((unsigned int)1 << 19) & (unsigned int)fraction ? (signed)(11) : \
-    ((unsigned int)1 << 18) & (unsigned int)fraction ? (signed)(12) : \
-    ((unsigned int)1 << 17) & (unsigned int)fraction ? (signed)(13) : \
-    ((unsigned int)1 << 16) & (unsigned int)fraction ? (signed)(14) : \
-    ((unsigned int)1 << 15) & (unsigned int)fraction ? (signed)(15) : \
-    ((unsigned int)1 << 14) & (unsigned int)fraction ? (signed)(16) : \
-    ((unsigned int)1 << 13) & (unsigned int)fraction ? (signed)(17) : \
-    ((unsigned int)1 << 12) & (unsigned int)fraction ? (signed)(18) : \
-    ((unsigned int)1 << 11) & (unsigned int)fraction ? (signed)(19) : \
-    ((unsigned int)1 << 10) & (unsigned int)fraction ? (signed)(20) : \
-    ((unsigned int)1 <<  9) & (unsigned int)fraction ? (signed)(21) : \
-    ((unsigned int)1 <<  8) & (unsigned int)fraction ? (signed)(22) : \
-    ((unsigned int)1 <<  7) & (unsigned int)fraction ? (signed)(23) : \
-    ((unsigned int)1 <<  6) & (unsigned int)fraction ? (signed)(24) : \
-    ((unsigned int)1 <<  5) & (unsigned int)fraction ? (signed)(25) : \
-    ((unsigned int)1 <<  4) & (unsigned int)fraction ? (signed)(26) : \
-    ((unsigned int)1 <<  3) & (unsigned int)fraction ? (signed)(27) : \
-    ((unsigned int)1 <<  2) & (unsigned int)fraction ? (signed)(28) : \
-    ((unsigned int)1 <<  1) & (unsigned int)fraction ? (signed)(29) : \
-    ((unsigned int)1 <<  0) & (unsigned int)fraction ? (signed)(30) : 31 \
+  /*((unsigned int)1 << 31) & (unsigned int)(fraction) ? Sign Bit     :*/  \
+    ((unsigned int)1 << 30) & (unsigned int)(fraction) ? (signed)( 0) :    \
+    ((unsigned int)1 << 29) & (unsigned int)(fraction) ? (signed)( 1) :    \
+    ((unsigned int)1 << 28) & (unsigned int)(fraction) ? (signed)( 2) :    \
+    ((unsigned int)1 << 27) & (unsigned int)(fraction) ? (signed)( 3) :    \
+    ((unsigned int)1 << 26) & (unsigned int)(fraction) ? (signed)( 4) :    \
+    ((unsigned int)1 << 25) & (unsigned int)(fraction) ? (signed)( 5) :    \
+    ((unsigned int)1 << 24) & (unsigned int)(fraction) ? (signed)( 6) :    \
+    ((unsigned int)1 << 23) & (unsigned int)(fraction) ? (signed)( 7) :    \
+    ((unsigned int)1 << 22) & (unsigned int)(fraction) ? (signed)( 8) :    \
+    ((unsigned int)1 << 21) & (unsigned int)(fraction) ? (signed)( 9) :    \
+    ((unsigned int)1 << 20) & (unsigned int)(fraction) ? (signed)(10) :    \
+    ((unsigned int)1 << 19) & (unsigned int)(fraction) ? (signed)(11) :    \
+    ((unsigned int)1 << 18) & (unsigned int)(fraction) ? (signed)(12) :    \
+    ((unsigned int)1 << 17) & (unsigned int)(fraction) ? (signed)(13) :    \
+    ((unsigned int)1 << 16) & (unsigned int)(fraction) ? (signed)(14) :    \
+    ((unsigned int)1 << 15) & (unsigned int)(fraction) ? (signed)(15) :    \
+    ((unsigned int)1 << 14) & (unsigned int)(fraction) ? (signed)(16) :    \
+    ((unsigned int)1 << 13) & (unsigned int)(fraction) ? (signed)(17) :    \
+    ((unsigned int)1 << 12) & (unsigned int)(fraction) ? (signed)(18) :    \
+    ((unsigned int)1 << 11) & (unsigned int)(fraction) ? (signed)(19) :    \
+    ((unsigned int)1 << 10) & (unsigned int)(fraction) ? (signed)(20) :    \
+    ((unsigned int)1 <<  9) & (unsigned int)(fraction) ? (signed)(21) :    \
+    ((unsigned int)1 <<  8) & (unsigned int)(fraction) ? (signed)(22) :    \
+    ((unsigned int)1 <<  7) & (unsigned int)(fraction) ? (signed)(23) :    \
+    ((unsigned int)1 <<  6) & (unsigned int)(fraction) ? (signed)(24) :    \
+    ((unsigned int)1 <<  5) & (unsigned int)(fraction) ? (signed)(25) :    \
+    ((unsigned int)1 <<  4) & (unsigned int)(fraction) ? (signed)(26) :    \
+    ((unsigned int)1 <<  3) & (unsigned int)(fraction) ? (signed)(27) :    \
+    ((unsigned int)1 <<  2) & (unsigned int)(fraction) ? (signed)(28) :    \
+    ((unsigned int)1 <<  1) & (unsigned int)(fraction) ? (signed)(29) :    \
+    ((unsigned int)1 <<  0) & (unsigned int)(fraction) ? (signed)(30) : 31 \
 )
 
 #define rounding_bias(fraction) ( \
-    ((unsigned int)fraction & ((unsigned int)1 << (6 + number_of_bits_to_shift(fraction)))) ? 1 : 0 \
+    ((unsigned int)(fraction) & ((unsigned int)1 << (6 + number_of_bits_to_shift(fraction)))) ? 1 : 0 \
 )
 
-#define smart_shift_4_encoder(fraction) (\
+#define recover_function_from_discard(fraction, discard, nbs) ( \
+    ((unsigned int)(fraction) << nbs) | ((unsigned)(discard) >> (32 - nbs)) \
+)
+
+#define smart_shift_4_encoder(fraction, discard) (\
     /* Sign bit at 31 => Highest data bit at 30 => right shift 7 bits */  \
-    (((unsigned int)fraction << number_of_bits_to_shift(fraction)) >> 7) + rounding_bias(fraction) \
+    /* printf("%08X << %d = %08X (%08X) <= %d \n", fraction, \
+                                                number_of_bits_to_shift(fraction), \
+                                                recover_function_from_discard(fraction, discard, number_of_bits_to_shift(fraction)), \
+                                                discard, \
+                                                rounding_bias(recover_function_from_discard(fraction, discard, number_of_bits_to_shift(fraction)))), */\
+    (recover_function_from_discard(fraction, discard, number_of_bits_to_shift(fraction)) >> 7) + \
+    rounding_bias(recover_function_from_discard(fraction, discard, number_of_bits_to_shift(fraction))) \
 )
 
 #define IEEE754_decode(fraction) ( \
@@ -76,21 +86,21 @@ unsigned char endian_check(){
     (0b00000000100000000000000000000000 | (unsigned int)(fraction)) << 8  \
 )
 
-#define IEEE754_encode(fraction) \
-    (0b00000000011111111111111111111111 & smart_shift_4_encoder(fraction))
+#define IEEE754_encode(fraction, discard) \
+    (0b00000000011111111111111111111111 & smart_shift_4_encoder(fraction, discard))
 
 #define Complement_of_2(sign, fraction) ( \
         ((unsigned int)sign << 31) \
     | \
-        ((unsigned int)sign == 0 ?  ((unsigned int)fraction >> 1) : \
-                                  (~((unsigned int)fraction >> 1) + 1)) \
+        ((unsigned int)sign == 0 ?  ((unsigned int)(fraction) >> 1) : \
+                                  (~((unsigned int)(fraction) >> 1) + 1)) \
 )
 
 #define Complement2TrueCode(sign, fraction) ( \
         ((unsigned int)sign << 31) \
     | \
-        ((unsigned int)sign == 0 ?  ((unsigned int)fraction >> 1) : \
-                                  ~(((unsigned int)fraction >> 1) - 1)) \
+        ((unsigned int)sign == 0 ?  ((unsigned int)(fraction) >> 1) : \
+                                  ~(((unsigned int)(fraction) >> 1) - 1)) \
 )
 
 #define show_FLOAT2BIN(n, end) do { \
@@ -106,14 +116,14 @@ unsigned char endian_check(){
 #define show_calc_add(a, b) do {\
     float c = calc_IEEE754(a, b, '+'); \
     show_FLOAT2BIN(c, ' '); \
-    printf("= %7.2f + %7.2f (Error to CPU: %.30f)\n", a, b, fabs(c - (a + b))); \
+    printf("= %12.6f + %12.6f (Error to CPU: %.20f)\n", a, b, fabs(c - (a + b))); \
     fprintf(fp, "%08X + %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
 #define show_calc_sub(a, b) do {\
     float c = calc_IEEE754(a, b, '-'); \
     show_FLOAT2BIN(c, ' '); \
-    printf("= %7.2f - %7.2f (Error to CPU: %.30f)\n", a, b, fabs(c - (a - b))); \
+    printf("= %12.6f - %12.6f (Error to CPU: %.30f)\n", a, b, fabs(c - (a - b))); \
     fprintf(fp, "%08X - %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
@@ -144,12 +154,15 @@ float calc_IEEE754(float _a_, float _b_, char op){
             unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
             if (a.u.exponent > b.u.exponent){
                 unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
-                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c >> 31, frac_c << 1));
+                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c >> 31, frac_c << 1), 0x00000000);
                 c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c >> 31, frac_c << 1));
                 c.u.sign = frac_c >> 31;
+                // printf("A : %08X (%08X) \n", frac_a, Complement_of_2(a.u.sign, frac_a));
+                // printf("B : %08X >> %d = %08X(%08X) \n", frac_b, nbs, frac_b >> nbs, Complement_of_2(b.u.sign, frac_b >> nbs));
+                // printf("C : %08X \n", frac_c);
             } else {
                 unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
-                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c >> 31, frac_c << 1));
+                c.u.fraction = IEEE754_encode(Complement2TrueCode(frac_c >> 31, frac_c << 1), 0x00000000);
                 c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(frac_c >> 31, frac_c << 1));
                 c.u.sign = frac_c >> 31;
             }
@@ -164,8 +177,8 @@ float calc_IEEE754(float _a_, float _b_, char op){
             c.u.exponent = a.u.exponent + b.u.exponent - (unsigned char )127;
             unsigned long int frac_c = (unsigned long int)frac_a 
                                      * (unsigned long int)frac_b;
-            frac_c = frac_c >> 32;  /* Calc errors arise here */
-            c.u.fraction = IEEE754_encode((unsigned int)frac_c);
+            c.u.fraction = IEEE754_encode((unsigned int)(frac_c >> 32), 
+                                          (unsigned int)(frac_c  & 0x00000000FFFFFFFF));
             break;
         case '/':
             printf("Div: UnSupported\n");
