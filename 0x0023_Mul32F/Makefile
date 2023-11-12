@@ -10,13 +10,13 @@ FLGS += --trace
 FLGS += -I../IPs_shared
 FLGS += -I../0x0001_AdderFL1bit
 FLGS += -I../0x0003_AdderLC32bit
-FLGS += -I../0x0004_AdderSC32bit
+FLGS += -I../0x0004_AdderCS32bit
 
 SRCS := $(Testbehch).v
 SRCS += $(TopModule).v
 SRCS += AdderFL1bit.v
 SRCS += AdderLC32bit.v
-SRCS += AdderSC32bit.v
+SRCS += AdderCS32bit.v
 
 include ../COMMON.mk
 

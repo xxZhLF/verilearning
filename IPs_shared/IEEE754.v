@@ -10,8 +10,8 @@ module IEEE754_decompo(
 
     assign sign = float[31];
 
-    assign fraction = { 1'b1, float[22: 0]};
     assign exponent = {       float[30:23]};
+    assign fraction = { 1'b1, float[22: 0]};
 
 endmodule
 

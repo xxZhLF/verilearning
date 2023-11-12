@@ -1,0 +1,59 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sun Nov 12 08:51:03 2023
+[*]
+[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0023_Mul32F/Mul32F.vcd"
+[dumpfile_mtime] "Sun Nov 12 08:42:35 2023"
+[dumpfile_size] 779375
+[savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0023_Mul32F/Mul32F.gtkw"
+[timestart] 0
+[size] 1428 819
+[pos] 65503 65503
+*-0.871267 2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.Mul32F_tb.
+[treeopen] TOP.Mul32F_tb.multipiler.
+[sst_width] 214
+[signals_width] 150
+[sst_expanded] 1
+[sst_vpaned_height] 229
+@22
+[color] 1
+TOP.Mul32F_tb.multipiler.op1[31:0]
+[color] 1
+TOP.Mul32F_tb.multipiler.op2[31:0]
+[color] 5
+TOP.Mul32F_tb.multipiler.res[31:0]
+@200
+-
+@22
+TOP.Mul32F_tb.multipiler.decompo0.float[31:0]
+@28
+TOP.Mul32F_tb.multipiler.decompo0.sign
+@22
+TOP.Mul32F_tb.multipiler.decompo0.exponent[7:0]
+TOP.Mul32F_tb.multipiler.decompo0.fraction[23:0]
+@200
+-
+@22
+TOP.Mul32F_tb.multipiler.decompo1.float[31:0]
+@28
+TOP.Mul32F_tb.multipiler.decompo1.sign
+@22
+TOP.Mul32F_tb.multipiler.decompo1.exponent[7:0]
+TOP.Mul32F_tb.multipiler.decompo1.fraction[23:0]
+@200
+-
+@22
+TOP.Mul32F_tb.multipiler.processor_e.exp_i[0][7:0]
+TOP.Mul32F_tb.multipiler.processor_e.exp_i[1][7:0]
+TOP.Mul32F_tb.multipiler.processor_e.exp_o[7:0]
+@200
+-
+@22
+TOP.Mul32F_tb.multipiler.processor_f.frac_i[0][23:0]
+TOP.Mul32F_tb.multipiler.processor_f.frac_i[1][23:0]
+@29
+TOP.Mul32F_tb.multipiler.processor_f.frac_o[47:0]
+[pattern_trace] 1
+[pattern_trace] 0
