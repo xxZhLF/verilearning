@@ -25,8 +25,8 @@ module AdderCS32bit_terminator(
 
     AdderLC32bit adderLC32bit(
         .op1(sum_without_carry),
-        .op2({carry[30:0], cin}),
-        .cin(1'b0),
+        .op2({carry[30:0], 1'b0}),
+        .cin(cin),
         .sum(sum),
         .cout(coutL2)
     );
