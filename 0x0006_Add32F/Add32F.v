@@ -162,7 +162,6 @@ module IEEE754_fraction_process(
 
     assign frac_of = overflow;
 
-
 endmodule
 
 module IEEE754_smart_shift(
