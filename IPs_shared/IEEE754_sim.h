@@ -121,6 +121,14 @@ unsigned char endian_check(){
     fprintf(fp, "%08X - %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
+#define show_calc_div(a, b) do {\
+    float c = calc_IEEE754(a, b, '/'); \
+    show_FLOAT2BIN(a, '\n'); show_FLOAT2BIN(b, '\n'); show_FLOAT2BIN(c, '\n'); \
+    printf("(%f)@T / (%f)@M = (%f)@B\n", a, b, c); \
+    printf("Error to CPU: %.30f\n\n", fabs(c - (a / b))); \
+    fprintf(fp, "%08X / %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
+} while(0)
+
 #define show_calc_mul(a, b) do {\
     float c = calc_IEEE754(a, b, '*'); \
     show_FLOAT2BIN(a, '\n'); show_FLOAT2BIN(b, '\n'); show_FLOAT2BIN(c, '\n'); \
@@ -144,7 +152,7 @@ float calc_IEEE754(float _a_, float _b_, char op){
     unsigned int frac_a = IEEE754_decode(a.u.fraction);
     unsigned int frac_b = IEEE754_decode(b.u.fraction);
     switch (op) {
-        case '+':
+        case '+': {
             unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
             if (a.u.exponent > b.u.exponent){
                 c.u.sign = a.u.sign;
@@ -168,12 +176,12 @@ float calc_IEEE754(float _a_, float _b_, char op){
                 c.u.fraction = IEEE754_encode(Complement2TrueCode(c.u.sign, frac_c << 1), 0x00000000);
                 c.u.exponent = b.u.exponent + overflow;
             }
-            break;
-        case '-':
+            } break;
+        case '-': {
             b.u.sign = ~b.u.sign;
             c.f = calc_IEEE754(a.f, b.f, '+');
-            break;
-        case '*':
+            } break;
+        case '*': {
             c.f = a.f * b.f;
             unsigned long int frac_c = (
                 (unsigned long int)frac_a * (unsigned long int)frac_b
@@ -184,10 +192,13 @@ float calc_IEEE754(float _a_, float _b_, char op){
                                            Positive Unsigned Integer  to Signed Integer */
                                           (unsigned int)(frac_c & 0x00000000FFFFFFFF));
             c.u.sign = a.u.sign ^ b.u.sign;
-            break;
-        case '/':
-            printf("Div: UnSupported\n");
-            break;
+            } break;
+        case '/': {
+            printf("UnSupport\n");
+            // b.u.exponent = (0 - (b.u.exponent - 127)) + 127;
+            // c.f = calc_IEEE754(a.f, b.f, '*');
+            /* IEEE754 除法貌似不能简单的通过，将除数的指数部分取反后调用乘法器实现。 */
+            } break;
         default:
             break;
     }
