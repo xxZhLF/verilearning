@@ -236,7 +236,7 @@ module MulWL32U (
 
     AddLC64 adder(
         .op1(vecL8O[0]),
-        .op2(vecL8O[1]),
+        .op2({vecL8O[1][63:1], 1'b0}),
         .sum(res)
     );
 
