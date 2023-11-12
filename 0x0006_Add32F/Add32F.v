@@ -5,7 +5,6 @@
 `include "../IPs_shared/Shift.v"
 `include "../IPs_shared/Comparator.v"
 `include "../IPs_shared/TC_converter.v"
-`include "../0x0003_AdderLC32bit/AdderLC32bit.v"
 `include "../0x0005_Add32/Add32.v"
 `include "../0x0012_Sub32U/Sub32.v"
 
