@@ -1,20 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Sun Nov 12 08:51:03 2023
+[*] Sun Nov 12 14:13:09 2023
 [*]
 [dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0023_Mul32F/Mul32F.vcd"
-[dumpfile_mtime] "Sun Nov 12 08:42:35 2023"
-[dumpfile_size] 779375
+[dumpfile_mtime] "Sun Nov 12 14:10:28 2023"
+[dumpfile_size] 1637492
 [savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0023_Mul32F/Mul32F.gtkw"
 [timestart] 0
 [size] 1428 819
-[pos] 65503 65503
-*-0.871267 2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -1
+*-0.871267 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.Mul32F_tb.
 [treeopen] TOP.Mul32F_tb.multipiler.
+[treeopen] TOP.Mul32F_tb.multipiler.processor_f.multipiler.
 [sst_width] 214
-[signals_width] 150
+[signals_width] 158
 [sst_expanded] 1
 [sst_vpaned_height] 229
 @22
@@ -53,7 +54,15 @@ TOP.Mul32F_tb.multipiler.processor_e.exp_o[7:0]
 @22
 TOP.Mul32F_tb.multipiler.processor_f.frac_i[0][23:0]
 TOP.Mul32F_tb.multipiler.processor_f.frac_i[1][23:0]
-@29
 TOP.Mul32F_tb.multipiler.processor_f.frac_o[47:0]
+@200
+-
+@22
+TOP.Mul32F_tb.multipiler.smart_shift.exponent_i[7:0]
+@23
+TOP.Mul32F_tb.multipiler.smart_shift.exponent_o[7:0]
+@22
+TOP.Mul32F_tb.multipiler.smart_shift.fraction_i[47:0]
+TOP.Mul32F_tb.multipiler.smart_shift.fraction_o[22:0]
 [pattern_trace] 1
 [pattern_trace] 0
