@@ -195,9 +195,6 @@ float calc_IEEE754(float _a_, float _b_, char op){
             } break;
         case '/': {
             printf("UnSupport\n");
-            // b.u.exponent = (0 - (b.u.exponent - 127)) + 127;
-            // c.f = calc_IEEE754(a.f, b.f, '*');
-            /* IEEE754 除法貌似不能简单的通过，将除数的指数部分取反后调用乘法器实现。 */
             } break;
         default:
             break;
