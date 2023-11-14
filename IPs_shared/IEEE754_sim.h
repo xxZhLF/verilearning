@@ -153,48 +153,57 @@ float calc_IEEE754(float _a_, float _b_, char op){
     unsigned int frac_b = IEEE754_decode(b.u.fraction);
     switch (op) {
         case '+': {
-            unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
-            if (a.u.exponent > b.u.exponent){
-                c.u.sign = a.u.sign;
-                unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
-                unsigned int overflow = frac_c >> 31 != c.u.sign;
-                frac_c = overflow ? frac_c >> 1 : frac_c;
-                c.u.fraction = IEEE754_encode(Complement2TrueCode(c.u.sign, frac_c << 1), 0x00000000);
-                c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(a.u.sign, frac_c << 1)) + overflow;
-            } else if (a.u.exponent < b.u.exponent) {
-                c.u.sign = b.u.sign;
-                unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
-                unsigned int overflow = frac_c >> 31 != c.u.sign;
-                frac_c = overflow ? frac_c >> 1 : frac_c;
-                c.u.fraction = IEEE754_encode(Complement2TrueCode(c.u.sign, frac_c << 1), 0x00000000);
-                c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(b.u.sign, frac_c << 1)) + overflow;
-            } else {
-                c.u.sign = a.u.fraction > b.u.fraction ? a.u.sign : b.u.sign;
-                unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
-                unsigned int overflow = frac_c >> 31 != c.u.sign;
-                frac_c = overflow ? frac_c >> 1 : frac_c;
-                c.u.fraction = IEEE754_encode(Complement2TrueCode(c.u.sign, frac_c << 1), 0x00000000);
-                c.u.exponent = b.u.exponent + overflow;
-            }
+                unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
+                if (a.u.exponent > b.u.exponent){
+                    c.u.sign = a.u.sign;
+                    unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
+                    unsigned int overflow = frac_c >> 31 != c.u.sign;
+                    frac_c = overflow ? frac_c >> 1 : frac_c;
+                    c.u.fraction = IEEE754_encode(Complement2TrueCode(c.u.sign, frac_c << 1), 0x00000000);
+                    c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(a.u.sign, frac_c << 1)) + overflow;
+                } else if (a.u.exponent < b.u.exponent) {
+                    c.u.sign = b.u.sign;
+                    unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
+                    unsigned int overflow = frac_c >> 31 != c.u.sign;
+                    frac_c = overflow ? frac_c >> 1 : frac_c;
+                    c.u.fraction = IEEE754_encode(Complement2TrueCode(c.u.sign, frac_c << 1), 0x00000000);
+                    c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(b.u.sign, frac_c << 1)) + overflow;
+                } else {
+                    c.u.sign = a.u.fraction > b.u.fraction ? a.u.sign : b.u.sign;
+                    unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
+                    unsigned int overflow = frac_c >> 31 != c.u.sign;
+                    frac_c = overflow ? frac_c >> 1 : frac_c;
+                    c.u.fraction = IEEE754_encode(Complement2TrueCode(c.u.sign, frac_c << 1), 0x00000000);
+                    c.u.exponent = b.u.exponent + overflow;
+                }
             } break;
         case '-': {
-            b.u.sign = ~b.u.sign;
-            c.f = calc_IEEE754(a.f, b.f, '+');
+                b.u.sign = ~b.u.sign;
+                c.f = calc_IEEE754(a.f, b.f, '+');
             } break;
         case '*': {
-            c.f = a.f * b.f;
-            unsigned long int frac_c = (
-                (unsigned long int)frac_a * (unsigned long int)frac_b
-            ) >> 1; /* Point left shift 1-bit */
-            c.u.exponent = a.u.exponent + b.u.exponent - 127 + 1
-                         - number_of_bits_to_shift((unsigned int)(frac_c >> 32));
-            c.u.fraction = IEEE754_encode((unsigned int)(frac_c >> 32) >> 1, /* Convert 
-                                           Positive Unsigned Integer  to Signed Integer */
-                                          (unsigned int)(frac_c & 0x00000000FFFFFFFF));
-            c.u.sign = a.u.sign ^ b.u.sign;
+                unsigned long int frac_c = (
+                    (unsigned long int)frac_a * (unsigned long int)frac_b
+                ) >> 1; /* Point left shift 1-bit */
+                c.u.exponent = a.u.exponent + b.u.exponent - 127 + 1
+                             - number_of_bits_to_shift((unsigned int)(frac_c >> 32));
+                c.u.fraction = IEEE754_encode((unsigned int)(frac_c >> 32) >> 1, /* Convert 
+                                              Positive Unsigned Integer to Signed Integer */
+                                              (unsigned int)((frac_c >> 1) & 0x00000000FFFFFFFF));
+                c.u.sign = a.u.sign ^ b.u.sign;
             } break;
         case '/': {
-            printf("UnSupport\n");
+                unsigned long int fracEX_a = (unsigned long int)frac_a << 32; printf("%016lX, %08X\n", fracEX_a, frac_a);
+                unsigned long int fracEX_b = (unsigned long int)frac_b << 32; printf("%016lX, %08X\n", fracEX_b, frac_b);
+                unsigned int frac_c = 0;
+                for (unsigned int i = 0; i < 24; ++i){
+                    frac_c = frac_c | (fracEX_a < fracEX_b ? 0 : (unsigned int)1 << (31 - i));
+                    fracEX_a = (fracEX_a < fracEX_b ? fracEX_a : fracEX_a - fracEX_b);
+                    fracEX_b = fracEX_b >> 1;
+                }   c.u.fraction = IEEE754_encode(frac_c >> 1, 0x00000000);
+                    c.u.exponent = a.u.exponent - b.u.exponent + 127 
+                                 - number_of_bits_to_shift(frac_c >> 1);
+                    c.u.sign = a.u.sign ^ b.u.sign;
             } break;
         default:
             break;
