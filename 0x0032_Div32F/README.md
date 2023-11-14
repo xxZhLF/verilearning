@@ -22,8 +22,8 @@ $`(7 \times 10^{-2}) \div (7 \times 10^{-4}) = 7 \div 7 \times 10^{(-2) - (-4)} 
     \\
     &\textup{frac}\left\{\begin{aligned}
     1.00011110101110000101001_{2} \\
-    1.01101111000000000110100_{2} \\
-    \end{aligned}\right. \\
+    1.01101111000000000110100_{2}
+    \end{aligned}\right.
 \end{aligned}
 ```
 
