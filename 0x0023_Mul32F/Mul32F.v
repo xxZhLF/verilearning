@@ -1,5 +1,5 @@
-`ifndef ADD_32BIT_FLOAT_V
-`define ADD_32BIT_FLOAT_V
+`ifndef MUL_32BIT_FLOAT_V
+`define MUL_32BIT_FLOAT_V
 
 `include "../IPs_shared/IEEE754.v"
 `include "../0x0003_AdderLC32bit/AdderLC32bit.v"
