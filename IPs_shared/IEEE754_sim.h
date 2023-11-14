@@ -181,12 +181,12 @@ float calc_IEEE754(float _a_, float _b_, char op){
                 b.u.sign = ~b.u.sign;
                 c.f = calc_IEEE754(a.f, b.f, '+');
             } break;
-        case '*': { // BUG ?
+        case '*': {
                 unsigned long int frac_c = (
                     (unsigned long int)frac_a * (unsigned long int)frac_b
                 ) >> 1; /* Point left shift 1-bit */
                 c.u.exponent = a.u.exponent + b.u.exponent - 127 + 1
-                             - number_of_bits_to_shift((unsigned int)(frac_c >> 32));
+                             - number_of_bits_to_shift((unsigned int)(frac_c >> 32)); // BUG ?
                 c.u.fraction = IEEE754_encode((unsigned int)(frac_c >> 32) >> 1, /* Convert 
                                               Positive Unsigned Integer to Signed Integer */
                                               (unsigned int)((frac_c >> 1) & 0x00000000FFFFFFFF));
