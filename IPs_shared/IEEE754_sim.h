@@ -181,7 +181,7 @@ float calc_IEEE754(float _a_, float _b_, char op){
                 b.u.sign = ~b.u.sign;
                 c.f = calc_IEEE754(a.f, b.f, '+');
             } break;
-        case '*': {
+        case '*': { // BUG ?
                 unsigned long int frac_c = (
                     (unsigned long int)frac_a * (unsigned long int)frac_b
                 ) >> 1; /* Point left shift 1-bit */
