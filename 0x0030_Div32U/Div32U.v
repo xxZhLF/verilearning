@@ -36,7 +36,7 @@ module Div32U (
     );
 
     wire [63:0] sub_res;
-    Sub64S sub(
+    Sub64 sub(
         .op1(remaiREG),
         .op2(divorREG),
         .diff(sub_res)
