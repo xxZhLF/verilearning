@@ -12,11 +12,12 @@ $`(7 \times 10^{-2}) \div (7 \times 10^{-4}) = 7 \div 7 \times 10^{(-2) - (-4)} 
 $$
 \begin{aligned}
     &\textup{exp}\left\{\begin{aligned}
-        &\left.\begin{aligned}
+        & \left. \begin{aligned}
             01111011_{2} - 127_{10} &= -4_{10}  \\
             01110100_{2} - 127_{10} &= -11_{10} \\
-        \end{aligned}\right\} \Rightarrow
+        \end{aligned} \right\} \Rightarrow
         (-4_{10}) - (-11_{10}) = 7_{10} \\
+        &7_{10} + 127_{10} = 10000110_{2}
     \end{aligned}\right. 
     \\
     &\textup{frac}\left\{\begin{aligned}
