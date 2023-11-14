@@ -17,12 +17,12 @@ int main (int argc, char* argv[]){
         return -1;
     }
 
-    float array[] = {0.07, 0.0007};
+    float array[] = {0.07, 0.0007, 100, 1000};
 
     Prepare4Show();
 
     show_calc_div(array[0], array[1]);
-    show_FLOAT2BIN(0.07 / 0.0007, '\n');
+    show_calc_div(array[2], array[3]);
 
     CleanUp4Show();
 
