@@ -56,7 +56,7 @@ module Div32U_combinational(
         .res(cmp_res));
 
     assign quoti = `isEQ(cmp_res, `OP1_GT_OP2) ? 1'b0 : 1'b1;
-    Sub64S sub(
+    Sub64 sub(
         .op1(remai),
         .op2(`isEQ(cmp_res, `OP1_GT_OP2) ? 64'h0 : divorSFT),
         .diff(remao));
