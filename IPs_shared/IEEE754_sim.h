@@ -193,8 +193,8 @@ float calc_IEEE754(float _a_, float _b_, char op){
                 c.u.sign = a.u.sign ^ b.u.sign;
             } break;
         case '/': {
-                unsigned long int fracEX_a = (unsigned long int)frac_a << 32; printf("%016lX, %08X\n", fracEX_a, frac_a);
-                unsigned long int fracEX_b = (unsigned long int)frac_b << 32; printf("%016lX, %08X\n", fracEX_b, frac_b);
+                unsigned long int fracEX_a = (unsigned long int)frac_a << 32;
+                unsigned long int fracEX_b = (unsigned long int)frac_b << 32;
                 unsigned int frac_c = 0;
                 for (unsigned int i = 0; i < 24; ++i){
                     frac_c = frac_c | (fracEX_a < fracEX_b ? 0 : (unsigned int)1 << (31 - i));
