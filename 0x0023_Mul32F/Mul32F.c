@@ -22,8 +22,8 @@ int main (int argc, char* argv[]){
     Prepare4Show();
 
     show_calc_mul(array[0], array[1]);
-    show_calc_mul(array[0], array[2]); 
-    show_calc_mul(array[0], array[3]); 
+    show_calc_mul(array[0], array[2]);
+    show_calc_mul(array[0], array[3]);
     show_calc_mul(array[0], array[4]);
     show_calc_mul(array[0], array[5]);
     show_calc_mul(array[2], array[2]);

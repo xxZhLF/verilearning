@@ -66,7 +66,8 @@ unsigned char endian_check(){
 )
 
 #define recover_function_from_discard(fraction, discard, nbs) ( \
-    ((unsigned int)(fraction) << nbs) | ((unsigned)(discard) >> (32 - nbs)) \
+    ((unsigned int)(fraction) << nbs) | /* Shift count MUST BE less then type width */ \
+     (nbs != 0 ? (unsigned)(discard) >> (32 - nbs) : (unsigned int)0) \
 )
 
 #define smart_shift_4_encoder(fraction, discard) (\
@@ -184,12 +185,11 @@ float calc_IEEE754(float _a_, float _b_, char op){
         case '*': {
                 unsigned long int frac_c = (
                     (unsigned long int)frac_a * (unsigned long int)frac_b
-                ) >> 1; /* Point left shift 1-bit */
-                c.u.exponent = a.u.exponent + b.u.exponent - 127 + 1
-                             - number_of_bits_to_shift((unsigned int)(frac_c >> 32)); // BUG ?
-                c.u.fraction = IEEE754_encode((unsigned int)(frac_c >> 32) >> 1, /* Convert 
-                                              Positive Unsigned Integer to Signed Integer */
-                                              (unsigned int)((frac_c >> 1) & 0x00000000FFFFFFFF));
+                ) >> 1; /* Positive Unsigned Integer to Signed Integer */
+                c.u.exponent = a.u.exponent + b.u.exponent - 127 + 1 /* Point left shift 1-bit */
+                             - number_of_bits_to_shift((unsigned int)(frac_c >> 32));
+                c.u.fraction = IEEE754_encode((unsigned int)(frac_c >> 32), 
+                                              (unsigned int)(frac_c & 0x00000000FFFFFFFF));
                 c.u.sign = a.u.sign ^ b.u.sign;
             } break;
         case '/': {
