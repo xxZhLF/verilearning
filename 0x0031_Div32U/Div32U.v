@@ -21,7 +21,7 @@ module Div32U (
         wire [63:0] remaiVEC [1+31:0];
         assign remaiVEC[0] = remaiEXT;
         for (genvar i = 0; i < 32; ++i) begin
-            Div32U_combinational core(
+            Div32U_chain_of_subtractor core(
                 .remai(remaiVEC[i]),
                 .divor(divorEXT),
                 .nbit(i+1),
@@ -35,7 +35,7 @@ module Div32U (
 
 endmodule
 
-module Div32U_combinational(
+module Div32U_chain_of_subtractor(
     input  wire [63:0] remai,
     input  wire [63:0] divor,
     input  wire [ 7:0] nbit,
@@ -55,11 +55,12 @@ module Div32U_combinational(
         .op2(remai),
         .res(cmp_res));
 
-    assign quoti = `isEQ(cmp_res, `OP1_GT_OP2) ? 1'b0 : 1'b1;
     Sub64 sub(
         .op1(remai),
         .op2(`isEQ(cmp_res, `OP1_GT_OP2) ? 64'h0 : divorSFT),
         .diff(remao));
+
+    assign quoti = `isEQ(cmp_res, `OP1_GT_OP2) ? 1'b0 : 1'b1;
 
 endmodule
 
