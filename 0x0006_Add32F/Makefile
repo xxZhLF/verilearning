@@ -24,6 +24,6 @@ include ../COMMON.mk
 
 .PHONY: c_sim
 c_sim:
-	@- gcc Add32F.c -o Add32F
-	@- ./Add32F
-	@- rm Add32F
+	@- gcc Add32F_sim.c -o Add32F_sim
+	@- ./Add32F_sim
+	@- rm Add32F_sim
