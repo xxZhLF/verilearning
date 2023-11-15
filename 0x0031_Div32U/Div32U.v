@@ -1,5 +1,5 @@
-`ifndef DIV_32BIT_UNSIGNED_V_SEQUENTIAL
-`define DIV_32BIT_UNSIGNED_V_SEQUENTIAL
+`ifndef DIV_32BIT_UNSIGNED_V_COMBINATIONAL
+`define DIV_32BIT_UNSIGNED_V_COMBINATIONAL
 
 `include "../IPs_shared/Counter.v"
 `include "../IPs_shared/Comparator.v"
