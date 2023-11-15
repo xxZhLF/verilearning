@@ -72,7 +72,7 @@ module IEEE754_exponent_process(
         .op3({24'b0, 8'b10000001}), /* -127 */
         .sum(pipe[0]),
         .carry(pipe[1])
-    );     reg USELESS;
+    );       reg USELESS;
     AdderLC32bit adderLC(
         .op1(pipe[0]),
         .op2({pipe[1][30:0], 1'b0}),
