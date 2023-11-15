@@ -24,7 +24,7 @@ int main (int argc, char* argv[]){
     show_calc_div(array[0], array[1]);
     show_calc_div(array[2], array[3]);
     show_calc_div(array[4], array[1]);
-    show_calc_div(array[4], array[2]);
+    show_calc_div(array[4], array[0]);
 
     CleanUp4Show();
 
