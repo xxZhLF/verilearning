@@ -97,9 +97,7 @@ RISC-V 译码器
   \textup{op}
   ~~~~~~ |
 }}}} \quad \textup{S-Type}
-
-\newline
-
+\\
 % B-Type
 \underset{7~btis}{\overset{31:25}{\underline{\overline{
 | ~~~~~~~
@@ -150,9 +148,7 @@ RISC-V 译码器
   \textup{op}
   ~~~~~~ |
 }}}} \quad \textup{U-Type}
-
-\newline
-
+\\
 % J-Type
 \underset{5~btis}{\overset{31:12}{\underline{\overline{
 | ~~~~~~~~~~~~~~~~~~~~ ~_{~~~~}
