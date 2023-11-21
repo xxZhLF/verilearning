@@ -8,7 +8,16 @@ RISC-V 译码器
 - 「0110111」高位立即数类型指令
 - 「1101111」无条件跳转类型指令
 
-<table style="text-align:center;">
+
+<style>
+  th {
+    text-align: center;
+  }
+  td {
+    text-align: center;
+  }
+</style>
+<table>
   <tr>
     <th style="border:0;"></th>
     <th>31</th> <th>30</th> <th>29</th> <th>28</th> <th>27</th> <th>26</th> <th>25</th> <th>24</th> 
