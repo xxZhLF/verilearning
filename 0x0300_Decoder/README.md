@@ -2,7 +2,7 @@ RISC-V 译码器
 
 指令类型一共6种：R，I，S，B，U，J。
 
-$`
+```math
     % R-Type
     \underset{7~btis}{\overset{31:25}{\underline{\overline{
     | ~~~~~~~ ~_{~~~~~}
@@ -34,7 +34,7 @@ $`
       \textup{op}
       ~~~~~~ |
     }}}} \quad \textup{R-Type}
-`$
+```
 
 ```math
  % I-Type
