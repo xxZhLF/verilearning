@@ -37,7 +37,7 @@ RISC-V 译码器
 ```
 
 ```math
- % I-Type
+     % I-Type
     \underset{12~btis}{\overset{31:20}{\underline{\overline{
     | ~~~~~~~~~~~~ ~_{~~~~~~~}
       \textup{imm}_{11:0}
@@ -63,7 +63,10 @@ RISC-V 译码器
       \textup{op}
       ~~~~~~ |
     }}}} \quad \textup{I-Type}
-\\  % S-Type
+```
+
+```math
+    % S-Type
     \underset{7~btis}{\overset{31:25}{\underline{\overline{
     | ~~~~~~~ 
       \textup{imm}_{11:5}
@@ -94,7 +97,10 @@ RISC-V 译码器
       \textup{op}
       ~~~~~~ |
     }}}} \quad \textup{S-Type}
-\\  % B-Type
+```
+
+```math
+    % B-Type
     \underset{7~btis}{\overset{31:25}{\underline{\overline{
     | ~~~~~~~
       \textup{imm}_{12},~_{10:5}
@@ -125,7 +131,10 @@ RISC-V 译码器
       \textup{op}
       ~~~~~~ |
     }}}} \quad \textup{B-Type}
-\\  % U-Type
+```
+
+```math
+    % U-Type
     \underset{5~btis}{\overset{31:12}{\underline{\overline{
     | ~~~~~~~~~~~~~~~~~~~~ ~_{~~~~}
       \textup{imm}_{31:12}
@@ -141,7 +150,10 @@ RISC-V 译码器
       \textup{op}
       ~~~~~~ |
     }}}} \quad \textup{U-Type}
-\\  % J-Type
+```
+
+```math
+    % J-Type
     \underset{5~btis}{\overset{31:12}{\underline{\overline{
     | ~~~~~~~~~~~~~~~~~~~~ ~_{~~~~}
       \textup{imm}_{20}, ~_{10:1}, ~_{11}, ~_{19:12}
@@ -157,4 +169,4 @@ RISC-V 译码器
       \textup{op}
       ~~~~~~ |
     }}}} \quad \textup{J-Type}
-$$
+```
