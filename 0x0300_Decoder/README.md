@@ -8,15 +8,6 @@ RISC-V 译码器
 - 「0110111」高位立即数类型指令
 - 「1101111」无条件跳转类型指令
 
-
-<style>
-  th {
-    text-align: center;
-  }
-  td {
-    text-align: center;
-  }
-</style>
 <table>
   <tr>
     <th style="border:0;"></th>
@@ -27,50 +18,50 @@ RISC-V 译码器
   </tr>
   <tr>
     <td style="border:0;">R</td>
-    <td colspan="7">func7</td>
-    <td colspan="5">rs2</td>
-    <td colspan="5">rs1</td>
-    <td colspan="3">func3</td>
-    <td colspan="5">rd</td>
-    <td colspan="7">op</td>
+    <td style="text-align:center" colspan="7">func7</td>
+    <td style="text-align:center" colspan="5">rs2</td>
+    <td style="text-align:center" colspan="5">rs1</td>
+    <td style="text-align:center" colspan="3">func3</td>
+    <td style="text-align:center" colspan="5">rd</td>
+    <td style="text-align:center" colspan="7">op</td>
   </tr>
   <tr>
     <td style="border:0;">I</td>
-    <td colspan="12">imm<sub>11:0</sub></td>
-    <td colspan="5">rs1</td>
-    <td colspan="3">func3</td>
-    <td colspan="5">rd</td>
-    <td colspan="7">op</td>
+    <td style="text-align:center" colspan="12">imm<sub>11:0</sub></td>
+    <td style="text-align:center" colspan="5">rs1</td>
+    <td style="text-align:center" colspan="3">func3</td>
+    <td style="text-align:center" colspan="5">rd</td>
+    <td style="text-align:center" colspan="7">op</td>
   </tr>
   <tr>
     <td style="border:0;">S</td>
-    <td colspan="7">imm<sub>11:5</sub></td>
-    <td colspan="5">rs2</td>
-    <td colspan="5">rs1</td>
-    <td colspan="3">func3</td>
-    <td colspan="5">imm<sub>4:0</sub></td>
-    <td colspan="7">op</td>
+    <td style="text-align:center" colspan="7">imm<sub>11:5</sub></td>
+    <td style="text-align:center" colspan="5">rs2</td>
+    <td style="text-align:center" colspan="5">rs1</td>
+    <td style="text-align:center" colspan="3">func3</td>
+    <td style="text-align:center" colspan="5">imm<sub>4:0</sub></td>
+    <td style="text-align:center" colspan="7">op</td>
   </tr>
   <tr>
     <td style="border:0;">B</td>
-    <td colspan="7">imm<sub>12, 10:5</sub></td>
-    <td colspan="5">rs2</td>
-    <td colspan="5">rs1</td>
-    <td colspan="3">func3</td>
-    <td colspan="5">imm<sub>4:1, 11</sub></td>
-    <td colspan="7">op</td>
+    <td style="text-align:center" colspan="7">imm<sub>12, 10:5</sub></td>
+    <td style="text-align:center" colspan="5">rs2</td>
+    <td style="text-align:center" colspan="5">rs1</td>
+    <td style="text-align:center" colspan="3">func3</td>
+    <td style="text-align:center" colspan="5">imm<sub>4:1, 11</sub></td>
+    <td style="text-align:center" colspan="7">op</td>
   </tr>
   <tr>
     <td style="border:0;">U</td>
-    <td colspan="20">imm<sub>31:12</sub></td>
-    <td colspan="5">rd</td>
-    <td colspan="7">op</td>
+    <td style="text-align:center" colspan="20">imm<sub>31:12</sub></td>
+    <td style="text-align:center" colspan="5">rd</td>
+    <td style="text-align:center" colspan="7">op</td>
   </tr>
   <tr>
     <td style="border:0;">J</td>
-    <td colspan="20">imm<sub>20, 10:1, 11, 19:12</sub></td>
-    <td colspan="5">rd</td>
-    <td colspan="7">op</td>
+    <td style="text-align:center" colspan="20">imm<sub>20, 10:1, 11, 19:12</sub></td>
+    <td style="text-align:center" colspan="5">rd</td>
+    <td style="text-align:center" colspan="7">op</td>
   </tr>
 </table>
 
