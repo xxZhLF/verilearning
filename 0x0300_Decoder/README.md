@@ -37,36 +37,36 @@ RISC-V 译码器
 ```
 
 ```math
-\aligned{begin}
-    % I-Type
-    \underset{12~btis}{\overset{31:20}{\underline{\overline{
-    | ~~~~~~~~~~~~ ~_{~~~~~~~}
-      \textup{imm}_{11:0}
-      ~~~~~~~~~~~~ ~_{~~~~~~~}
-    }}}}
-    \underset{5~btis}{\overset{19:15}{\underline{\overline{
-    | ~~~~~
-      \textup{rs1}
-      ~~~~~
-    }}}}
-    \underset{3~btis}{\overset{14:12}{\underline{\overline{
-    | ~~~
-      \textup{func3}
-      ~~~
-    }}}}
-    \underset{5~btis}{\overset{11:7}{\underline{\overline{
-    | ~~~~~ ~_{~~~~~~~~~~}
-      \textup{rd}
-      ~~~~~ ~_{~~~~~~~~~~}
-    }}}}
-    \underset{7~btis}{\overset{6:0}{\underline{\overline{
-    | ~~~~~~
-      \textup{op}
-      ~~~~~~ |
-    }}}} \quad \textup{I-Type}
-    ```
+% I-Type
+\underset{12~btis}{\overset{31:20}{\underline{\overline{
+| ~~~~~~~~~~~~ ~_{~~~~~~~}
+  \textup{imm}_{11:0}
+  ~~~~~~~~~~~~ ~_{~~~~~~~}
+}}}}
+\underset{5~btis}{\overset{19:15}{\underline{\overline{
+| ~~~~~
+  \textup{rs1}
+  ~~~~~
+}}}}
+\underset{3~btis}{\overset{14:12}{\underline{\overline{
+| ~~~
+  \textup{func3}
+  ~~~
+}}}}
+\underset{5~btis}{\overset{11:7}{\underline{\overline{
+| ~~~~~ ~_{~~~~~~~~~~}
+  \textup{rd}
+  ~~~~~ ~_{~~~~~~~~~~}
+}}}}
+\underset{7~btis}{\overset{6:0}{\underline{\overline{
+| ~~~~~~
+  \textup{op}
+  ~~~~~~ |
+}}}} \quad \textup{I-Type}
+```
     
-    ```math
+```math
+\begin{aligned}
     % S-Type
     \underset{7~btis}{\overset{31:25}{\underline{\overline{
     | ~~~~~~~ 
