@@ -4,7 +4,7 @@ module REGs3P_tb(
     // None
 );
 
-    reg         clk;
+    reg          clk;
     reg  [ 7:0] _cnt;
 
     reg         en4w;
