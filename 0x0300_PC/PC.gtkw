@@ -1,0 +1,25 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Wed Nov 22 15:24:15 2023
+[*]
+[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0300_PC/PC.vcd"
+[dumpfile_mtime] "Wed Nov 22 15:24:02 2023"
+[dumpfile_size] 43132
+[savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0300_PC/PC.gtkw"
+[timestart] 0
+[size] 1428 819
+[pos] 32767 32767
+*-6.000000 202 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[sst_width] 214
+[signals_width] 126
+[sst_expanded] 1
+[sst_vpaned_height] 229
+@28
+TOP.PC_tb.clk
+TOP.PC_tb.rst
+@25
+[color] 1
+TOP.PC_tb.pc_val[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
