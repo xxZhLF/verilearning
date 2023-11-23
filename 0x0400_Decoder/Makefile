@@ -15,3 +15,13 @@ SRCS := $(ROOT)/$(Testbehch).v
 SRCS += $(ROOT)/$(TopModule).v
 
 include ../COMMON.mk
+
+.PHONY: tb
+tb:
+	clang code.c -o code.S -S
+	clang code.S -o code.o -c
+	clang code.o -o code
+
+.PHONY: clear
+clear:
+	rm *.S *.o $(C_PROG)
