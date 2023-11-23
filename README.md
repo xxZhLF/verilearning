@@ -16,6 +16,52 @@
   - `sudo apt install gtkwave`
 - Xilinx Vivado (Optional)
 
+LLVM
+```bash
+$ git clone https://github.com/llvm/llvm-project.git
+$ mkdir llvm-project/build
+$ cd llvm-project/build
+$ cmake -G "Unix Makefiles" \
+        -DCMAKE_BUILD_TYPE="Release" \
+        -DLLVM_ENABLE_PROJECTS="clang;lld" \
+        -DLLVM_TARGETS_TO_BUILD="RISCV" \
+        -DLLVM_DEFAULT_TARGET_TRIPLE='riscv32-unknown-unknown-elf' \
+        -DCMAKE_INSTALL_PREFIX="/opt/llvm-riscv" ../llvm
+$ make -j8
+$ sudo make install
+$ echo "PATH=/opt/llvm-riscv/bin:\$PATH" >> ~/.bashrc
+```
+
+<details>
+
+<summary>内存不足时</summary>
+
+错误信息：
+```bash
+c++: fatal error: Killed signal terminated program cc1plus
+```
+
+创建交换空间：
+```bash
+sudo mkdir -p /var/cache/swap                                    // 1st time only
+sudo dd if=/dev/zero of=/var/cache/swap/swap0 bs=64M count=64    // 1st time only
+sudo chmod 0600 /var/cache/swap/swap0                            // 1st time only
+sudo mkswap /var/cache/swap/swap0                                // Everytime
+sudo swapon /var/cache/swap/swap0                                // Everytime
+sudo swapon -s                                                   // Option
+```
+
+在这里重新 `make`
+
+释放交换空间：
+```bash
+sudo swapoff /var/cache/swap/swap0                               // Everytime
+sudo rm /var/cache/swap/swap0                                    // Everytime
+sudo swapoff -a                                                  // Everytime
+```
+
+</details>
+
 ---
 
 git promopt 优化： [here](https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh)
