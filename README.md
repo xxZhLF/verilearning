@@ -20,7 +20,7 @@
 ```bash
 $ git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git
 $ ./configure --with-arch=rv32i --with-abi=ilp32 --prefix=/opt/riscv
-$ sudo make linux  
+$ sudo make  
 ```
 
 [LLVM](https://llvm.org/docs/GettingStarted.html)
