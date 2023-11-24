@@ -16,11 +16,37 @@ SRCS += $(ROOT)/$(TopModule).v
 
 include ../COMMON.mk
 
-.PHONY: tb
-tb:
-	clang code.c -o code.S -S
-	clang code.S -o code.o -c
-	clang code.o -o code
+# =============================================================================
+
+.SUFFIXES:		# DISABLE Makefile Implicit Rules
+.PRECIOUS: %.S	# Keep ASM file otherwise it will be delete automatically
+
+CC := /opt/llvm-riscv/bin/clang
+DC := /opt/riscv/bin/riscv32-unknown-elf-objdump
+
+C_PROG := prog
+
+CLFLGs := --sysroot=/opt/riscv/riscv32-unknown-elf
+CLFLGs += --gcc-toolchain=/opt/riscv/
+CLFLGs += --target=riscv32-unknown-elf 
+CLFLGs +=  -march=rv32i
+CLFLGs +=  -mabi=ilp32
+CLFLGs +=  -fno-builtin
+CLFLGs +=  -static
+CLFLGs +=  -ffreestanding
+CLFLGs +=  -nostdlib
+
+$(C_PROG).mc: $(C_PROG)
+	$(DC) $< -d -j .text -M no-aliases,numeric
+
+$(C_PROG): $(patsubst %.S, %.o, $(patsubst %.c, %.S, $(wildcard *.c))) 
+	$(CC) $^ -g -o $@ $(CLFLGs)
+
+%.o: %.S
+	$(CC) $< -g -o $@ -c
+
+%.S: %.c
+	$(CC) $< -g -o $@ -S 
 
 .PHONY: clear
 clear:
