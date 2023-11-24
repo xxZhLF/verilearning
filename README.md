@@ -29,7 +29,7 @@ $ cmake -G "Unix Makefiles" \
         -DCMAKE_INSTALL_PREFIX="/opt/llvm-riscv" ../llvm
 $ make -j8
 $ sudo make install
-$ echo "PATH=/opt/llvm-riscv/bin:\$PATH" >> ~/.bashrc
+$ echo "export PATH=/opt/llvm-riscv/bin:\$PATH" >> ~/.bashrc
 ```
 
 <details>
