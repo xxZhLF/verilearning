@@ -19,8 +19,8 @@
 [RISC-V GNU Toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain)
 ```bash
 $ git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git
-$ ./configure
-$ make linux  
+$ ./configure --with-arch=rv32i --with-abi=ilp32 --prefix=/opt/riscv
+$ sudo make linux  
 ```
 
 [LLVM](https://llvm.org/docs/GettingStarted.html)
@@ -36,7 +36,6 @@ $ cmake -G "Unix Makefiles" \
         -DCMAKE_INSTALL_PREFIX="/opt/llvm-riscv" ../llvm
 $ make -j8
 $ sudo make install
-$ echo "export PATH=/opt/llvm-riscv/bin:\$PATH" >> ~/.bashrc
 ```
 
 <details>
