@@ -5,6 +5,6 @@
 0x0013_Sub32F/data.tb
 0x0023_Mul32F/data.tb
 0x0032_Div32F/data.tb
-0x0400_Decoder/code.S
-0x0400_Decoder/code.o
-0x0400_Decoder/code
+0x0400_Decoder/prog.S
+0x0400_Decoder/prog.o
+0x0400_Decoder/prog
