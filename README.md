@@ -16,7 +16,14 @@
   - `sudo apt install gtkwave`
 - Xilinx Vivado (Optional)
 
-LLVM
+[RISC-V GNU Toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain)
+```bash
+$ git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git
+$ ./configure
+$ make linux  
+```
+
+[LLVM](https://llvm.org/docs/GettingStarted.html)
 ```bash
 $ git clone https://github.com/llvm/llvm-project.git
 $ mkdir llvm-project/build
