@@ -35,18 +35,19 @@ CLFLGs +=  -fno-builtin
 CLFLGs +=  -static
 CLFLGs +=  -ffreestanding
 CLFLGs +=  -nostdlib
+CLFLGs +=  -g
 
-$(C_PROG).mc: $(C_PROG)
+$(C_PROG).instr: $(C_PROG)
 	$(DC) $< -d -j .text -M no-aliases,numeric
 
 $(C_PROG): $(patsubst %.S, %.o, $(patsubst %.c, %.S, $(wildcard *.c))) 
-	$(CC) $^ -g -o $@ $(CLFLGs)
+	$(CC) $^ $(CLFLGs) -o $@
 
 %.o: %.S
-	$(CC) $< -g -o $@ -c
+	$(CC) $< $(CLFLGs) -o $@ -c
 
 %.S: %.c
-	$(CC) $< -g -o $@ -S 
+	$(CC) $< $(CLFLGs) -o $@ -S 
 
 .PHONY: clear
 clear:
