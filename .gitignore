@@ -8,3 +8,4 @@
 0x0400_Decoder/prog.S
 0x0400_Decoder/prog.o
 0x0400_Decoder/prog
+0x0400_Decoder/prog.mc
