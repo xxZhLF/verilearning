@@ -37,8 +37,8 @@ CLFLGs +=  -ffreestanding
 CLFLGs +=  -nostdlib
 CLFLGs +=  -g
 
-$(C_PROG).instr: $(C_PROG)
-	$(DC) $< -d -j .text -M no-aliases,numeric
+$(C_PROG).mc: $(C_PROG)
+	$(DC) $< -d -M no-aliases,numeric | awk 'NR > 7 {print $$2}' > $@
 
 $(C_PROG): $(patsubst %.S, %.o, $(patsubst %.c, %.S, $(wildcard *.c))) 
 	$(CC) $^ $(CLFLGs) -o $@
@@ -51,4 +51,4 @@ $(C_PROG): $(patsubst %.S, %.o, $(patsubst %.c, %.S, $(wildcard *.c)))
 
 .PHONY: clear
 clear:
-	rm *.S *.o $(C_PROG)
+	rm *.S *.o *.mc $(C_PROG)
