@@ -19,10 +19,7 @@
 [RISC-V GNU Toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain)
 ```bash
 $ git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git
-$ ./configure --with-arch=rv32i \
-              --with-abi=ilp32 \
-              --enable-llvm  \
-              --prefix=/opt/riscv
+$ ./configure --with-arch=rv32i --with-abi=ilp32 --prefix=/opt/riscv
 $ sudo make  
 ```
 
