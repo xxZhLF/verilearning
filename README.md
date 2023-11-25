@@ -19,15 +19,18 @@
 [RISC-V GNU Toolchain](https://github.com/riscv-collab/riscv-gnu-toolchain)
 ```bash
 $ git clone https://github.com/riscv-collab/riscv-gnu-toolchain.git
-$ ./configure --with-arch=rv32i --with-abi=ilp32 --prefix=/opt/riscv
+$ ./configure --with-arch=rv32i \
+              --with-abi=ilp32 \
+              --enable-llvm  \
+              --prefix=/opt/riscv
 $ sudo make  
 ```
 
 [LLVM](https://llvm.org/docs/GettingStarted.html)
 ```bash
 $ git clone https://github.com/llvm/llvm-project.git
-$ mkdir llvm-project/build
-$ cd llvm-project/build
+$ cd llvm-project/
+$ mkdir build && cd build
 $ cmake -G "Unix Makefiles" \
         -DCMAKE_BUILD_TYPE="Release" \
         -DLLVM_ENABLE_PROJECTS="clang;lld" \
