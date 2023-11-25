@@ -38,16 +38,16 @@ CLFLGs +=  -nostdlib
 CLFLGs +=  -g
 
 $(C_PROG).mc: $(C_PROG)
-	$(DC) $< -d -M no-aliases,numeric | awk 'NR > 7 {print $$2}' > $@
+	@ $(DC) $< -d -M no-aliases,numeric | awk 'NR > 7 {print $$2, "\t", $$3, "\t", $$4, " "}' > $@
 
 $(C_PROG): $(patsubst %.S, %.o, $(patsubst %.c, %.S, $(wildcard *.c))) 
-	$(CC) $^ $(CLFLGs) -o $@
+	@ $(CC) $^ $(CLFLGs) -o $@
 
 %.o: %.S
-	$(CC) $< $(CLFLGs) -o $@ -c
+	@ $(CC) $< $(CLFLGs) -o $@ -c
 
 %.S: %.c
-	$(CC) $< $(CLFLGs) -o $@ -S 
+	@ $(CC) $< $(CLFLGs) -o $@ -S 
 
 .PHONY: clear
 clear:
