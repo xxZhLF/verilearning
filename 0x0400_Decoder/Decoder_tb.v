@@ -62,7 +62,7 @@ module Decoder_tb(
             mnemonic_p2 = prepro(mnemonic_p2);
             $write("%s:\t %H => ", {mnemonic_p1[15*8-1 : 8*8], mnemonic_p2}, instruction);
             instr = instruction; /* Hint: Dealy for $write(). Otherwise the current result 
-            (try it by deletint #5) will be output to the console in the next cycle */ #5;
+            (try it by deleting #5) will be output to the console in the next cycle */ #5;
             case (op)
                 `ITYP_R: begin
                     case (func)
