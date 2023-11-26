@@ -1,14 +1,8 @@
 `ifndef DECODER_V
 `define DECODER_V
 
+`include "RV32I.v"
 `include "../IPs_shared/MacroFunc.v"
-
-`define DTYP_R 7'b0110011
-`define DTYP_I 7'b0010011
-`define DTYP_S 7'b0100011
-`define DTYP_B 7'b1100011
-`define DTYP_U 7'b0110111
-`define DTYP_J 7'b1101111
 
 module Decoder (
     input  wire [31:0] instr,
@@ -21,12 +15,15 @@ module Decoder (
     output wire [19:0] imml
 );
 
-    assign {rs1, rs2, rd, func, imms, imml} = `isEQ(instr[6:0], `DTYP_R) ? {rt_rs1, rt_rs2, rt_rd, rt_func,  12'b0,  20'b0} :
-                                              `isEQ(instr[6:0], `DTYP_I) ? {it_rs1,   5'b0, it_rd, it_func, it_imm,  20'b0} :
-                                              `isEQ(instr[6:0], `DTYP_S) ? {st_rs1, st_rs2,  5'b0, st_func, st_imm,  20'b0} :
-                                              `isEQ(instr[6:0], `DTYP_B) ? {bt_rs1, bt_rs2,  5'b0, bt_func, bt_imm,  20'b0} :
-                                              `isEQ(instr[6:0], `DTYP_U) ? {  5'b0,   5'b0, ut_rd,   10'b0,  12'b0, ut_imm} :
-                                              `isEQ(instr[6:0], `DTYP_J) ? {  5'b0,   5'b0, jt_rd,   10'b0,  12'b0, jt_imm} : 57'b0;
+    assign op = instr[6:0];
+
+    assign {rs1, rs2, rd, func, imms, imml} = `isEQ(instr[6:0], `ITYP_R) ? {rt_rs1, rt_rs2, rt_rd, rt_func,  12'b0,  20'b0} :
+                                              `isEQ(instr[6:0], `ITYP_I_SP) |
+                                              `isEQ(instr[6:0], `ITYP_I) ? {it_rs1,   5'b0, it_rd, it_func, it_imm,  20'b0} :
+                                              `isEQ(instr[6:0], `ITYP_S) ? {st_rs1, st_rs2,  5'b0, st_func, st_imm,  20'b0} :
+                                              `isEQ(instr[6:0], `ITYP_B) ? {bt_rs1, bt_rs2,  5'b0, bt_func, bt_imm,  20'b0} :
+                                              `isEQ(instr[6:0], `ITYP_U) ? {  5'b0,   5'b0, ut_rd,   10'b0,  12'b0, ut_imm} :
+                                              `isEQ(instr[6:0], `ITYP_J) ? {  5'b0,   5'b0, jt_rd,   10'b0,  12'b0, jt_imm} : 57'b0;
 
     wire [ 4:0] rt_rs1, rt_rs2, rt_rd;
     wire [ 9:0] rt_func;
