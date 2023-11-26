@@ -44,6 +44,8 @@
 
 `define ITYP_J_FC_JAL   10'bZZZZZZZ_ZZZ
 
+/* ============================================ */
+
 `define ITYP_I_SP 7'b1100111
 
 `define ITYP_I_SP_FC_JALR 10'b0000000_000
