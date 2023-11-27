@@ -80,7 +80,7 @@ wget https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 关于目录结构： \
 $`\qquad\qquad\quad 0\textup{x}[A][B][C][D]\_[E]`$
 - $`A`$: 保留
-- $`B`$: 功能目录
-- $`C`$: 逻辑功能
-- $`D`$: 逻辑实现
+- $`B`$: 功能目录（L2）
+- $`C`$: 逻辑功能（L1）
+- $`D`$: 逻辑实现（同一逻辑功能的不同实现）
 - $`E`$: 实装名称
