@@ -35,6 +35,7 @@ CLFLGs +=  -fno-builtin
 CLFLGs +=  -static
 CLFLGs +=  -ffreestanding
 CLFLGs +=  -nostdlib
+CLFLGs +=  -O0
 CLFLGs +=  -g
 
 $(C_PROG).mc: $(C_PROG)
