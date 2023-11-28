@@ -71,7 +71,14 @@ module Mem4K ( input wire clk,
         .cout(USELESS4B[3])
     );
 
-    reg [ 7:0] mem [4*1204 : 0];
+    reg [ 7:0] mem [4*1204-1 : 0];
+    initial begin
+        integer i;
+        for (i = 0; i < 4096; ++i) begin
+            mem[i] = 8'b0;
+        end
+    end
+
 
     reg [31:0] Word4A, Word4B;
     always @(posedge clk) begin
