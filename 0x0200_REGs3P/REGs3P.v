@@ -19,7 +19,7 @@ module REGs3P (
     always RF[0] = 32'h0;
 
     always @(posedge clk) begin
-        if (~`isZERO(addr_w0) &  en4w) begin
+        if (~`isZERO(addr_w0) & en4w) begin
             RF[addr_w0] <= data_i0;
         end else begin
         end
