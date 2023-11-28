@@ -1,8 +1,8 @@
 `ifndef MEMORY_4K_V
 `define MEMORY_4K_V
 
-`define WENB 1'b0
-`define RENB 1'b1
+`define RENB 1'b0
+`define WENB 1'b1
 
 module Mem4K ( input wire clk,
     /* Port A for instration */ input  wire        A_EnWR,
