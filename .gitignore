@@ -9,3 +9,7 @@
 0x0400_Decoder/prog.o
 0x0400_Decoder/prog
 0x0400_Decoder/prog.mc
+0x0500_Mem/prog.S
+0x0500_Mem/prog.o
+0x0500_Mem/prog
+0x0500_Mem/prog.mc
