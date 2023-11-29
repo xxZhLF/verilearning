@@ -16,59 +16,41 @@ module Mem4K ( input wire clk,
 );
 
     reg [31:0] BytesA [3:0];
-    reg USELESS4A[4-1 : 0];
-    AdderLC32bit adderA0 (
+    Add32 adderA0 (
         .op1(A_ABus),
         .op2(32'd0),
-        .cin(1'b0),
-        .sum(BytesA[0]),
-        .cout(USELESS4A[0])
+        .sum(BytesA[0])
     ), adderA1 (
         .op1(A_ABus),
         .op2(32'd1),
-        .cin(1'b0),
-        .sum(BytesA[1]),
-        .cout(USELESS4A[1])
+        .sum(BytesA[1])
     ), adderA2 (
         .op1(A_ABus),
         .op2(32'd2),
-        .cin(1'b0),
-        .sum(BytesA[2]),
-        .cout(USELESS4A[2])
+        .sum(BytesA[2])
     ), adderA3 (
         .op1(A_ABus),
         .op2(32'd3),
-        .cin(1'b0),
-        .sum(BytesA[3]),
-        .cout(USELESS4A[3])
+        .sum(BytesA[3])
     );
 
     reg [31:0] BytesB [3:0];
-    reg USELESS4B[4-1 : 0];
-    AdderLC32bit adderB0 (
+    Add32 adderB0 (
         .op1(B_ABus),
         .op2(32'd0),
-        .cin(1'b0),
-        .sum(BytesB[0]),
-        .cout(USELESS4B[0])
+        .sum(BytesB[0])
     ), adderB1 (
         .op1(B_ABus),
         .op2(32'd1),
-        .cin(1'b0),
-        .sum(BytesB[1]),
-        .cout(USELESS4B[1])
+        .sum(BytesB[1])
     ), adderB2 (
         .op1(B_ABus),
         .op2(32'd2),
-        .cin(1'b0),
-        .sum(BytesB[2]),
-        .cout(USELESS4B[2])
+        .sum(BytesB[2])
     ), adderB3 (
         .op1(B_ABus),
         .op2(32'd3),
-        .cin(1'b0),
-        .sum(BytesB[3]),
-        .cout(USELESS4B[3])
+        .sum(BytesB[3])
     );
 
     reg [ 7:0] mem [4*1024-1 : 0];
