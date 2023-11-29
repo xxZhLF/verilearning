@@ -1,12 +1,7 @@
 `ifndef ADD_32BIT_FLOAT_V
 `define ADD_32BIT_FLOAT_V
 
-`include "../IPs_shared/IEEE754.v"
-`include "../IPs_shared/Shift.v"
-`include "../IPs_shared/Comparator.v"
-`include "../IPs_shared/TC_converter.v"
-`include "../0x0005_Add32/Add32.v"
-`include "../0x0012_Sub32U/Sub32.v"
+`include "../IPs_shared/universal4inc.v"
 
 module Add32F(
     input  wire [31:0] op1,

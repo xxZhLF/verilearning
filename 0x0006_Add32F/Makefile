@@ -19,6 +19,10 @@ SRCS += AdderFL1bit.v
 SRCS += AdderLC32bit.v
 SRCS += Add32.v
 SRCS += Sub32.v
+SRCS += IEEE754.v
+SRCS += Shift.v
+SRCS += Comparator.v
+SRCS += TC_converter.v
 
 include ../COMMON.mk
 
