@@ -1,11 +1,7 @@
 `ifndef IPs_SHARED_COMPARATOR_V
 `define IPs_SHARED_COMPARATOR_V
 
-`include "MacroFunc.v"
-
-`define OP1_GT_OP2 2'b01
-`define OP1_LT_OP2 2'b10
-`define OP1_EQ_OP2 2'b11
+`include "universal4inc.v"
 
 module Cmp32U (
     input  wire [31:0] op1,

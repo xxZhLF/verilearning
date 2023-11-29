@@ -1,7 +1,6 @@
 `ifndef IPs_SHARED_SUB64_V
 `define IPs_SHARED_SUB64_V
 
-`include "./Comparator.v"
 `include "./Add64.v"
 
 module Sub64(

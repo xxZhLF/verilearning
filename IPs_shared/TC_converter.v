@@ -1,7 +1,7 @@
 `ifndef IPs_SHARED_TC_CONVERTER_V
 `define IPs_SHARED_TC_CONVERTER_V
 
-`include "MacroFunc.v"
+`include "universal4inc.v"
 
 module TCC32(
     input  wire [31:0] T,
