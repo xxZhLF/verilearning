@@ -1,9 +1,7 @@
 `ifndef DIV_32BIT_UNSIGNED_V_SEQUENTIAL
 `define DIV_32BIT_UNSIGNED_V_SEQUENTIAL
 
-`include "../IPs_shared/Counter.v"
-`include "../IPs_shared/Comparator.v"
-`include "../IPs_shared/Sub64.v"
+`include "../IPs_shared/universal4inc.v"
 
 module Div32U (
     input  wire        rst,
