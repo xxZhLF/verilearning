@@ -74,7 +74,7 @@ module Decoder_tb(
                         `R_TYP_FC_SRA:  $write("SRA with ");
                         `R_TYP_FC_OR:   $write("OR with ");
                         `R_TYP_FC_AND:  $write("AND with ");
-                        default: $write("*[ERROR]@INSTR_TYP_R Func = %b", func);
+                        default: $write("*[ERROR]@INSTR_TYP_R Func=%b ", func);
                     endcase
                     $write("rs1=x%-d, rs2=x%-d, rd=x%-d", rs1, rs2, rd);
                 end 
@@ -89,7 +89,7 @@ module Decoder_tb(
                         `I_TYP_FC_SLLI:  $write("SLLI with ");
                         `I_TYP_FC_SRLI:  $write("SRLI with ");
                         `I_TYP_FC_SRAI:  $write("SRAI with ");
-                        default: $write("*[ERROR]@INSTR_TYP_I Func=%b", func);
+                        default: $write("*[ERROR]@INSTR_TYP_I Func=%b ", func);
                     endcase
                     $write("rs1=x%-d, rd=x%-d, imm=%-d", rs1, rd, $signed(imm));
                 end 
@@ -98,7 +98,7 @@ module Decoder_tb(
                         `S_TYP_FC_SB: $write("SB with ");
                         `S_TYP_FC_SH: $write("SH with ");
                         `S_TYP_FC_SW: $write("SW with ");
-                        default: $write("*[ERROR]@INSTR_TYP_S Func=%b", func);
+                        default: $write("*[ERROR]@INSTR_TYP_S Func=%b ", func);
                     endcase
                     $write("rs1=x%-d, rs2=x%-d, imm=%-d", rs1, rs2, $signed(imm));
                 end 
@@ -110,7 +110,7 @@ module Decoder_tb(
                         `B_TYP_FC_BGE:  $write("BGE with ");
                         `B_TYP_FC_BLTU: $write("BLTU with ");
                         `B_TYP_FC_BGEU: $write("BGEU with ");
-                        default: $write("*[ERROR]@INSTR_TYP_B Func=%b", func);
+                        default: $write("*[ERROR]@INSTR_TYP_B Func=%b ", func);
                     endcase
                     $write("rs1=x%-d, rs2=x%-d, imm=%-d", rs1, rs2, $signed(imm));
                 end 
@@ -127,19 +127,19 @@ module Decoder_tb(
                         `ILD_TYP_FC_LW:  $write("LW with ");
                         `ILD_TYP_FC_LBU: $write("LBU with ");
                         `ILD_TYP_FC_LHU: $write("LHU with ");
-                        default: $write("*[ERROR]@INSTR_TYP_ILD Func=%b", func);
+                        default: $write("*[ERROR]@INSTR_TYP_ILD Func=%b ", func);
                     endcase
                     $write("rs1=x%-d, rd=x%-d, imm=%-d", rs1, rd, $signed(imm));
                 end
                 `INSTR_TYP_IJR: begin
                     case (func) 
                         `IJR_TYP_FC_JALR: $write("JALR with ");
-                        default: $write("*[ERROR]@INSTR_TYP_IJR Func=%b", func);
+                        default: $write("*[ERROR]@INSTR_TYP_IJR Func=%b ", func);
                     endcase
                     $write("rs1=x%-d, rd=x%-d, imm=%-d", rs1, rd, $signed(imm));
                 end
                 default: begin
-                    $write("*[ERROR] Machine Code is %H, op=%b", instr, op);
+                    $write("*[ERROR] Machine Code is %H, op=%b ", instr, op);
                 end
             endcase
             $write("\n");
