@@ -2,7 +2,7 @@
 `define DECODER_V
 
 `include "RV32I.v"
-`include "../IPs_shared/MacroFunc.v"
+`include "../IPs_shared/universal4inc.v"
 
 module Decoder (
     input  wire [31:0] instr,
