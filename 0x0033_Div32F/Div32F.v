@@ -1,12 +1,6 @@
 `ifndef DIV_32BIT_FLOAT_V
 `define DIV_32BIT_FLOAT_V
 
-`include "../IPs_shared/IEEE754.v"
-`include "../IPs_shared/TC_converter.v"
-`include "../IPs_shared/Comparator.v"
-`include "../0x0031_Div32U/Div32U.v"
-`include "../0x0012_Sub32U/Sub32.v"
-
 module Div32F (
     input  wire [31:0] op1,
     input  wire [31:0] op2,
