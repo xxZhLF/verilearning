@@ -5,7 +5,7 @@ int main(int argc, char* argv[]){
         if (i < 8) {
             buff[i] = i + (bias >> 1);
         } else {
-            buff[i] = (buff[i-8] + i) > 2;
+            buff[i] = (buff[i-8] * i) * 3;
         }
     }
     return 0;

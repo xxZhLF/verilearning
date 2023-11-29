@@ -29,7 +29,7 @@ C_PROG := prog
 CLFLGs := --sysroot=/opt/riscv/riscv32-unknown-elf
 CLFLGs += --gcc-toolchain=/opt/riscv/
 CLFLGs += --target=riscv32-unknown-elf 
-CLFLGs +=  -march=rv32i
+CLFLGs +=  -march=rv32im
 CLFLGs +=  -mabi=ilp32
 CLFLGs +=  -fno-builtin
 CLFLGs +=  -static
