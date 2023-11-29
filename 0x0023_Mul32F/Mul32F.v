@@ -1,13 +1,6 @@
 `ifndef MUL_32BIT_FLOAT_V
 `define MUL_32BIT_FLOAT_V
 
-`include "../IPs_shared/IEEE754.v"
-`include "../0x0003_AdderLC32bit/AdderLC32bit.v"
-`include "../0x0004_AdderCS32bit/AdderCS32bit.v"
-`include "../0x0022_MulBT32S/MulBT32S.v"
-`include "../0x0005_Add32/Add32.v"
-`include "../0x0012_Sub32U/Sub32.v"
-
 module Mul32F(
     input  wire [31:0] op1,
     input  wire [31:0] op2,
