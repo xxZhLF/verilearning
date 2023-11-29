@@ -1,10 +1,7 @@
 `ifndef DIV_32BIT_UNSIGNED_V_COMBINATIONAL
 `define DIV_32BIT_UNSIGNED_V_COMBINATIONAL
 
-`include "../IPs_shared/Counter.v"
-`include "../IPs_shared/Comparator.v"
-`include "../IPs_shared/Sub64.v"
-`include "../IPs_shared/Shift.v"
+`include "../IPs_shared/universal4inc.v"
 
 module Div32U (
     input  wire [31:0] dived,

@@ -22,6 +22,9 @@ SRCS += AdderLC32bit.v
 SRCS += Add32.v
 SRCS += Add64.v
 SRCS += Sub64.v
+SRCS += Shift.v
+SRCS += Counter.v
+SRCS += Comparator.v
 SRCS += TC_converter.v
 
 include ../COMMON.mk
