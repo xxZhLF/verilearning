@@ -1,8 +1,6 @@
 `ifndef MUL_WALLACE_32BIT_V_UNSIGNED
 `define MUL_WALLACE_32BIT_V_UNSIGNED
 
-`include "../IPs_shared/Shift.v"
-`include "../IPs_shared/Add64.v"
 `include "WallaceTree.v"
 
 `ifdef WALLACE_TREE_4_MULTIPLIER_V

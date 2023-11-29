@@ -17,6 +17,7 @@ SRCS += $(TopModule).v
 SRCS += AdderFL1bit.v
 SRCS += AdderLC32bit.v
 SRCS += AdderCS32bit.v
-SRCS += MacroFunc.v
+SRCS += Shift.v
+SRCS += Add64.v
 
 include ../COMMON.mk
