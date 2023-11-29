@@ -2,7 +2,6 @@
 `define PROGRAM_COUNTER_V
 
 `include "../IPs_shared/MacroFunc.v"
-`include "../0x0003_AdderLC32bit/AdderLC32bit.v"
 
 `define NORMAL 2'b11
 `define BRANCH 2'b01
@@ -20,14 +19,11 @@ module PC (
 
     reg  [31:0] pc;
 
-    reg         USELESS;
     wire [31:0] pcNext;
-    AdderLC32bit adder (
+    Add32 adder (
         .op1(`isEQ(mode, `BRANCH) ? offset : 32'd4),
         .op2(pc),
-        .cin(1'b0),
-        .sum(pcNext),
-        .cout(USELESS)
+        .sum(pcNext)
     );
 
     always @(negedge rst or posedge clk) begin
