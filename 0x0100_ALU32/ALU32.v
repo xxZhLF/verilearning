@@ -1,7 +1,7 @@
 `ifndef ARITHMETIC_LOGICAL_UNIT_32BIT_V
 `define ARITHMETIC_LOGICAL_UNIT_32BIT_V
 
-`include "../IPs_shared/MacroFunc.v"
+`include "../IPs_shared/universal4inc.v"
 
 module ALU32 (
     input  wire [ 1:0] ctl,
