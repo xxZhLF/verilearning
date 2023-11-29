@@ -15,5 +15,7 @@ SRCS := $(Testbehch).v
 SRCS += $(TopModule).v
 SRCS += AdderFL1bit.v
 SRCS += AdderLC32bit.v
+SRCS += Shift.v
+SRCS += Add64.v
 
 include ../COMMON.mk

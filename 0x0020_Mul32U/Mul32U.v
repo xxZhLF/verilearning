@@ -1,9 +1,6 @@
 `ifndef MUL_32BIT_UNSIGNED_V_COMBINATORIAL
 `define MUL_32BIT_UNSIGNED_V_COMBINATORIAL
 
-`include "../IPs_shared/Shift.v"
-`include "../IPs_shared/Add64.v"
-
 module Mul32U (
     input  wire [31:0] op1,
     input  wire [31:0] op2,
