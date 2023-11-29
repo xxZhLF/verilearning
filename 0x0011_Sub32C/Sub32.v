@@ -1,8 +1,6 @@
 `ifndef SUB_32BIT_COMPLEMENT_V
 `define SUB_32BIT_COMPLEMENT_V
 
-`include "../IPs_shared/TC_converter.v"
-
 module Sub32(
     input  wire [31:0] op1,
     input  wire [31:0] op2,
