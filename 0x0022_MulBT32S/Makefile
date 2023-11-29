@@ -19,5 +19,8 @@ SRCS += $(ROOT)/$(TopModule).v
 SRCS += AdderFL1bit.v
 SRCS += AdderLC32bit.v
 SRCS += AdderCS32bit.v
+SRCS += Add64.v
+SRCS += Shift.v
+SRCS += TC_converter.v
 
 include ../COMMON.mk

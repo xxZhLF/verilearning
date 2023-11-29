@@ -1,10 +1,7 @@
 `ifndef MUL_BOOTH_32BIT_SIGNED_V
 `define MUL_BOOTH_32BIT_SIGNED_V
 
-`include "../IPs_shared/MacroFunc.v"
-`include "../IPs_shared/Add64.v"
-`include "../IPs_shared/Shift.v"
-`include "../IPs_shared/TC_converter.v"
+`include "../IPs_shared/universal4inc.v"
 
 `define WALLACE
 
