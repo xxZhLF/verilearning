@@ -9,18 +9,18 @@ module Div32S (
 );
 
     wire [31:0] divedT, divorT;
-    CTC32 t2c_1 (
+    CTC32 c2t_1 (
         .C(dived),
         .T(divedT)
-    ), t2c_2 (
+    ), c2t_2 (
         .C(divor),
         .T(divorT)
     );
 
     wire [31:0] quotiT;
     Div32U divider(
-        .dived(dived),
-        .divor(divor),
+        .dived({1'b0, divedT[30:0]}),
+        .divor({1'b0, divorT[30:0]}),
         .quoti(quotiT),
         .remai(remai)
     );
