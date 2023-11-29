@@ -1,8 +1,6 @@
 `ifndef SUB_32BIT_FLOAT_V
 `define SUB_32BIT_FLOAT_V
 
-`include "../0x0006_Add32F/Add32F.v"
-
 module Sub32F(
     input  wire [31:0] op1,
     input  wire [31:0] op2,
