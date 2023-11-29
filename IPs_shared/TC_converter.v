@@ -20,7 +20,7 @@ module TCC32(
         .sum(datO)
     );  /* ~datI + 1 */
 
-    assign C = {sign, sign ? datO[30:0] : datI[30:0]};
+    assign C = `isZERO(datI) ? 32'h0 : {sign, sign ? datO[30:0] : datI[30:0]};
 
 endmodule
 
@@ -42,7 +42,7 @@ module CTC32(
     );  /* ~(datI + -1) 
            ~ at next line */
 
-    assign T = {sign, sign ? ~datO[30:0] : datI[30:0]};
+    assign T = `isZERO(datI) ? 32'h0 : {sign, sign ? ~datO[30:0] : datI[30:0]};
 
 endmodule
 
