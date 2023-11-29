@@ -1,7 +1,7 @@
 `ifndef REGISTER_FILE_3_PORTs_V
 `define REGISTER_FILE_3_PORTs_V
 
-`include "../IPs_shared/MacroFunc.v"
+`include "../IPs_shared/universal4inc.v"
 
 module REGs3P (
     input  wire        clk,
