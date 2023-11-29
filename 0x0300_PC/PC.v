@@ -1,7 +1,7 @@
 `ifndef PROGRAM_COUNTER_V
 `define PROGRAM_COUNTER_V
 
-`include "../IPs_shared/MacroFunc.v"
+`include "../IPs_shared/universal4inc.v"
 
 `define NORMAL 2'b11
 `define BRANCH 2'b01
