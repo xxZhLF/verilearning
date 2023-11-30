@@ -4,7 +4,7 @@ module ALU32FF_tb (
     // None
 );
 
-    reg  [31:0] ctrl;
+    reg  [23:0] ctrl;
     reg  [31:0] op1, op2;
     wire [31:0] res;
 

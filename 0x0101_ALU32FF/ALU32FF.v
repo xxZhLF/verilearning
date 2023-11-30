@@ -5,7 +5,7 @@
 `include "../IPs_shared/universal4inc.v"
 
 module ALU32FF (
-    input  wire [31:0] ctrl,
+    input  wire [23:0] ctrl,
     input  wire [31:0] op1,
     input  wire [31:0] op2,
     output wire [31:0] res
