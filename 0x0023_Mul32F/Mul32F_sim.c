@@ -1,4 +1,4 @@
-#include "../IPs_shared/IEEE754_sim.h"
+#include "../c_sim/IEEE754_sim.h"
 
 int main (int argc, char* argv[]){
 
