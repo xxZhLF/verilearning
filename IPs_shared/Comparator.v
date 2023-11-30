@@ -117,4 +117,42 @@ module Cmp64U (
 
 endmodule
 
+module Cmp32S (
+    input  wire [31:0] op1,
+    input  wire [31:0] op2,
+    output wire [ 1:0] res
+);
+
+    wire [1:0] res_of_dat_cmp;
+    Cmp32U cmp_dat(
+        .op1({1'b0, op1[30:0]}),
+        .op2({1'b0, op2[30:0]}),
+        .res(res_of_dat_cmp)
+    );
+
+    assign res =  ~(op1[31]  ^   op2[31]) ? res_of_dat_cmp :
+                    op1[31]  & (~op2[31]) ? `OP1_LT_OP2 :
+                  (~op1[31]) &   op2[31]  ? `OP1_GT_OP2 : 2'bZZ;
+
+endmodule
+
+module Cmp64S (
+    input  wire [63:0] op1,
+    input  wire [63:0] op2,
+    output wire [ 1:0] res
+);
+
+    wire [1:0] res_of_dat_cmp;
+    Cmp64U cmp_dat(
+        .op1({1'b0, op1[62:0]}),
+        .op2({1'b0, op2[62:0]}),
+        .res(res_of_dat_cmp)
+    );
+
+    assign res =  ~(op1[63]  ^   op2[63]) ? res_of_dat_cmp :
+                    op1[63]  & (~op2[63]) ? `OP1_LT_OP2 :
+                  (~op1[63]) &   op2[63]  ? `OP1_GT_OP2 : 2'bZZ;
+
+endmodule
+
 `endif
