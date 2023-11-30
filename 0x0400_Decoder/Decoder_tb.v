@@ -1,6 +1,7 @@
 `timescale 1ps/1ps 
 
 `include "RV32I.v"
+`include "RV32M.v"
 
 module Decoder_tb(
     // None
@@ -64,16 +65,24 @@ module Decoder_tb(
             case (op)
                 `INSTR_TYP_R: begin
                     case (func)
-                        `R_TYP_FC_ADD:  $write("ADD with ");
-                        `R_TYP_FC_SUB:  $write("SUB with ");
-                        `R_TYP_FC_SLL:  $write("SLL with ");
-                        `R_TYP_FC_SLT:  $write("SLT with ");
-                        `R_TYP_FC_SLTU: $write("SLTU with ");
-                        `R_TYP_FC_XOR:  $write("XOR with ");
-                        `R_TYP_FC_SRL:  $write("SRL with ");
-                        `R_TYP_FC_SRA:  $write("SRA with ");
-                        `R_TYP_FC_OR:   $write("OR with ");
-                        `R_TYP_FC_AND:  $write("AND with ");
+                        `R_TYP_FC_ADD:    $write("ADD with ");
+                        `R_TYP_FC_SUB:    $write("SUB with ");
+                        `R_TYP_FC_SLL:    $write("SLL with ");
+                        `R_TYP_FC_SLT:    $write("SLT with ");
+                        `R_TYP_FC_SLTU:   $write("SLTU with ");
+                        `R_TYP_FC_XOR:    $write("XOR with ");
+                        `R_TYP_FC_SRL:    $write("SRL with ");
+                        `R_TYP_FC_SRA:    $write("SRA with ");
+                        `R_TYP_FC_OR:     $write("OR with ");
+                        `R_TYP_FC_AND:    $write("AND with ");
+                        `R_TYP_FC_MUL:    $write("MUL with ");
+                        `R_TYP_FC_MULH:   $write("MULH with ");
+                        `R_TYP_FC_MULHSU: $write("MULHSU with ");
+                        `R_TYP_FC_MULHU:  $write("MULHU with ");
+                        `R_TYP_FC_DIV:    $write("DIV with ");
+                        `R_TYP_FC_DIVU:   $write("DIVU with ");
+                        `R_TYP_FC_REM:    $write("REM with ");
+                        `R_TYP_FC_REMU:   $write("REMU with ");
                         default: $write("*[ERROR]@INSTR_TYP_R Func=%b ", func);
                     endcase
                     $write("rs1=x%-d, rs2=x%-d, rd=x%-d", rs1, rs2, rd);

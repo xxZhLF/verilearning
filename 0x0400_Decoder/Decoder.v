@@ -2,6 +2,7 @@
 `define DECODER_V
 
 `include "RV32I.v"
+`include "RV32M.v"
 `include "../IPs_shared/universal4inc.v"
 
 module Decoder (
