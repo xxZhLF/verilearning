@@ -1,7 +1,7 @@
 `ifndef FULL_FUNCTION_ARITHMETIC_LOGICAL_UNIT_32BIT_V
 `define FULL_FUNCTION_ARITHMETIC_LOGICAL_UNIT_32BIT_V
 
-`include "CtrlALU.v"
+`include "CtlALU.v"
 `include "../IPs_shared/universal4inc.v"
 
 module ALU32FF (
