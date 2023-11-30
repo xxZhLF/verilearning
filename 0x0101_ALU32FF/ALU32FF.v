@@ -5,7 +5,7 @@
 `include "../IPs_shared/universal4inc.v"
 
 module ALU32FF (
-    input  wire [23:0] ctrl,
+    input  wire [23:0] ctl,
     input  wire [31:0] op1,
     input  wire [31:0] op2,
     output wire [31:0] res
@@ -40,7 +40,7 @@ module ALU32FF (
 
     wire [63:0]  res_of_mul_u;
     MulWL32U multipiler_u(
-        .op1(`isEQ(ctrl, `ALU_CTRL_MULHSU) ? {1'b0, op1_T[30:0]} : op1),
+        .op1(`isEQ(ctl, `ALU_CTL_MULHSU) ? {1'b0, op1_T[30:0]} : op1),
         .op2(op2),
         .res(res_of_mul_u)
     );
@@ -116,24 +116,24 @@ module ALU32FF (
         return op1 ^ op2;
     endfunction
 
-    assign res = `isEQ(ctrl, `ALU_CTRL_ADD)    ? res_of_add : 
-                 `isEQ(ctrl, `ALU_CTRL_SUB)    ? res_of_sub :
-                 `isEQ(ctrl, `ALU_CTRL_MUL)    ? res_of_mul_s[31: 0] :
-                 `isEQ(ctrl, `ALU_CTRL_DIV)    ? res_of_div_s_quoti :
-                 `isEQ(ctrl, `ALU_CTRL_REM)    ? res_of_div_s_remai : 
-                 `isEQ(ctrl, `ALU_CTRL_DIVU)   ? res_of_div_u_quoti :
-                 `isEQ(ctrl, `ALU_CTRL_REMU)   ? res_of_div_u_remai :
-                 `isEQ(ctrl, `ALU_CTRL_MULH)   ? res_of_mul_s[63:32] :
-                 `isEQ(ctrl, `ALU_CTRL_MULHU)  ? res_of_mul_u[63:32] :
-                 `isEQ(ctrl, `ALU_CTRL_MULHSU) ? res_of_mul_u_T[63:32] :
-                 `isEQ(ctrl, `ALU_CTRL_SLT)    ? {31'b0, `isEQ(res_of_cmp_s, `OP1_LT_OP2)} :
-                 `isEQ(ctrl, `ALU_CTRL_SLTU)   ? {31'b0, `isEQ(res_of_cmp_u, `OP1_LT_OP2)} :
-                 `isEQ(ctrl, `ALU_CTRL_SLL)    ? res_of_shiftL_u :
-                 `isEQ(ctrl, `ALU_CTRL_SRL)    ? res_of_shiftR_u :
-                 `isEQ(ctrl, `ALU_CTRL_SRA)    ? res_of_shiftR_s :
-                 `isEQ(ctrl, `ALU_CTRL_OR)     ?  OR(op1, op2) :
-                 `isEQ(ctrl, `ALU_CTRL_AND)    ? AND(op1, op2) :
-                 `isEQ(ctrl, `ALU_CTRL_XOR)    ? XOR(op1, op2) : 32'hZZZZZZZZ;
+    assign res = `isEQ(ctl, `ALU_CTL_ADD)    ? res_of_add : 
+                 `isEQ(ctl, `ALU_CTL_SUB)    ? res_of_sub :
+                 `isEQ(ctl, `ALU_CTL_MUL)    ? res_of_mul_s[31: 0] :
+                 `isEQ(ctl, `ALU_CTL_DIV)    ? res_of_div_s_quoti :
+                 `isEQ(ctl, `ALU_CTL_REM)    ? res_of_div_s_remai : 
+                 `isEQ(ctl, `ALU_CTL_DIVU)   ? res_of_div_u_quoti :
+                 `isEQ(ctl, `ALU_CTL_REMU)   ? res_of_div_u_remai :
+                 `isEQ(ctl, `ALU_CTL_MULH)   ? res_of_mul_s[63:32] :
+                 `isEQ(ctl, `ALU_CTL_MULHU)  ? res_of_mul_u[63:32] :
+                 `isEQ(ctl, `ALU_CTL_MULHSU) ? res_of_mul_u_T[63:32] :
+                 `isEQ(ctl, `ALU_CTL_SLT)    ? {31'b0, `isEQ(res_of_cmp_s, `OP1_LT_OP2)} :
+                 `isEQ(ctl, `ALU_CTL_SLTU)   ? {31'b0, `isEQ(res_of_cmp_u, `OP1_LT_OP2)} :
+                 `isEQ(ctl, `ALU_CTL_SLL)    ? res_of_shiftL_u :
+                 `isEQ(ctl, `ALU_CTL_SRL)    ? res_of_shiftR_u :
+                 `isEQ(ctl, `ALU_CTL_SRA)    ? res_of_shiftR_s :
+                 `isEQ(ctl, `ALU_CTL_OR)     ?  OR(op1, op2) :
+                 `isEQ(ctl, `ALU_CTL_AND)    ? AND(op1, op2) :
+                 `isEQ(ctl, `ALU_CTL_XOR)    ? XOR(op1, op2) : 32'hZZZZZZZZ;
 
 endmodule
 
