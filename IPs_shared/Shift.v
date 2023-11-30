@@ -85,6 +85,47 @@ module ShiftR32U (
 
 endmodule
 
+module ShiftR32S (
+    input  wire [ 7:0] n,
+    input  wire [31:0] in,
+    output wire [31:0] out
+);
+
+    assign out = `isEQ(n, 8'h00) ? in : 
+                 `isEQ(n, 8'h01) ? {{ 1{in[31]}}, in[31: 1]} :
+                 `isEQ(n, 8'h02) ? {{ 2{in[31]}}, in[31: 2]} : 
+                 `isEQ(n, 8'h03) ? {{ 3{in[31]}}, in[31: 3]} : 
+                 `isEQ(n, 8'h04) ? {{ 4{in[31]}}, in[31: 4]} : 
+                 `isEQ(n, 8'h05) ? {{ 5{in[31]}}, in[31: 5]} : 
+                 `isEQ(n, 8'h06) ? {{ 6{in[31]}}, in[31: 6]} : 
+                 `isEQ(n, 8'h07) ? {{ 7{in[31]}}, in[31: 7]} : 
+                 `isEQ(n, 8'h08) ? {{ 8{in[31]}}, in[31: 8]} : 
+                 `isEQ(n, 8'h09) ? {{ 9{in[31]}}, in[31: 9]} : 
+                 `isEQ(n, 8'h0A) ? {{10{in[31]}}, in[31:10]} : 
+                 `isEQ(n, 8'h0B) ? {{11{in[31]}}, in[31:11]} : 
+                 `isEQ(n, 8'h0C) ? {{12{in[31]}}, in[31:12]} : 
+                 `isEQ(n, 8'h0D) ? {{13{in[31]}}, in[31:13]} : 
+                 `isEQ(n, 8'h0E) ? {{14{in[31]}}, in[31:14]} : 
+                 `isEQ(n, 8'h0F) ? {{15{in[31]}}, in[31:15]} : 
+                 `isEQ(n, 8'h10) ? {{16{in[31]}}, in[31:16]} : 
+                 `isEQ(n, 8'h11) ? {{17{in[31]}}, in[31:17]} : 
+                 `isEQ(n, 8'h12) ? {{18{in[31]}}, in[31:18]} : 
+                 `isEQ(n, 8'h13) ? {{19{in[31]}}, in[31:19]} : 
+                 `isEQ(n, 8'h14) ? {{20{in[31]}}, in[31:20]} : 
+                 `isEQ(n, 8'h15) ? {{21{in[31]}}, in[31:21]} : 
+                 `isEQ(n, 8'h16) ? {{22{in[31]}}, in[31:22]} : 
+                 `isEQ(n, 8'h17) ? {{23{in[31]}}, in[31:23]} : 
+                 `isEQ(n, 8'h18) ? {{24{in[31]}}, in[31:24]} : 
+                 `isEQ(n, 8'h19) ? {{25{in[31]}}, in[31:25]} : 
+                 `isEQ(n, 8'h1A) ? {{26{in[31]}}, in[31:26]} : 
+                 `isEQ(n, 8'h1B) ? {{27{in[31]}}, in[31:27]} : 
+                 `isEQ(n, 8'h1C) ? {{28{in[31]}}, in[31:28]} : 
+                 `isEQ(n, 8'h1D) ? {{29{in[31]}}, in[31:29]} : 
+                 `isEQ(n, 8'h1E) ? {{30{in[31]}}, in[31:30]} : 
+                 `isEQ(n, 8'h1F) ? {{31{in[31]}}, in[31:31]} : {32{in[31]}};
+
+endmodule
+
 module ShiftL64U (
     input  wire [ 7:0] n,
     input  wire [63:0] in,
