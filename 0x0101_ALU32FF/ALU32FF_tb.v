@@ -71,7 +71,7 @@ module ALU32FF_tb (
         end
 
         ctl = `ALU_CTL_MULH; op1 = 32'h8CBDA0FC; op2 = 32'h0012300F; #5;
-        tmp[0] = {{32{op1[31]}}, op1} * {{32{op2[31]}}, op1}; 
+        tmp[0] = {{32{op1[31]}}, op1} * {{32{op2[31]}}, op2}; 
         if (res == tmp[0][63:32]) begin 
             $display("[OK] ALU_CTL_MULH"); 
         end else begin
