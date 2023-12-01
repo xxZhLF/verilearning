@@ -184,7 +184,7 @@ module BoothEncoding (
 );
 
     wire [63:0] op1EX; // Symbol Expansion
-    assign op1EX = {op1[31] ? 32'hFFFFFFFF : 32'h00000000, op1};
+    assign op1EX = {{32{op1[31]}}, op1};
 
     wire        sb;  // sign of partial product
     wire [ 7:0] nb;  // bits to be shift
@@ -278,18 +278,14 @@ module BoothEncoding (
     );
 
     wire [63:0] negsh;
-    Sub32 negativerH(
-        .op1(32'b0),
-        .op2(shout[63:32]),
-        .diff(negsh[63:32])
-    ), negativerL(
-        .op1(32'b0),
-        .op2(shout[31:0]),
-        .diff(negsh[31:0])
+    Sub64 negativer(
+        .op1(64'b0),
+        .op2(shout),
+        .diff(negsh)
     );
 
     assign pp = sb ? negsh : shout;
-    
+
 endmodule
 
 `endif 
