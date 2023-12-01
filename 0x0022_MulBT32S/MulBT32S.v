@@ -244,7 +244,7 @@ module BoothEncoding (
                       ((`isEQ(grp, 3'b100)                     ) & `isEQ(gid, 4'h04)) ? {1'b1, 8'h09} : /* -2 * (op1 << 2i) = op1 << (2i + 1) */
                       ((`isEQ(grp, 3'b100)                     ) & `isEQ(gid, 4'h05)) ? {1'b1, 8'h0B} : /* -2 * (op1 << 2i) = op1 << (2i + 1) */
                       ((`isEQ(grp, 3'b100)                     ) & `isEQ(gid, 4'h06)) ? {1'b1, 8'h0D} : /* -2 * (op1 << 2i) = op1 << (2i + 1) */
-                      ((`isEQ(grp, 3'b100)                     ) & `isEQ(gid, 4'h07)) ? {1'b1, 8'h1F} : /* -2 * (op1 << 2i) = op1 << (2i + 1) */
+                      ((`isEQ(grp, 3'b100)                     ) & `isEQ(gid, 4'h07)) ? {1'b1, 8'h0F} : /* -2 * (op1 << 2i) = op1 << (2i + 1) */
                       ((`isEQ(grp, 3'b100)                     ) & `isEQ(gid, 4'h08)) ? {1'b1, 8'h11} : /* -2 * (op1 << 2i) = op1 << (2i + 1) */
                       ((`isEQ(grp, 3'b100)                     ) & `isEQ(gid, 4'h09)) ? {1'b1, 8'h13} : /* -2 * (op1 << 2i) = op1 << (2i + 1) */
                       ((`isEQ(grp, 3'b100)                     ) & `isEQ(gid, 4'h0A)) ? {1'b1, 8'h15} : /* -2 * (op1 << 2i) = op1 << (2i + 1) */
@@ -277,13 +277,18 @@ module BoothEncoding (
         .out(shout)
     );
 
-    wire [63:0] t2cout;
-    TCC64 t2c( // True Code　↓
-        .T({sb, shout[62:0]}), 
-        .C(t2cout) // 2's Comp
+    wire [63:0] negsh;
+    Sub32 negativerH(
+        .op1(32'b0),
+        .op2(shout[63:32]),
+        .diff(negsh[63:32])
+    ), negativerL(
+        .op1(32'b0),
+        .op2(shout[31:0]),
+        .diff(negsh[31:0])
     );
 
-    assign pp = ~sb ? {sb, shout[62:0]} : {sb, t2cout[62:0]};
+    assign pp = sb ? negsh : shout;
     
 endmodule
 
