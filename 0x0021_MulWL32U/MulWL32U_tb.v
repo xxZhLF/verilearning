@@ -13,7 +13,8 @@ module MulWL32U_tb(
 
     initial begin
         #5 op1 = 32'h00000009; op2 = 32'h00000007;
-        #5 op1 = 32'd15;       op2 =  32'd14940;
+        #5 op1 = 32'd15;       op2 = 32'd14940;
+        #5 op1 = 32'h8CBDA0FC; op2 = 32'h0712300F;
         #5 ;
     end
 

@@ -164,7 +164,7 @@ wire [63:0] vecL7O [2*`NL7-1:0];                    \
 generate /* 3 * NL7 = 3, 2 * NL6 = 2 */             \
     for (genvar i = 0; i < 2*`NL6; ++i) begin       \
         assign vecL7I[i] = vecL6O[i];               \
-    end assign vecL7I[2*`NL7-1] = vecL5O[2*`NL5-1]; \
+    end assign vecL7I[3*`NL7-1] = vecL5O[2*`NL5-1]; \
     for (genvar i = 0; i < `NL7; ++i) begin         \
         if (i % 2 == 0) begin                       \
             AddCS64 adder(                          \
@@ -185,7 +185,7 @@ wire [63:0] vecL8O [2*`NL8-1:0];                    \
 generate /* 3 * NL8 = 3, 2 * NL7 = 2 */             \
     for (genvar i = 0; i < 2*`NL7; ++i) begin       \
         assign vecL8I[i] = vecL7O[i];               \
-    end assign vecL8I[2*`NL8-1] = vecL3O[2*`NL3-1]; \
+    end assign vecL8I[3*`NL8-1] = vecL3O[2*`NL3-1]; \
     for (genvar i = 0; i < `NL8; ++i) begin         \
         if (i % 2 == 0) begin                       \
             AddCS64 adder(                          \

@@ -29,7 +29,7 @@ module MulWL32U (
     generate
         for (genvar i = 0; i < `NL0; ++i) begin
             ShiftL64U shift(
-                .n(op2[i] ^ 1'b0 ? i : 8'h40),
+                .n(op2[i] ? i : 8'hFF),
                 .in(op1EX),
                 .out(PPs[i])
             );
@@ -195,7 +195,7 @@ module MulWL32U (
     generate // 3 * NL7 = 3, 2 * NL6 = 2
         for (genvar i = 0; i < 2*`NL6; ++i) begin
             assign vecL7I[i] = vecL6O[i];
-        end assign vecL7I[2*`NL7-1] = vecL5O[2*`NL5-1];
+        end assign vecL7I[3*`NL7-1] = vecL5O[2*`NL5-1];
         for (genvar i = 0; i < `NL7; ++i) begin
             if (i % 2 == 0) begin
                 AddCS64 adder(
@@ -216,7 +216,7 @@ module MulWL32U (
     generate // 3 * NL8 = 3, 2 * NL7 = 2
         for (genvar i = 0; i < 2*`NL7; ++i) begin
             assign vecL8I[i] = vecL7O[i];
-        end assign vecL8I[2*`NL8-1] = vecL3O[2*`NL3-1];
+        end assign vecL8I[3*`NL8-1] = vecL3O[2*`NL3-1];
         for (genvar i = 0; i < `NL8; ++i) begin
             if (i % 2 == 0) begin
                 AddCS64 adder(
