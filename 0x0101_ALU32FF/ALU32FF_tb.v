@@ -25,57 +25,57 @@ module ALU32FF_tb (
         if (res == op1 + op2) begin 
             $display("[OK] ALU_CTL_ADD"); 
         end else begin
-            $display("[NG] ALU_CTL_ADD: 0x%08X + 0x%08X = 0x%08X", op1, op2, res);
+            $display("[NG] ALU_CTL_ADD: 0x%08X + 0x%08X = 0x%08X (0x%08X)", op1, op2, res, op1 + op2);
         end
 
         ctl = `ALU_CTL_SUB; op1 = 32'h0135721D; op2 = 32'h0086FC98; #5;
         if (res == op1 - op2) begin 
             $display("[OK] ALU_CTL_SUB"); 
         end else begin
-            $display("[NG] ALU_CTL_SUB: 0x%08X - 0x%08X = 0x%08X", op1, op2, res);
+            $display("[NG] ALU_CTL_SUB: 0x%08X - 0x%08X = 0x%08X (0x%08X)", op1, op2, res,op1 - op2);
         end
 
         ctl = `ALU_CTL_MUL; op1 = 32'h8CBDA0FC; op2 = 32'h0012300F; #5;
         if (res == op1 * op2) begin 
             $display("[OK] ALU_CTL_MUL"); 
         end else begin
-            $display("[NG] ALU_CTL_MUL: 0x%08X * 0x%08X = 0x%08X", op1, op2, res);
+            $display("[NG] ALU_CTL_MUL: 0x%08X * 0x%08X = 0x%08X (0x%08X)", op1, op2, res, op1 * op2);
         end
 
         ctl = `ALU_CTL_DIV; op1 = 32'h0AE02023; op2 = 32'h80000A12; #5;
         if (res == op1 / op2) begin 
             $display("[OK] ALU_CTL_DIV"); 
         end else begin
-            $display("[NG] ALU_CTL_DIV: 0x%08X / 0x%08X = 0x%08X", op1, op2, res);
+            $display("[NG] ALU_CTL_DIV: 0x%08X / 0x%08X = 0x%08X (0x%08X)", op1, op2, res, op1 / op2);
         end
 
         ctl = `ALU_CTL_REM; op1 = 32'h0AE02023; op2 = 32'h80000A12; #5;
         if (res == op1 % op2) begin 
             $display("[OK] ALU_CTL_REM"); 
         end else begin
-            $display("[NG] ALU_CTL_REM: 0x%08X %% 0x%08X = 0x%08X", op1, op2, res);
+            $display("[NG] ALU_CTL_REM: 0x%08X %% 0x%08X = 0x%08X (0x%08X)", op1, op2, res, op1 % op2);
         end
 
         ctl = `ALU_CTL_DIVU; op1 = 32'h0AE02023; op2 = 32'h80000A12; #5;
         if (res == op1 / op2) begin 
             $display("[OK] ALU_CTL_DIVU"); 
         end else begin
-            $display("[NG] ALU_CTL_DIVU: 0x%08X / 0x%08X = 0x%08X", op1, op2, res);
+            $display("[NG] ALU_CTL_DIVU: 0x%08X / 0x%08X = 0x%08X (0x%08X)", op1, op2, res, op1 / op2);
         end
 
         ctl = `ALU_CTL_REMU; op1 = 32'h0AE02023; op2 = 32'h80000A12; #5;
         if (res == op1 % op2) begin 
             $display("[OK] ALU_CTL_REMU"); 
         end else begin
-            $display("[NG] ALU_CTL_REMU: 0x%08X %% 0x%08X = 0x%08X", op1, op2, res);
+            $display("[NG] ALU_CTL_REMU: 0x%08X %% 0x%08X = 0x%08X (0x%08X)", op1, op2, res, op1 % op2);
         end
 
-        tmp[0] = {32'b0, op1} * {32'b0, op2};
         ctl = `ALU_CTL_MULH; op1 = 32'h8CBDA0FC; op2 = 32'h0012300F; #5;
+        tmp[0] = {{32{op1[31]}}, op1} * {{32{op2[31]}}, op1}; 
         if (res == tmp[0][63:32]) begin 
             $display("[OK] ALU_CTL_MULH"); 
         end else begin
-            $display("[NG] ALU_CTL_MULH: 0x%08X * 0x%08X = 0x%08X", op1, op2, res);
+            $display("[NG] ALU_CTL_MULH: 0x%08X * 0x%08X = 0x%08X (0x%016X)", op1, op2, res, tmp[0][63:32]);
         end
 
     end
