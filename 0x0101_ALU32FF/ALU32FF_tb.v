@@ -70,12 +70,20 @@ module ALU32FF_tb (
             $display("[NG] ALU_CTL_REMU: 0x%08X %% 0x%08X = 0x%08X (0x%08X)", op1, op2, res, op1 % op2);
         end
 
-        ctl = `ALU_CTL_MULH; op1 = 32'h8CBDA0FC; op2 = 32'h0012300F; #5;
+        ctl = `ALU_CTL_MULH; op1 = 32'h0012300F; op2 = 32'h8CBDA0FC; #5;
         tmp[0] = {{32{op1[31]}}, op1} * {{32{op2[31]}}, op2}; 
         if (res == tmp[0][63:32]) begin 
             $display("[OK] ALU_CTL_MULH"); 
         end else begin
             $display("[NG] ALU_CTL_MULH: 0x%08X * 0x%08X = 0x%08X (0x%016X)", op1, op2, res, tmp[0][63:32]);
+        end
+
+        ctl = `ALU_CTL_MULHU; op1 = 32'h8CBDA0FC; op2 = 32'h0712300F; #5;
+        tmp[1] = {32'b0, op1} * {32'b0, op2}; 
+        if (res == tmp[1][63:32]) begin 
+            $display("[OK] ALU_CTL_MULHU");
+        end else begin
+            $display("[NG] ALU_CTL_MULHU: 0x%08X * 0x%08X = 0x%08X (0x%016X)", op1, op2, res, tmp[1][63:32]);
         end
 
     end
