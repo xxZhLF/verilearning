@@ -131,8 +131,8 @@ module Cmp32S (
     );
 
     assign res =  ~(op1[31]  ^   op2[31]) ? res_of_dat_cmp :
-                    op1[31]  & (~op2[31]) ? `OP1_LT_OP2 :
-                  (~op1[31]) &   op2[31]  ? `OP1_GT_OP2 : 2'bZZ;
+                  (~op1[31]) &   op2[31]  ? `OP1_LT_OP2 :
+                    op1[31]  & (~op2[31]) ? `OP1_GT_OP2 : 2'bZZ;
 
 endmodule
 
