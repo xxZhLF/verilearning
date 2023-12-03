@@ -13,10 +13,8 @@ FLGS += -I../0x0003_AdderLC32bit
 FLGS += -I../0x0004_AdderCS32bit
 FLGS += -I../0x0005_Add32
 FLGS += -I../0x0012_Sub32U
-FLGS += -I../0x0021_MulWL32U
 FLGS += -I../0x0022_MulBT32S
 FLGS += -I../0x0031_Div32U
-FLGS += -I../0x0032_Div32S
 
 SRCS := $(Testbehch).v
 SRCS += $(TopModule).v
