@@ -13,3 +13,7 @@
 0x0500_Mem/prog.o
 0x0500_Mem/prog
 0x0500_Mem/prog.mc
+0x0600_MicroarchSC/prog.S
+0x0600_MicroarchSC/prog.o
+0x0600_MicroarchSC/prog
+0x0600_MicroarchSC/prog.mc
