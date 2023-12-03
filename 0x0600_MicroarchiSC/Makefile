@@ -18,6 +18,7 @@ FLGS += -I../0x0031_Div32U
 FLGS += -I../0x0101_ALU32FF
 FLGS += -I../0x0200_REGs3P
 FLGS += -I../0x0300_PC
+FLGS += -I../0x0400_Decoder
 FLGS += -I../0x0500_Mem
 
 SRCS := $(Testbehch).v
@@ -37,6 +38,7 @@ SRCS += TC_converter.v
 SRCS += ALU32FF.v
 SRCS += REGs3P.v
 SRCS += PC.v
+SRCS += Decoder.v
 SRCS += Mem4K.v
 
 include ../COMMON.mk

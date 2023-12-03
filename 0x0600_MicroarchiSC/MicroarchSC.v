@@ -1,9 +1,13 @@
 `ifndef MICROARCHITECTURE_SINGLE_CYCLE_V
 `define MICROARCHITECTURE_SINGLE_CYCLE_V
 
+`include "../0x0500_Mem/MemIO.v"
+
 module MicroarchSC (
-    input wire rst,
-    input wire clk
+    input wire        rst,
+    input wire        clk,
+    input wire [31:0] LoadProg_addr,
+    input wire [31:0] LoadProg_data
 );
 
     wire [ 1:0] pc_mode;
@@ -46,9 +50,26 @@ module MicroarchSC (
         .res(alu_res)
     );
 
-    wire        mem_A_EnWR,  mem_B_EnWR;
-    wire [31:0] mem_A_ABus,  mem_B_ABus;
-    wire [31:0] mem_A_DBusW, mem_B_DBusW;
+    wire [31:0] decoder_instr;
+    wire [ 6:0] decoder_op;
+    wire [ 4:0] decoder_rs1;
+    wire [ 4:0] decoder_rs2;
+    wire [ 4:0] decoder_rd;
+    wire [ 9:0] decoder_func;
+    wire [31:0] decoder_imm;
+    Decoder decoder(
+        .instr(decoder_instr),
+        .op(decoder_op),
+        .rs1(decoder_rs1),
+        .rs2(decoder_rs2),
+        .rd(decoder_rd),
+        .func(decoder_func),
+        .imm(decoder_imm)
+    );
+
+    reg         mem_A_EnWR,  mem_B_EnWR;
+    reg  [31:0] mem_A_ABus,  mem_B_ABus;
+    reg  [31:0] mem_A_DBusW, mem_B_DBusW;
     wire [31:0] mem_A_DBusR, mem_B_DBusR;
     Mem4K mem(
         .clk(clk),
@@ -61,6 +82,15 @@ module MicroarchSC (
         .B_DBusW(mem_B_DBusW),
         .B_DBusR(mem_B_DBusR)
     );
+
+    always @(negedge rst or posedge clk) begin
+        if (rst) begin
+            mem_A_EnWR  <= `ENB_W;
+            mem_A_ABus  <= LoadProg_addr;
+            mem_A_DBusW <= LoadProg_data;
+        end else begin
+        end
+    end
     
 endmodule
 
