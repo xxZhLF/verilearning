@@ -1,8 +1,7 @@
 `ifndef MEMORY_4K_V
 `define MEMORY_4K_V
 
-`define ENB_R 1'b0
-`define ENB_W 1'b1
+`include "MemIO.v"
 
 module Mem4K ( input wire clk,
     /* Port A for instration */ input  wire        A_EnWR,
