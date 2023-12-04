@@ -127,7 +127,7 @@ module Decoder_tb(
                     $write("LUI with rd=x%-d, imm=0x%05H", rd, $signed(imm[31:12]));
                 end 
                 `INSTR_TYP_J: begin
-                    $write("JAL with rd=x%-d, imm=0x%05H", rd, $signed(imm));
+                    $write("JAL with rd=x%-d, imm=0x%05H", rd, $signed(imm[31:12]));
                 end 
                 `INSTR_TYP_I12LD: begin
                     case (func) 
