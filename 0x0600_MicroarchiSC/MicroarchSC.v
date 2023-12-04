@@ -1,6 +1,10 @@
 `ifndef MICROARCHITECTURE_SINGLE_CYCLE_V
 `define MICROARCHITECTURE_SINGLE_CYCLE_V
 
+`include "../0x0101_ALU32FF/CtlALU.v"
+`include "../0x0300_PC/PCIM.v"
+`include "../0x0400_Decoder/RV32I.v"
+`include "../0x0400_Decoder/RV32M.v"
 `include "../0x0500_Mem/MemIO.v"
 
 module MicroarchSC (
@@ -10,9 +14,9 @@ module MicroarchSC (
     input wire [31:0] LoadProg_data
 );
 
-    wire [ 1:0] pc_mode;
-    wire [31:0] pc_offset;
-    wire [31:0] pc_target;
+    reg  [ 1:0] pc_mode;
+    reg  [31:0] pc_offset;
+    reg  [31:0] pc_target;
     wire [31:0] pc_addr;
     wire [31:0] pc_addr_nxt;
     PC pc(
@@ -50,7 +54,7 @@ module MicroarchSC (
         .res(alu_res)
     );
 
-    wire [31:0] decoder_instr;
+    reg  [31:0] decoder_instr;
     wire [ 6:0] decoder_op;
     wire [ 4:0] decoder_rs1;
     wire [ 4:0] decoder_rs2;
@@ -88,10 +92,285 @@ module MicroarchSC (
             mem_A_EnWR  <= `ENB_W;
             mem_A_ABus  <= LoadProg_addr;
             mem_A_DBusW <= LoadProg_data;
+            pc_mode     <= `UCJUMP;
+            pc_target   <= 32'b0;
         end else begin
+            mem_A_EnWR <= `ENB_R;
+            mem_A_ABus <= pc_addr;
+            decoder_instr <= mem_A_DBusR;
+            case (decoder_op)
+                `INSTR_TYP_R: begin
+                    pc_mode <= `NORMAL;
+                    case (decoder_func)
+                        `R_TYP_FC_ADD: begin
+                            // $display("ADD: ");
+                        end
+                        `R_TYP_FC_SUB: begin
+                            // $display("SUB: ");
+                        end
+                        `R_TYP_FC_SLL: begin
+                            // $display("SLL: ");
+                        end
+                        `R_TYP_FC_SLT: begin
+                            // $display("SLT: ");
+                        end
+                        `R_TYP_FC_SLTU: begin 
+                            // $display("SLTU: ");
+                        end
+                        `R_TYP_FC_XOR: begin
+                            // $display("XOR: ");
+                        end
+                        `R_TYP_FC_SRL: begin
+                            // $display("SRL: ");
+                        end
+                        `R_TYP_FC_SRA: begin
+                            // $display("SRA: ");
+                        end
+                        `R_TYP_FC_OR: begin
+                            // $display("OR: ");
+                        end
+                        `R_TYP_FC_AND: begin
+                            // $display("AND: ");
+                        end
+                        `R_TYP_FC_MUL: begin
+                            // $display("MUL: ");
+                        end
+                        `R_TYP_FC_MULH: begin
+                            // $display("MULH: ");
+                        end
+                        `R_TYP_FC_MULHSU: begin
+                            // $display("MULHSU: ");
+                        end
+                        `R_TYP_FC_MULHU: begin
+                            // $display("MULHU: ");
+                        end
+                        `R_TYP_FC_DIV: begin
+                            // $display("DIV: ");
+                        end
+                        `R_TYP_FC_DIVU: begin
+                            // $display("DIVU: ");
+                        end
+                        `R_TYP_FC_REM: begin
+                            // $display("REM: ");
+                        end
+                        `R_TYP_FC_REMU: begin
+                            // $display("REMU: ");
+                        end
+                        default: ;//$display("*[ERROR]@INSTR_TYP_R Func=%b ", decoder_func);
+                    endcase
+                end 
+                `INSTR_TYP_I: begin
+                    pc_mode <= `NORMAL;
+                    case (decoder_func)
+                        `I_TYP_FC_ADDI: begin
+                            // $display("ADDI: ");
+                        end
+                        `I_TYP_FC_SLTI: begin 
+                            // $display("SLTI: ");
+                        end
+                        `I_TYP_FC_SLTIU: begin
+                            // $display("SLTIU: ");
+                        end
+                        `I_TYP_FC_XORI: begin
+                            // $display("XORI: ");
+                        end
+                        `I_TYP_FC_ORI: begin
+                            // $display("ORI: ");
+                        end
+                        `I_TYP_FC_ANDI: begin
+                            // $display("ANDI: ");
+                        end
+                        `I_TYP_FC_SLLI: begin
+                            // $display("SLLI: ");
+                        end
+                        `I_TYP_FC_SRLI: begin
+                            // $display("SRLI: ");
+                        end
+                        `I_TYP_FC_SRAI: begin
+                            // $display("SRAI: ");
+                        end
+                        default: ;//$display("*[ERROR]@INSTR_TYP_I Func=%b ", decoder_func);
+                    endcase
+                end
+                `INSTR_TYP_S: begin
+                    pc_mode <= `NORMAL;
+                    case (decoder_func)
+                        `S_TYP_FC_SB: begin
+                            // $display("SB: ");
+                        end
+                        `S_TYP_FC_SH: begin
+                            // $display("SH: ");
+                        end
+                        `S_TYP_FC_SW: begin
+                            // $display("SW: ");
+                        end
+                        default: ;//$display("*[ERROR]@INSTR_TYP_S Func=%b ", decoder_func);
+                    endcase
+                end
+                `INSTR_TYP_B: begin
+                    pc_mode <= `BRANCH;
+                    case (decoder_func)
+                        `B_TYP_FC_BEQ: begin
+                            // $display("BEQ: ");
+                        end
+                        `B_TYP_FC_BEN: begin
+                            // $display("BNE: ");
+                        end
+                        `B_TYP_FC_BLT: begin
+                            // $display("BLT: ");
+                        end
+                        `B_TYP_FC_BGE: begin
+                            // $display("BGE: ");
+                        end
+                        `B_TYP_FC_BLTU: begin
+                            // $display("BLTU: ");
+                        end
+                        `B_TYP_FC_BGEU: begin
+                            // $display("BGEU: ");
+                        end
+                        default: ;//$display("*[ERROR]@INSTR_TYP_B Func=%b ", decoder_func);
+                    endcase
+                end
+                `INSTR_TYP_U: begin
+                    pc_mode <= `NORMAL;
+                    // $display("LUI: ");
+                end
+                `INSTR_TYP_J: begin
+                    pc_mode <= `UCJUMP;
+                    // $display("JAL: ");
+                end
+                `INSTR_TYP_I12LD: begin
+                    pc_mode <= `NORMAL;
+                    case (decoder_func) 
+                        `I12LD_TYP_FC_LB: begin
+                            // $display("LB: ");
+                        end
+                        `I12LD_TYP_FC_LH: begin
+                            // $display("LH: ");
+                        end
+                        `I12LD_TYP_FC_LW: begin
+                            // $display("LW: ");
+                        end
+                        `I12LD_TYP_FC_LBU: begin
+                            // $display("LBU: ");
+                        end
+                        `I12LD_TYP_FC_LHU: begin
+                            // $display("LHU: ");
+                        end
+                        default: ;//$display("*[ERROR]@INSTR_TYP_I12LD Func=%b ", decoder_func);
+                    endcase
+                end
+                `INSTR_TYP_I12JR: begin
+                    pc_mode <= `UCJUMP;
+                    case (decoder_func) 
+                        `I12JR_TYP_FC_JALR: begin
+                            // $display("JALR: ");
+                        end
+                        default: ;//$display("*[ERROR]@INSTR_TYP_I12JR Func=%b ", decoder_func);
+                    endcase
+                end
+                default: ;//$display("*[ERROR] Machine Code is %H, op=%b ", decoder_instr, decoder_op);
+            endcase
+            DBG_detail_of_instr_exec(decoder_op, decoder_func, decoder_imm, decoder_rs1, 32'b0, decoder_rs2, 32'b0, decoder_rd, 32'b0);
         end
     end
     
+    task DBG_detail_of_instr_exec(
+        input [ 6:0] op,
+        input [ 9:0] func,
+        input [31:0] imm,
+        input [ 4:0] rs1_addr,
+        input [31:0] rs1_data,
+        input [ 4:0] rs2_addr, 
+        input [31:0] rs2_data,
+        input [ 4:0]  rd_addr,
+        input [31:0]  rd_data
+    ); begin
+        case (op)
+            `INSTR_TYP_R: begin
+                case (func)
+                    `R_TYP_FC_ADD:      $display("ADD:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_SUB:      $display("SUB:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_SLL:      $display("SLL:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_SLT:      $display("SLT:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_SLTU:     $display("SLTU:   rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_XOR:      $display("XOR:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_SRL:      $display("SRL:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_SRA:      $display("SRA:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_OR:       $display("OR:     rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_AND:      $display("AND:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_MUL:      $display("MUL:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_MULH:     $display("MULH:   rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_MULHSU:   $display("MULHSU: rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_MULHU:    $display("MULHU:  rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_DIV:      $display("DIV:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_DIVU:     $display("DIVU:   rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_REM:      $display("REM:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    `R_TYP_FC_REMU:     $display("REMU:   rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, rd  is x%-2d=%08X", rs1_addr, rs1_data, rs2_addr, rs2_data, rd_addr, rd_data);
+                    default: $display("*[ERROR]@INSTR_TYP_R Func=%b ", func);
+                endcase
+            end 
+            `INSTR_TYP_I: begin
+                case (func)
+                    `I_TYP_FC_ADDI:     $display("ADDI:   rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I_TYP_FC_SLTI:     $display("SLTI:   rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I_TYP_FC_SLTIU:    $display("SLTIU:  rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I_TYP_FC_XORI:     $display("XORI:   rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I_TYP_FC_ORI:      $display("ORI:    rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I_TYP_FC_ANDI:     $display("ANDI:   rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I_TYP_FC_SLLI:     $display("SLLI:   rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I_TYP_FC_SRLI:     $display("SRLI:   rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I_TYP_FC_SRAI:     $display("SRAI:   rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    default: $display("*[ERROR]@INSTR_TYP_I Func=%b ", func);
+                endcase
+            end 
+            `INSTR_TYP_S: begin
+                case (func)
+                    `S_TYP_FC_SB:       $display("SB:     rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rs2_addr, rs2_data, $signed(imm));
+                    `S_TYP_FC_SH:       $display("SH:     rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rs2_addr, rs2_data, $signed(imm));
+                    `S_TYP_FC_SW:       $display("SW:     rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rs2_addr, rs2_data, $signed(imm));
+                    default: $display("*[ERROR]@INSTR_TYP_S Func=%b ", func);
+                endcase
+            end 
+            `INSTR_TYP_B: begin
+                case (func)
+                    `B_TYP_FC_BEQ:      $display("BEQ:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rs2_addr, rs2_data, $signed(imm));
+                    `B_TYP_FC_BEN:      $display("BNE:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rs2_addr, rs2_data, $signed(imm));
+                    `B_TYP_FC_BLT:      $display("BLT:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rs2_addr, rs2_data, $signed(imm));
+                    `B_TYP_FC_BGE:      $display("BGE:    rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rs2_addr, rs2_data, $signed(imm));
+                    `B_TYP_FC_BLTU:     $display("BLTU:   rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rs2_addr, rs2_data, $signed(imm));
+                    `B_TYP_FC_BGEU:     $display("BGEU:   rs1 is x%-2d=%08X, rs2 is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rs2_addr, rs2_data, $signed(imm));
+                    default: $display("*[ERROR]@INSTR_TYP_B Func=%b ", func);
+                endcase
+            end 
+            `INSTR_TYP_U: begin
+                $display("LUI:    rd  is x%-2d=%08X, imm is 0x%05H", rd_addr, rd_data, $signed(imm[31:12]));
+            end 
+            `INSTR_TYP_J: begin
+                $display("JAL:    rd  is x%-2d=%08X, imm is 0x%05H", rd_addr, rd_data, $signed(imm[31:12]));
+            end 
+            `INSTR_TYP_I12LD: begin
+                case (func) 
+                    `I12LD_TYP_FC_LB:   $display("LB:     rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I12LD_TYP_FC_LH:   $display("LH:     rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I12LD_TYP_FC_LW:   $display("LW:     rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I12LD_TYP_FC_LBU:  $display("LBU:    rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    `I12LD_TYP_FC_LHU:  $display("LHU:    rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    default: $display("*[ERROR]@INSTR_TYP_I12LD Func=%b ", func);
+                endcase
+            end
+            `INSTR_TYP_I12JR: begin
+                case (func) 
+                    `I12JR_TYP_FC_JALR: $display("JALR:   rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
+                    default: $display("*[ERROR]@INSTR_TYP_I12JR Func=%b ", func);
+                endcase
+            end
+            default: begin
+                $display("*[ERROR] Machine Code is op=%b ", op);
+            end
+        endcase
+    end endtask
+
 endmodule
 
 `endif 

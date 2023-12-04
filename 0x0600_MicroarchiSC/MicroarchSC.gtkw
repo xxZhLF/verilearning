@@ -1,0 +1,34 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Mon Dec  4 07:51:43 2023
+[*]
+[dumpfile] "/home/xxzhou/verilearning/0x0600_MicroarchiSC/MicroarchSC.vcd"
+[dumpfile_mtime] "Mon Dec  4 07:51:21 2023"
+[dumpfile_size] 8330302
+[savefile] "/home/xxzhou/verilearning/0x0600_MicroarchiSC/MicroarchSC.gtkw"
+[timestart] 402
+[size] 1908 987
+[pos] -39 -241
+*-6.000000 420 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.MicroarchSC_tb.
+[treeopen] TOP.MicroarchSC_tb.core.
+[sst_width] 214
+[signals_width] 134
+[sst_expanded] 1
+[sst_vpaned_height] 287
+@28
+TOP.MicroarchSC_tb.rst
+@200
+-
+@22
+TOP.MicroarchSC_tb.core.mem.A_ABus[31:0]
+TOP.MicroarchSC_tb.core.mem.A_DBusW[31:0]
+@200
+-
+@22
+TOP.MicroarchSC_tb.core.pc_addr[31:0]
+@29
+TOP.MicroarchSC_tb.core.pc.mode[1:0]
+[pattern_trace] 1
+[pattern_trace] 0

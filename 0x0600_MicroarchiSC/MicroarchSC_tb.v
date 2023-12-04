@@ -18,7 +18,6 @@ module MicroarchSC_tb(
         .LoadProg_data(data)
     );
 
-    reg [31:0] instr[1023:0];
     initial begin 
         integer fd = $fopen("prog.mc", "r");
         if (fd == 0) begin
@@ -28,15 +27,21 @@ module MicroarchSC_tb(
         end 
         for (integer i = 0; !$feof(fd); i += 4) begin
             reg [16*8-1 : 0] mnemonic_p1, mnemonic_p2; 
-            addr = i; $fscanf(fd, "%h \t %s \t %s \n", data, mnemonic_p1, mnemonic_p2); #10;
-        end #10 rst = 1'b0;
-        $finish();
+            addr = i; $fscanf(fd, "%h \t %s \t %s \n", data, mnemonic_p1, mnemonic_p2); #20;
+        end #20 rst = 1'b0;
     end 
 
-    always #5 clk = ~clk;
+    reg [31:0] cnt;
+    always #10 clk = ~clk;
     always @(negedge rst or posedge clk) begin
         if (rst) begin
+            cnt <= 32'b0;
         end else begin
+            if (cnt == 32'b1 << 9) begin
+                $finish;
+            end else begin
+                cnt <= cnt + 1;
+            end
         end
     end
 
