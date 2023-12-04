@@ -103,176 +103,131 @@ module MicroarchiSC (
                     pc_mode <= `NORMAL;
                     case (decoder_func)
                         `R_TYP_FC_ADD: begin
-                            // $display("ADD: ");
                         end
                         `R_TYP_FC_SUB: begin
-                            // $display("SUB: ");
                         end
                         `R_TYP_FC_SLL: begin
-                            // $display("SLL: ");
                         end
                         `R_TYP_FC_SLT: begin
-                            // $display("SLT: ");
                         end
                         `R_TYP_FC_SLTU: begin 
-                            // $display("SLTU: ");
                         end
                         `R_TYP_FC_XOR: begin
-                            // $display("XOR: ");
                         end
                         `R_TYP_FC_SRL: begin
-                            // $display("SRL: ");
                         end
                         `R_TYP_FC_SRA: begin
-                            // $display("SRA: ");
                         end
                         `R_TYP_FC_OR: begin
-                            // $display("OR: ");
                         end
                         `R_TYP_FC_AND: begin
-                            // $display("AND: ");
                         end
                         `R_TYP_FC_MUL: begin
-                            // $display("MUL: ");
                         end
                         `R_TYP_FC_MULH: begin
-                            // $display("MULH: ");
                         end
                         `R_TYP_FC_MULHSU: begin
-                            // $display("MULHSU: ");
                         end
                         `R_TYP_FC_MULHU: begin
-                            // $display("MULHU: ");
                         end
                         `R_TYP_FC_DIV: begin
-                            // $display("DIV: ");
                         end
                         `R_TYP_FC_DIVU: begin
-                            // $display("DIVU: ");
                         end
                         `R_TYP_FC_REM: begin
-                            // $display("REM: ");
                         end
                         `R_TYP_FC_REMU: begin
-                            // $display("REMU: ");
                         end
-                        default: ;//$display("*[ERROR]@INSTR_TYP_R Func=%b ", decoder_func);
+                        default: ;
                     endcase
                 end 
                 `INSTR_TYP_I: begin
                     pc_mode <= `NORMAL;
                     case (decoder_func)
                         `I_TYP_FC_ADDI: begin
-                            // $display("ADDI: ");
                         end
                         `I_TYP_FC_SLTI: begin 
-                            // $display("SLTI: ");
                         end
                         `I_TYP_FC_SLTIU: begin
-                            // $display("SLTIU: ");
                         end
                         `I_TYP_FC_XORI: begin
-                            // $display("XORI: ");
                         end
                         `I_TYP_FC_ORI: begin
-                            // $display("ORI: ");
                         end
                         `I_TYP_FC_ANDI: begin
-                            // $display("ANDI: ");
                         end
                         `I_TYP_FC_SLLI: begin
-                            // $display("SLLI: ");
                         end
                         `I_TYP_FC_SRLI: begin
-                            // $display("SRLI: ");
                         end
                         `I_TYP_FC_SRAI: begin
-                            // $display("SRAI: ");
                         end
-                        default: ;//$display("*[ERROR]@INSTR_TYP_I Func=%b ", decoder_func);
+                        default: ;
                     endcase
                 end
                 `INSTR_TYP_S: begin
                     pc_mode <= `NORMAL;
                     case (decoder_func)
                         `S_TYP_FC_SB: begin
-                            // $display("SB: ");
                         end
                         `S_TYP_FC_SH: begin
-                            // $display("SH: ");
                         end
                         `S_TYP_FC_SW: begin
-                            // $display("SW: ");
                         end
-                        default: ;//$display("*[ERROR]@INSTR_TYP_S Func=%b ", decoder_func);
+                        default: ;
                     endcase
                 end
                 `INSTR_TYP_B: begin
                     pc_mode <= `BRANCH;
                     case (decoder_func)
                         `B_TYP_FC_BEQ: begin
-                            // $display("BEQ: ");
                         end
                         `B_TYP_FC_BEN: begin
-                            // $display("BNE: ");
                         end
                         `B_TYP_FC_BLT: begin
-                            // $display("BLT: ");
                         end
                         `B_TYP_FC_BGE: begin
-                            // $display("BGE: ");
                         end
                         `B_TYP_FC_BLTU: begin
-                            // $display("BLTU: ");
                         end
                         `B_TYP_FC_BGEU: begin
-                            // $display("BGEU: ");
                         end
-                        default: ;//$display("*[ERROR]@INSTR_TYP_B Func=%b ", decoder_func);
+                        default: ;
                     endcase
                 end
                 `INSTR_TYP_U: begin
                     pc_mode <= `NORMAL;
-                    // $display("LUI: ");
                 end
                 `INSTR_TYP_J: begin
                     pc_mode <= `UCJUMP;
-                    // $display("JAL: ");
                 end
                 `INSTR_TYP_I12LD: begin
                     pc_mode <= `NORMAL;
                     case (decoder_func) 
                         `I12LD_TYP_FC_LB: begin
-                            // $display("LB: ");
                         end
                         `I12LD_TYP_FC_LH: begin
-                            // $display("LH: ");
                         end
                         `I12LD_TYP_FC_LW: begin
-                            // $display("LW: ");
                         end
                         `I12LD_TYP_FC_LBU: begin
-                            // $display("LBU: ");
                         end
                         `I12LD_TYP_FC_LHU: begin
-                            // $display("LHU: ");
                         end
-                        default: ;//$display("*[ERROR]@INSTR_TYP_I12LD Func=%b ", decoder_func);
+                        default: ;
                     endcase
                 end
                 `INSTR_TYP_I12JR: begin
                     pc_mode <= `UCJUMP;
                     case (decoder_func) 
                         `I12JR_TYP_FC_JALR: begin
-                            // $display("JALR: ");
                         end
-                        default: ;//$display("*[ERROR]@INSTR_TYP_I12JR Func=%b ", decoder_func);
+                        default: ;
                     endcase
                 end
                 `INSTR_TYP_I20PC: begin
-                    // $write("AUIPC with rd=x%-d, imm=0x%05H", rd, $signed(imm[31:12]));
                 end
-                default: ;//$display("*[ERROR] Machine Code is %H, op=%b ", decoder_instr, decoder_op);
+                default: ;
             endcase
             DBG_detail_of_instr_exec(decoder_op, decoder_func, decoder_imm, decoder_rs1, 32'b0, decoder_rs2, 32'b0, decoder_rd, 32'b0);
         end
