@@ -1,11 +1,8 @@
 `ifndef PROGRAM_COUNTER_V
 `define PROGRAM_COUNTER_V
 
+`include "PCIM.v"
 `include "../IPs_shared/universal4inc.v"
-
-`define NORMAL 2'b11
-`define BRANCH 2'b01
-`define UCJUMP 2'b10
 
 module PC (
     input  wire        rst,
