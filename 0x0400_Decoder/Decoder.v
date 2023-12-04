@@ -18,8 +18,8 @@ module Decoder (
     assign op = instr[6:0];
 
     assign {rs1, rs2, rd, func, imm} = `isEQ(instr[6:0], `INSTR_TYP_R) ? {rt_rs1, rt_rs2, rt_rd, rt_func,  32'b0 } :
-                                       `isEQ(instr[6:0], `INSTR_TYP_ILD) |
-                                       `isEQ(instr[6:0], `INSTR_TYP_IJR) |
+                                       `isEQ(instr[6:0], `INSTR_TYP_I12LD) |
+                                       `isEQ(instr[6:0], `INSTR_TYP_I12JR) |
                                        `isEQ(instr[6:0], `INSTR_TYP_I) ? {it_rs1,   5'b0, it_rd, it_func, it_imm } :
                                        `isEQ(instr[6:0], `INSTR_TYP_S) ? {st_rs1, st_rs2,  5'b0, st_func, st_imm } :
                                        `isEQ(instr[6:0], `INSTR_TYP_B) ? {bt_rs1, bt_rs2,  5'b0, bt_func, bt_imm } :

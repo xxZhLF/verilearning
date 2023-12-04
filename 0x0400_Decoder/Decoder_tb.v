@@ -129,21 +129,21 @@ module Decoder_tb(
                 `INSTR_TYP_J: begin
                     $write("JAL with rd=x%-d, imm=0x%05H", rd, $signed(imm));
                 end 
-                `INSTR_TYP_ILD: begin
+                `INSTR_TYP_I12LD: begin
                     case (func) 
-                        `ILD_TYP_FC_LB:  $write("LB with ");
-                        `ILD_TYP_FC_LH:  $write("LH with ");
-                        `ILD_TYP_FC_LW:  $write("LW with ");
-                        `ILD_TYP_FC_LBU: $write("LBU with ");
-                        `ILD_TYP_FC_LHU: $write("LHU with ");
-                        default: $write("*[ERROR]@INSTR_TYP_ILD Func=%b ", func);
+                        `I12LD_TYP_FC_LB:  $write("LB with ");
+                        `I12LD_TYP_FC_LH:  $write("LH with ");
+                        `I12LD_TYP_FC_LW:  $write("LW with ");
+                        `I12LD_TYP_FC_LBU: $write("LBU with ");
+                        `I12LD_TYP_FC_LHU: $write("LHU with ");
+                        default: $write("*[ERROR]@INSTR_TYP_I12LD Func=%b ", func);
                     endcase
                     $write("rs1=x%-d, rd=x%-d, imm=%-d", rs1, rd, $signed(imm));
                 end
-                `INSTR_TYP_IJR: begin
+                `INSTR_TYP_I12JR: begin
                     case (func) 
-                        `IJR_TYP_FC_JALR: $write("JALR with ");
-                        default: $write("*[ERROR]@INSTR_TYP_IJR Func=%b ", func);
+                        `I12JR_TYP_FC_JALR: $write("JALR with ");
+                        default: $write("*[ERROR]@INSTR_TYP_I12JR Func=%b ", func);
                     endcase
                     $write("rs1=x%-d, rd=x%-d, imm=%-d", rs1, rd, $signed(imm));
                 end
