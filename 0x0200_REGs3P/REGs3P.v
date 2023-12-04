@@ -15,6 +15,12 @@ module REGs3P (
 ) ;
 
     reg [31:0] RF [31:0];
+    initial begin
+        integer i;
+        for (i = 0; i < 4096; ++i) begin
+            RF[i] = 32'h0;
+        end
+    end
 
     always RF[0] = 32'h0;
 
