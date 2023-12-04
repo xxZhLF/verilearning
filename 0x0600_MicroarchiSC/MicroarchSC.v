@@ -31,8 +31,8 @@ module MicroarchSC (
     REGs3P rf(
         .clk(clk),
         .en4w(rf_en4w),
-        .addr_w0(rf_wa),
-        .data_i0(rf_wd),
+        .addr_w(rf_wa),
+        .data_i(rf_wd),
         .addr_r0(rf_r0a),
         .data_o0(rf_r0d),
         .addr_r1(rf_r1a),
