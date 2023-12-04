@@ -1,5 +1,5 @@
-TopModule := MicroarchSC
-Testbehch := MicroarchSC_tb
+TopModule := MicroarchiSC
+Testbehch := MicroarchiSC_tb
 
 OPutTo := obj_dir/
 

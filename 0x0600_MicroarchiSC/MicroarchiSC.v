@@ -7,7 +7,7 @@
 `include "../0x0400_Decoder/RV32M.v"
 `include "../0x0500_Mem/MemIO.v"
 
-module MicroarchSC (
+module MicroarchiSC (
     input wire        rst,
     input wire        clk,
     input wire [31:0] LoadProg_addr,

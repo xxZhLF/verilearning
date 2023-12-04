@@ -1,6 +1,6 @@
 `timescale 1ps/1ps 
 
-module MicroarchSC_tb(
+module MicroarchiSC_tb(
     // None
 );
 
@@ -11,7 +11,7 @@ module MicroarchSC_tb(
 
     reg [31:0] addr;
     reg [31:0] data;
-    MicroarchSC core(
+    MicroarchiSC core(
         .rst(rst),
         .clk(clk),
         .LoadProg_addr(addr),
@@ -46,7 +46,7 @@ module MicroarchSC_tb(
     end
 
     initial begin
-        $dumpfile("MicroarchSC.vcd");
+        $dumpfile("MicroarchiSC.vcd");
         $dumpvars(0, rst);
         $dumpvars(1, clk);
     end
