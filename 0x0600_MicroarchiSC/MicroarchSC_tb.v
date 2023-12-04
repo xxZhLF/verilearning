@@ -27,7 +27,8 @@ module MicroarchSC_tb(
             $finish;
         end 
         for (integer i = 0; !$feof(fd); i += 4) begin
-            addr = i; $fscanf(fd, "%h\n", data); #10;
+            reg [16*8-1 : 0] mnemonic_p1, mnemonic_p2; 
+            addr = i; $fscanf(fd, "%h \t %s \t %s \n", data, mnemonic_p1, mnemonic_p2); #10;
         end #10 rst = 1'b0;
         $finish();
     end 
