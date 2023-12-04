@@ -6,8 +6,8 @@
 module REGs3P (
     input  wire        clk,
     input  wire        en4w,
-    input  wire [ 4:0] addr_w0,
-    input  wire [31:0] data_i0,
+    input  wire [ 4:0] addr_w,
+    input  wire [31:0] data_i,
     input  wire [ 4:0] addr_r0,
     output wire [31:0] data_o0,
     input  wire [ 4:0] addr_r1,
@@ -19,8 +19,8 @@ module REGs3P (
     always RF[0] = 32'h0;
 
     always @(posedge clk) begin
-        if (~`isZERO(addr_w0) & en4w) begin
-            RF[addr_w0] <= data_i0;
+        if (~`isZERO(addr_w) & en4w) begin
+            RF[addr_w] <= data_i;
         end else begin
         end
     end
