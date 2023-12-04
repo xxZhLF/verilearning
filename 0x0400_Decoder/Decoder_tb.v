@@ -147,6 +147,9 @@ module Decoder_tb(
                     endcase
                     $write("rs1=x%-d, rd=x%-d, imm=%-d", rs1, rd, $signed(imm));
                 end
+                `INSTR_TYP_I20PC: begin
+                    $write("AUIPC with rd=x%-d, imm=0x%05H", rd, $signed(imm[31:12]));
+                end
                 default: begin
                     $write("*[ERROR] Machine Code is %H, op=%b ", instr, op);
                 end

@@ -24,6 +24,7 @@ module Decoder (
                                        `isEQ(instr[6:0], `INSTR_TYP_S) ? {st_rs1, st_rs2,  5'b0, st_func, st_imm } :
                                        `isEQ(instr[6:0], `INSTR_TYP_B) ? {bt_rs1, bt_rs2,  5'b0, bt_func, bt_imm } :
                                        `isEQ(instr[6:0], `INSTR_TYP_U) ? {  5'b0,   5'b0, ut_rd,   10'b0, ut_imm } :
+                                       `isEQ(instr[6:0], `INSTR_TYP_I20PC) |
                                        `isEQ(instr[6:0], `INSTR_TYP_J) ? {  5'b0,   5'b0, jt_rd,   10'b0, jt_imm } : 57'b0;
 
     wire [ 4:0] rt_rs1, rt_rs2, rt_rd;

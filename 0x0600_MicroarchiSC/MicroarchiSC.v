@@ -269,6 +269,9 @@ module MicroarchiSC (
                         default: ;//$display("*[ERROR]@INSTR_TYP_I12JR Func=%b ", decoder_func);
                     endcase
                 end
+                `INSTR_TYP_I20PC: begin
+                    // $write("AUIPC with rd=x%-d, imm=0x%05H", rd, $signed(imm[31:12]));
+                end
                 default: ;//$display("*[ERROR] Machine Code is %H, op=%b ", decoder_instr, decoder_op);
             endcase
             DBG_detail_of_instr_exec(decoder_op, decoder_func, decoder_imm, decoder_rs1, 32'b0, decoder_rs2, 32'b0, decoder_rd, 32'b0);
@@ -364,6 +367,9 @@ module MicroarchiSC (
                     `I12JR_TYP_FC_JALR: $display("JALR:   rs1 is x%-2d=%08X, rd  is x%-2d=%08X, imm is %-d", rs1_addr, rs1_data, rd_addr, rd_data, $signed(imm));
                     default: $display("*[ERROR]@INSTR_TYP_I12JR Func=%b ", func);
                 endcase
+            end
+            `INSTR_TYP_I20PC: begin
+                $display("AUIPC:  rd  is x%-2d=%08X, imm is 0x%05H", rd_addr, rd_data, $signed(imm[31:12]));
             end
             default: begin
                 $display("*[ERROR] Machine Code is op=%b ", op);
