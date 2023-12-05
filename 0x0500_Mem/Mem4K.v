@@ -77,9 +77,9 @@ module Mem4K ( input wire clk,
             endcase
         end else begin
             case (B_Size)
-                `MW_Byte: Word4B[ 7:0] <= {mem[BytesB[0]]};
-                `MW_Half: Word4B[15:0] <= {mem[BytesB[1]], mem[BytesB[0]]};
-                `MW_Word: Word4B[31:0] <= {mem[BytesB[3]], mem[BytesB[2]], mem[BytesB[1]], mem[BytesB[0]]};
+                `MW_Byte: Word4B <= {24'b0,                                          mem[BytesB[0]]};
+                `MW_Half: Word4B <= {16'b0,                          mem[BytesB[1]], mem[BytesB[0]]};
+                `MW_Word: Word4B <= {mem[BytesB[3]], mem[BytesB[2]], mem[BytesB[1]], mem[BytesB[0]]};
                 default: ;
             endcase
         end
