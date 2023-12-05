@@ -124,10 +124,10 @@ module Decoder_tb(
                     $write("rs1=x%-d, rs2=x%-d, imm=%-d", rs1, rs2, $signed(imm));
                 end 
                 `INSTR_TYP_U: begin
-                    $write("LUI with rd=x%-d, imm=0x%05H", rd, $signed(imm[31:12]));
+                    $write("LUI with rd=x%-d, imm=0x%05H", rd, $signed(imm));
                 end 
                 `INSTR_TYP_J: begin
-                    $write("JAL with rd=x%-d, imm=0x%05H", rd, $signed(imm[31:12]));
+                    $write("JAL with rd=x%-d, imm=0x%05H", rd, $signed(imm));
                 end 
                 `INSTR_TYP_I12LD: begin
                     case (func) 
@@ -148,7 +148,7 @@ module Decoder_tb(
                     $write("rs1=x%-d, rd=x%-d, imm=%-d", rs1, rd, $signed(imm));
                 end
                 `INSTR_TYP_I20PC: begin
-                    $write("AUIPC with rd=x%-d, imm=0x%05H", rd, $signed(imm[31:12]));
+                    $write("AUIPC with rd=x%-d, imm=0x%05H", rd, $signed(imm));
                 end
                 default: begin
                     $write("*[ERROR] Machine Code is %H, op=%b ", instr, op);
