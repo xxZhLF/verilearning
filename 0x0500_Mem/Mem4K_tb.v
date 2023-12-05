@@ -12,6 +12,7 @@ module Mem4K_tb (
     end
 
     reg         A_EnWR,  B_EnWR;
+    reg  [ 1:0]          B_Size;
     reg  [31:0] A_ABus,  B_ABus;
     reg  [31:0] A_DBusW, B_DBusW;
     wire [31:0] A_DBusR, B_DBusR;
@@ -22,6 +23,7 @@ module Mem4K_tb (
         .A_DBusW(A_DBusW),
         .A_DBusR(A_DBusR),
         .B_EnWR(B_EnWR),
+        .B_Size(),
         .B_ABus(B_ABus),
         .B_DBusW(B_DBusW),
         .B_DBusR(B_DBusR)

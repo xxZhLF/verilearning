@@ -9,6 +9,7 @@ module Mem4K ( input wire clk,
     /* Port A for instration */ input  wire [31:0] A_DBusW,
     /* Port A for instration */ output wire [31:0] A_DBusR,
     /* Port B for data       */ input  wire        B_EnWR,
+    /* Port B for data       */ input  wire [ 1:0] B_Size,
     /* Port B for data       */ input  wire [31:0] B_ABus,
     /* Port B for data       */ input  wire [31:0] B_DBusW,
     /* Port B for data       */ output wire [31:0] B_DBusR
@@ -68,14 +69,24 @@ module Mem4K ( input wire clk,
             Word4A <= {mem[BytesA[3]], mem[BytesA[2]], mem[BytesA[1]], mem[BytesA[0]]};
         end
         if (B_EnWR) begin
-            {mem[BytesB[3]], mem[BytesB[2]], mem[BytesB[1]], mem[BytesB[0]]} <= B_DBusW;
+            case (B_Size)
+                `MW_Byte: {mem[BytesB[0]]} <= B_DBusW[7:0];
+                `MW_Half: {mem[BytesB[1]], mem[BytesB[0]]} <= B_DBusW[15:0];
+                `MW_Word: {mem[BytesB[3]], mem[BytesB[2]], mem[BytesB[1]], mem[BytesB[0]]} <= B_DBusW[31:0];
+                default: ;
+            endcase
         end else begin
-            Word4B <= {mem[BytesB[3]], mem[BytesB[2]], mem[BytesB[1]], mem[BytesB[0]]};
+            case (B_Size)
+                `MW_Byte: Word4B[ 7:0] <= {mem[BytesB[0]]};
+                `MW_Half: Word4B[15:0] <= {mem[BytesB[1]], mem[BytesB[0]]};
+                `MW_Word: Word4B[31:0] <= {mem[BytesB[3]], mem[BytesB[2]], mem[BytesB[1]], mem[BytesB[0]]};
+                default: ;
+            endcase
         end
     end
 
-    assign A_DBusR = {mem[BytesA[3]], mem[BytesA[2]], mem[BytesA[1]], mem[BytesA[0]]};
-    assign B_DBusR = {mem[BytesB[3]], mem[BytesB[2]], mem[BytesB[1]], mem[BytesB[0]]};
+    assign A_DBusR = Word4A;
+    assign B_DBusR = Word4B;
 
 endmodule
 
