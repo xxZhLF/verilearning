@@ -1,41 +1,53 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Tue Dec  5 08:33:59 2023
+[*] Tue Dec  5 14:29:24 2023
 [*]
-[dumpfile] "/home/xxzhou/verilearning/0x0500_Mem/Mem4K.vcd"
-[dumpfile_mtime] "Tue Dec  5 08:32:24 2023"
-[dumpfile_size] 221253
-[savefile] "/home/xxzhou/verilearning/0x0500_Mem/Mem4K.gtkw"
-[timestart] 428
-[size] 1908 987
+[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0500_Mem/Mem4K.vcd"
+[dumpfile_mtime] "Tue Dec  5 14:29:17 2023"
+[dumpfile_size] 229288
+[savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0500_Mem/Mem4K.gtkw"
+[timestart] 880
+[size] 1428 819
 [pos] -1 -1
-*-5.000000 456 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.000000 1019 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.Mem4K_tb.
 [treeopen] TOP.Mem4K_tb.memory.
 [sst_width] 214
 [signals_width] 150
 [sst_expanded] 1
-[sst_vpaned_height] 288
+[sst_vpaned_height] 229
 @28
 TOP.Mem4K_tb.rst
 TOP.Mem4K_tb.clk
+@24
+TOP.Mem4K_tb.cnt[31:0]
 @200
 -
 @28
+[color] 4
 TOP.Mem4K_tb.A_EnWR
 @22
+[color] 4
 TOP.Mem4K_tb.A_ABus[31:0]
+[color] 4
 TOP.Mem4K_tb.memory.A_DBusR[31:0]
+[color] 4
 TOP.Mem4K_tb.A_DBusW[31:0]
 @200
 -
 @28
+[color] 4
 TOP.Mem4K_tb.B_EnWR
+[color] 4
 TOP.Mem4K_tb.B_Size[1:0]
-@22
+@23
+[color] 4
 TOP.Mem4K_tb.B_ABus[31:0]
+@22
+[color] 4
 TOP.Mem4K_tb.B_DBusR[31:0]
+[color] 4
 TOP.Mem4K_tb.memory.B_DBusW[31:0]
 @200
 -

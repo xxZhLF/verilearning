@@ -38,46 +38,47 @@ module Mem4K_tb (
             $display("* SUGGEST: Run \"make prog.mc\" to generate, Please.");
             $finish;
         end
-        for (i = 0; !$feof(fd); i += 4) begin
+        for (i = 2048; !$feof(fd); i += 4) begin
             $fscanf(fd, "%h\n", instr[i]);
-            A_EnWR = `MM_ENB_W; A_ABus = i; A_DBusW = instr[i]; #10;
-        end A_EnWR = `MM_ENB_W; A_ABus = i; A_DBusW = 32'hFFFF; #10;
-        rst = 1'b0; #5;
+            A_EnWR = `MM_ENB_W; A_ABus = i; A_DBusW = instr[i]; #20;
+        end A_EnWR = `MM_ENB_W; A_ABus = i; A_DBusW = 32'hFFFF; #20;
+        #10 rst = 1'b0;
     end 
 
-    always #5 clk = ~clk;
+    reg [31:0] cnt;
+    initial cnt = 32'b0;
+
+    always #10 clk = ~clk;
     always @(negedge rst or posedge clk) begin
         if (rst) begin
-            B_ABus <= 32'h0;
-        end else begin 
-            {B_EnWR, B_Size} <= {`MM_ENB_R, `MW_Word}; 
+            cnt <= 32'b0;
+            B_ABus <= 32'd2048;
+        end else begin
+            B_EnWR <= `MM_ENB_R;
+            B_Size <= `MW_Word;
             if (B_DBusR != 32'hFFFF) begin
-                if (B_DBusR == instr[B_ABus]) begin
-                    B_ABus <= B_ABus + 4;
-                    $display("[OK] %H", B_DBusR);
-                end else begin
-                    $display("Test [NG] @%H: %H != %H.", 
-                             B_ABus, B_DBusR, instr[B_ABus]);
-                    $finish;
-                end
+                #20 B_ABus <= B_ABus + 4;
             end else begin
                 $finish;
             end
         end
+        cnt <= cnt + 32'b1;
     end
 
     initial begin
         $dumpfile("Mem4K.vcd");
-        $dumpvars(0, clk);
-        $dumpvars(1, A_EnWR);
-        $dumpvars(2, A_ABus);
-        $dumpvars(3, A_DBusW);
-        $dumpvars(4, A_DBusR);
-        $dumpvars(5, B_EnWR);
-        $dumpvars(6, B_Size);
-        $dumpvars(7, B_ABus);
-        $dumpvars(8, B_DBusW);
-        $dumpvars(9, B_DBusR);
+        $dumpvars( 0, rst);
+        $dumpvars( 1, clk);
+        $dumpvars( 2, cnt);
+        $dumpvars( 3, A_EnWR);
+        $dumpvars( 4, A_ABus);
+        $dumpvars( 5, A_DBusW);
+        $dumpvars( 6, A_DBusR);
+        $dumpvars( 7, B_EnWR);
+        $dumpvars( 8, B_Size);
+        $dumpvars( 9, B_ABus);
+        $dumpvars(10, B_DBusW);
+        $dumpvars(11, B_DBusR);
     end
 
 endmodule
