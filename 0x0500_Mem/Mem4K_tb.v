@@ -9,7 +9,7 @@ module Mem4K_tb (
     reg rst, clk;
     initial begin
         {rst, clk} = 2'b10;
-    end
+    end always #10 clk = ~clk;
 
     reg         A_EnWR,  B_EnWR;
     reg  [ 1:0]          B_Size;
@@ -47,22 +47,36 @@ module Mem4K_tb (
 
     reg [31:0] cnt;
     initial cnt = 32'b0;
+    always @(posedge clk) cnt <= rst ? 32'b0 : cnt + 1'b1;
 
-    always #10 clk = ~clk;
+    reg isInit;
     always @(negedge rst or posedge clk) begin
         if (rst) begin
-            cnt <= 32'b0;
-            B_ABus <= 32'd2048;
+            isInit <= 1'b1;
         end else begin
             B_EnWR <= `MM_ENB_R;
             B_Size <= `MW_Word;
-            if (B_DBusR != 32'hFFFF) begin
-                #20 B_ABus <= B_ABus + 4;
+            if (isInit) begin
+                isInit <= 1'b0;
+                B_ABus <= 32'd2048;
             end else begin
-                $finish;
+                B_ABus <= B_ABus + 4;
             end
         end
-        cnt <= cnt + 32'b1;
+    end
+
+    always @(negedge rst or negedge clk) begin
+        if (rst) begin
+        end else begin
+            if (isInit) begin
+            end else begin
+                if (B_DBusR == 32'hFFFF) begin
+                    $finish;
+                end else begin
+                    $display("[%s]@%08H", B_DBusR == instr[B_ABus-4] ? "OK" : "NG", B_ABus);
+                end
+            end
+        end
     end
 
     initial begin
