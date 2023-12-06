@@ -8,11 +8,19 @@
 `include "../0x0400_Decoder/RV32M.v"
 `include "../0x0500_Mem/MemIO.v"
 
+`define DATA_ST `MM_ENB_W
+`define DATA_LD `MM_ENB_R
+
 module MicroarchiSC (
-    input wire        rst,
-    input wire        clk,
-    input wire [31:0] LoadProg_addr,
-    input wire [31:0] LoadProg_data
+    input  wire        rst,
+    input  wire        clk,
+    input  wire [31:0] instr,
+    input  wire [31:0] dataI,
+    output reg  [31:0] dataO,
+    output reg         store_or_load,
+    output reg  [ 1:0] width_of_data,
+    output reg  [31:0] locat_of_data,
+    output wire [31:0] where_is_instr
 );
 
     reg  [ 1:0] pc_mode;
@@ -74,24 +82,6 @@ module MicroarchiSC (
         .imm(decoder_imm)
     );
 
-    reg         mem_A_EnWR,  mem_B_EnWR;
-    reg  [ 1:0]              mem_B_Size;
-    reg  [31:0] mem_A_ABus,  mem_B_ABus;
-    reg  [31:0] mem_A_DBusW, mem_B_DBusW;
-    wire [31:0] mem_A_DBusR, mem_B_DBusR;
-    Mem4K mem(
-        .clk(clk),
-        .A_EnWR(mem_A_EnWR),
-        .A_ABus(mem_A_ABus),
-        .A_DBusW(mem_A_DBusW),
-        .A_DBusR(mem_A_DBusR),
-        .B_EnWR(mem_B_EnWR),
-        .B_Size(mem_B_Size),
-        .B_ABus(mem_B_ABus),
-        .B_DBusW(mem_B_DBusW),
-        .B_DBusR(mem_B_DBusR)
-    );
-
     reg  [31:0] c2t_1C, c2t_2C;
     wire [31:0] c2t_1T, c2t_2T;
     CTC32 c2t_1(
@@ -109,17 +99,14 @@ module MicroarchiSC (
         .C(t2c_C)
     );
 
+    assign where_is_instr = pc_addr;
+
     always @(negedge rst or posedge clk) begin
         if (rst) begin
-            mem_A_EnWR  <= `MM_ENB_W;
-            mem_A_ABus  <= LoadProg_addr;
-            mem_A_DBusW <= LoadProg_data;
-            pc_mode     <= `UCJUMP;
-            pc_target   <= LoadProg_addr;
+            pc_mode   <= `UCJUMP;
+            pc_target <= 32'd2048;
         end else begin
-            mem_A_EnWR <= `MM_ENB_R;
-            mem_A_ABus <= pc_addr;
-            decoder_instr <= mem_A_DBusR;
+            decoder_instr <= instr;
             case (decoder_op)
                 `INSTR_TYP_R: begin
                     pc_mode <= `NORMAL;
@@ -291,18 +278,18 @@ module MicroarchiSC (
                     alu_op1 <= rf_r0D;
                     alu_op2 <= decoder_imm;
                     rf_r1A  <= decoder_rs2;
-                    mem_B_EnWR  <= `MM_ENB_W;
-                    mem_B_ABus  <= alu_res;
-                    mem_B_DBusW <= rf_r1D;
+                    store_or_load <= `DATA_ST;
+                    locat_of_data <= alu_res;
+                    dataO <= rf_r1D;
                     case (decoder_func)
                         `S_TYP_FC_SB: begin
-                            mem_B_Size  <= `MW_Byte;
+                            width_of_data  <= `MW_Byte;
                         end
                         `S_TYP_FC_SH: begin
-                            mem_B_Size  <= `MW_Half;
+                            width_of_data  <= `MW_Half;
                         end
                         `S_TYP_FC_SW: begin
-                            mem_B_Size  <= `MW_Word;
+                            width_of_data  <= `MW_Word;
                         end
                         default: ;
                     endcase
@@ -341,25 +328,46 @@ module MicroarchiSC (
                 end
                 `INSTR_TYP_U: begin
                     pc_mode <= `NORMAL;
-                    rf_en4w <= `MM_ENB_W;
+                    rf_en4w <= 1'b0;
                     rf_wA   <= decoder_rd;
                     rf_wD   <= decoder_imm;
                 end
                 `INSTR_TYP_J: begin
-                    pc_mode <= `UCJUMP;
+                    pc_mode   <= `UCJUMP;
+                    alu_ctl   <= `ALU_CTL_ADD;
+                    alu_op1   <= pc_addr;
+                    alu_op2   <= decoder_imm;
+                    pc_target <= alu_res;
                 end
                 `INSTR_TYP_I12LD: begin
                     pc_mode <= `NORMAL;
+                    alu_ctl <= `ALU_CTL_ADD;
+                    rf_r0A  <= decoder_rs1;
+                    alu_op1 <= rf_r0D;
+                    alu_op2 <= decoder_imm;
+                    rf_wA   <= decoder_rd;
+                    store_or_load <= `DATA_LD;
+                    locat_of_data <= alu_res;
                     case (decoder_func) 
                         `I12LD_TYP_FC_LB: begin
+                            width_of_data  <= `MW_Byte;
+                            rf_wD <= {{24{dataI[7]}}, dataI[ 7:0]};
                         end
                         `I12LD_TYP_FC_LH: begin
+                            width_of_data  <= `MW_Half;
+                            rf_wD <= {{16{dataI[7]}}, dataI[15:0]};
                         end
                         `I12LD_TYP_FC_LW: begin
+                            width_of_data  <= `MW_Word;
+                            rf_wD <= dataI;
                         end
                         `I12LD_TYP_FC_LBU: begin
+                            width_of_data  <= `MW_Byte;
+                            rf_wD <= {24'b0, dataI[ 7:0]};
                         end
                         `I12LD_TYP_FC_LHU: begin
+                            width_of_data  <= `MW_Half;
+                            rf_wD <= {16'b0, dataI[15:0]};
                         end
                         default: ;
                     endcase
