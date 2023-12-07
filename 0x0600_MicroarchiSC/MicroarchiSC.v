@@ -20,7 +20,7 @@ module MicroarchiSC (
     output reg         store_or_load,
     output reg  [ 1:0] width_of_data,
     output reg  [31:0] locat_of_data,
-    output wire [31:0] where_is_instr
+    output reg  [31:0] where_is_instr
 );
 
     reg  [ 1:0] pc_mode;
@@ -99,9 +99,16 @@ module MicroarchiSC (
         .C(t2c_C)
     );
 
-    assign where_is_instr = pc_addr;
+    assign rf_r0A = decoder_rs1;
+    assign rf_r1A = decoder_rs2;
+    assign rf_wA  = decoder_rd;
+
+    assign c2t_1C = rf_r0D;
+    assign c2t_2C = rf_r1D;
+    assign t2c_T  = {rf_r0D[31] ^ rf_r1D[31], alu_res[30:0]};
 
     always @(negedge rst or posedge clk) begin
+        where_is_instr <= pc_addr;
         if (rst) begin
             pc_mode   <= `UCJUMP;
             pc_target <= 32'd2048;
@@ -394,6 +401,14 @@ module MicroarchiSC (
         end
     end
     
+    function [31:0] ALU_MUX_OP1;
+        input [31:0] regT;
+        input [31:0] regC;
+        input [31:0] pc;
+    begin
+    end 
+    endfunction
+
     task DBG_detail_of_instr_exec(
         input [31:0] instr,
         input [ 6:0] op,
