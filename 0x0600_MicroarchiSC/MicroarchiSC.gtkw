@@ -1,34 +1,43 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Mon Dec  4 07:51:43 2023
+[*] Thu Dec  7 09:11:59 2023
 [*]
 [dumpfile] "/home/xxzhou/verilearning/0x0600_MicroarchiSC/MicroarchiSC.vcd"
-[dumpfile_mtime] "Mon Dec  4 07:51:21 2023"
-[dumpfile_size] 8330302
+[dumpfile_mtime] "Thu Dec  7 08:15:59 2023"
+[dumpfile_size] 9433001
 [savefile] "/home/xxzhou/verilearning/0x0600_MicroarchiSC/MicroarchiSC.gtkw"
-[timestart] 402
+[timestart] 696
 [size] 1908 987
-[pos] -39 -241
-*-6.000000 420 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -1
+*-7.000000 1014 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.MicroarchiSC_tb.
 [treeopen] TOP.MicroarchiSC_tb.core.
 [sst_width] 214
-[signals_width] 134
+[signals_width] 190
 [sst_expanded] 1
 [sst_vpaned_height] 287
 @28
 TOP.MicroarchiSC_tb.rst
+TOP.MicroarchiSC_tb.clk_base
+TOP.MicroarchiSC_tb.clk_core
 @200
 -
+@28
+TOP.MicroarchiSC_tb.A_EnWR
 @22
-TOP.MicroarchiSC_tb.core.mem.A_ABus[31:0]
-TOP.MicroarchiSC_tb.core.mem.A_DBusW[31:0]
+TOP.MicroarchiSC_tb.A_ABus[31:0]
+TOP.MicroarchiSC_tb.A_DBusR[31:0]
+TOP.MicroarchiSC_tb.A_DBusW[31:0]
 @200
 -
+@28
+TOP.MicroarchiSC_tb.B_EnWR
 @22
-TOP.MicroarchiSC_tb.core.pc_addr[31:0]
-@29
-TOP.MicroarchiSC_tb.core.pc.mode[1:0]
+TOP.MicroarchiSC_tb.B_ABus[31:0]
+TOP.MicroarchiSC_tb.B_DBusR[31:0]
+TOP.MicroarchiSC_tb.B_DBusW[31:0]
+@200
+-
 [pattern_trace] 1
 [pattern_trace] 0
