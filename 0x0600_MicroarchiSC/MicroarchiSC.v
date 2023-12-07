@@ -107,6 +107,24 @@ module MicroarchiSC (
     assign c2t_2C = rf_r1D;
     assign t2c_T  = {rf_r0D[31] ^ rf_r1D[31], alu_res[30:0]};
 
+    assign {
+        pc_mode,
+        pc_offset,
+        pc_target,
+        rf_en4w,
+        rf_wA,
+        rf_wD,
+        rf_r0A,
+        rf_r1A,
+        alu_ctl,
+        alu_op1,
+        alu_op2,
+        c2t_1C, 
+        c2t_2C,
+        t2c_T
+    } = `isEQ(decoder_op, `INSTR_TYP_R) ? `isEQ(decoder_func, `R_TYP_FC_ADD) ? {`NORMAL, 32'hZZZZZZZZ, 32'hZZZZZZZZ, 1'b1, decoder_rd, alu_res, decoder_rs1, decoder_rs2, `ALU_CTL_ADD, rf_r0D, alu_op2, 32'hZZZZZZZZ, 32'hZZZZZZZZ, 32'hZZZZZZZZ} :
+                                        ? `isEQ(decoder_func, `R_TYP_FC_SUB) ? ;
+
     always @(negedge rst or posedge clk) begin
         where_is_instr <= pc_addr;
         if (rst) begin
