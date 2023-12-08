@@ -188,6 +188,7 @@ module MicroarchiSC (
 
 
     assign decoder_instr = instr;
+    assign where_is_instr = pc_addr;
 
     reg [HB-1 : 0] __Hub__;
     assign Hub2O = __Hub__;
