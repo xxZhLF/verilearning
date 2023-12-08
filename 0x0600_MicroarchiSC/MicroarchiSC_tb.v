@@ -23,7 +23,7 @@ module MicroarchiSC_tb(
             $fscanf(fd, "%h \t %s \t %s \n", instr[i], mnemonic_p1, mnemonic_p2);
             A_EnWR = `MM_ENB_W; A_ABus = i; A_DBusW = instr[i]; #20;
         end A_EnWR = `MM_ENB_W; A_ABus = i; A_DBusW = {16'hFFFF, 16'h0000};
-        #20 rst = 1'b0;
+        #10 rst = 1'b0;
     end 
 
     reg clk_base;
@@ -96,6 +96,7 @@ module MicroarchiSC_tb(
                 A_ABus <= I_ABus;
                 if (is_Loading) begin
                 end else begin
+                    // $display("[%s]@%08H -> %08H ", B_DBusR == instr[B_ABus] ? "OK" : "NG", B_ABus, B_DBusR);
                     I_DBus <= A_DBusR;
                 end
             end
@@ -109,10 +110,10 @@ module MicroarchiSC_tb(
             B_Size <= `MW_Word;
             if (is_Loading) begin
                 B_ABus <= 32'd2048;
-                $display("+++++++ %08H, %08H", B_ABus, B_DBusR);
+                // $display("+++++++ %08H, %08H", B_ABus, B_DBusR);
             end else begin
                 B_ABus <= B_ABus + 32'd4;
-                $display("------- %08H, %08H [%s]", B_ABus, B_DBusR, B_DBusR == instr[B_ABus] ? "OK" : "NG");
+                // $display("------- %08H, %08H [%s]", B_ABus, B_DBusR, B_DBusR == instr[B_ABus] ? "OK" : "NG");
             end
             if (B_DBusR == 32'hFFFF0000) begin
                 $finish;
