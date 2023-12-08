@@ -16,16 +16,16 @@ module MicroarchiSC (
     input  wire        clk,
     input  wire [31:0] instr,
     input  wire [31:0] dataI,
-    output reg  [31:0] dataO,
-    output reg         store_or_load,
-    output reg  [ 1:0] width_of_data,
-    output reg  [31:0] locat_of_data,
-    output reg  [31:0] where_is_instr
+    output wire [31:0] dataO,
+    output wire        store_or_load,
+    output wire [ 1:0] width_of_data,
+    output wire [31:0] locat_of_data,
+    output wire [31:0] where_is_instr
 );
 
-    reg  [ 1:0] pc_mode;
-    reg  [31:0] pc_offset;
-    reg  [31:0] pc_target;
+    wire [ 1:0] pc_mode;
+    wire [31:0] pc_offset;
+    wire [31:0] pc_target;
     wire [31:0] pc_addr;
     wire [31:0] pc_addr_nxt;
     PC pc(
@@ -38,10 +38,10 @@ module MicroarchiSC (
         .addr_ret(pc_addr_nxt)
     );
 
-    reg         rf_en4w;
-    reg  [ 4:0] rf_wA;
-    reg  [31:0] rf_wD;
-    reg  [ 4:0] rf_r0A, rf_r1A;
+    wire        rf_en4w;
+    wire [ 4:0] rf_wA;
+    wire [31:0] rf_wD;
+    wire [ 4:0] rf_r0A, rf_r1A;
     wire [31:0] rf_r0D, rf_r1D;
     REGs3P rf(
         .clk(clk),
@@ -54,9 +54,9 @@ module MicroarchiSC (
         .data_o1(rf_r1D)
     );
 
-    reg  [15:0] alu_ctl;
-    reg  [31:0] alu_op1;
-    reg  [31:0] alu_op2;
+    wire [15:0] alu_ctl;
+    wire [31:0] alu_op1;
+    wire [31:0] alu_op2;
     wire [31:0] alu_res;
     ALU32FF alu(
         .ctl(alu_ctl),
@@ -65,7 +65,7 @@ module MicroarchiSC (
         .res(alu_res)
     );
 
-    reg  [31:0] decoder_instr;
+    wire [31:0] decoder_instr;
     wire [ 6:0] decoder_op;
     wire [ 4:0] decoder_rs1;
     wire [ 4:0] decoder_rs2;
@@ -82,7 +82,7 @@ module MicroarchiSC (
         .imm(decoder_imm)
     );
 
-    reg  [31:0] c2t_1C, c2t_2C;
+    wire [31:0] c2t_1C, c2t_2C;
     wire [31:0] c2t_1T, c2t_2T;
     CTC32 c2t_1(
         .C(c2t_1C),
@@ -92,361 +92,108 @@ module MicroarchiSC (
         .T(c2t_2T)
     );
 
-    reg  [31:0] c2t_IC;
+    wire [31:0] c2t_IC;
     wire [31:0] c2t_IT;
-    CTC32 c2t_1(
+    CTC32 c2t_I(
         .C(c2t_IC),
         .T(c2t_IT)
     );
 
-    reg  [31:0] t2c_T;
+    wire [31:0] t2c_T;
     wire [31:0] t2c_C;
     TCC32 t2c(
         .T(t2c_T),
         .C(t2c_C)
     );
 
+    parameter HB = 32 +  1 +  2 + 32 +  2 
+                 + 32 + 32 +  1 +  5 + 32 
+                 +  5 +  5 + 16 + 32 + 32 
+                 + 32 + 32 + 32 + 32 ;
+    wire [HB-1 : 0] I2Hub, Hub2O;
     assign {
-        /* 32-Bit */ dataO, /*         Date Write to Memory                         */
-        /*  1-Bit */ store_or_load, /* Signal of Memory Read/Write                  */
-        /*  2-Bit */ width_of_data, /* Size of Date in Memory to Read/Write         */
-        /* 32-Bit */ locat_of_data, /* Address of Memory to Read/Write              */
-        /*  2-Bit */ pc_mode, /*       Mode of PC                                   */
-        /* 32-Bit */ pc_offset, /*     Offset Add to PC                             */
-        /* 32-Bit */ pc_target, /*     Target Write to PC                           */
-        /*  1-Bit */ rf_en4w, /*       Write Signal of Destination Register         */
-        /*  5-Bit */ rf_wA, /*         Address of Destination Register              */
-        /* 32-Bit */ rf_wD, /*         Value Write to Destination Register          */
-        /*  5-Bit */ rf_r0A, /*        Address of Source Register 1                 */
-        /* 32-Bit */ rf_r1A, /*        Address of Source Register 2                 */
-        /* 16-Bit */ alu_ctl, /*       Control Signal of ALU                        */
-        /* 32-Bit */ alu_op1, /*       OP1 of ALU                                   */
-        /* 32-Bit */ alu_op2, /*       OP2 of ALU                                   */
-        /* 32-Bit */ c2t_1C, /*        2'complement (Converted to True Code as OP1) */
-        /* 32-Bit */ c2t_2C, /*        2'complement (Converted to True Code as OP2) */
-        /* 32-Bit */ c2t_IC, /*        2'complement (Converted to True Code as IMM) */
-        /* 32-Bit */ t2c_T /*          RES of True Code (Converted to 2'complement) */     /* Mem Write Data */ /* Mem RW Signal */ /* Mem Data Szie */ /* Mem Write Addr */ /* PC Mode    */ /* PC Offset     */ /* PC Target     */ /* Reg WE  */ /* Dest Reg      */ /* Dest Val   */ /* Src Reg 1      */ /* Src Reg 2      */ /* ALU Control        */ /*ALU OP 1                 */ /* ALU OP 2                */ /* 2'Complement 1 */ /* 2'Complement 2 */ /* 2'Complement IMM */ /* True Code                                  */
-    } = `isEQ(decoder_op, `INSTR_TYP_R)     ? `isEQ(decoder_func, `R_TYP_FC_ADD)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_ADD,    /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SUB)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SUB,    /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SLL)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SLL,    /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SRL)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SRL,    /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SRA)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SRA,    /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SLT)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SLT,    /* | */ c2t_1T,               /* | */ c2t_2T,               /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SLTU)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SLTU,   /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_AND)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_AND,    /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_OR)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_OR,     /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_XOR)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_XOR,    /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_MUL)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_MUL,    /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_MULH)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_MULH,   /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_MULHU)  ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_MULHU,  /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_MULHSU) ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_MULHSU, /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_DIV)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_DIV,    /* | */ {1'b0, c2t_1T[30:0]}, /* | */ {1'b0, c2t_2T[30:0]}, /* | */ rf_r0D,      /* | */ rf_r1D,      /* | */ {32{1'bZ}}     /* | */ {rf_r0D[31] ^ rf_r1D[31], alu_res[30:0]} /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_REM)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_REM,    /* | */ {1'b0, c2t_1T[30:0]}, /* | */ {1'b0, c2t_2T[30:0]}, /* | */ rf_r0D,      /* | */ rf_r1D,      /* | */ {32{1'bZ}}     /* | */ {rf_r0D[31] ^ rf_r1D[31], alu_res[30:0]} /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_DIVU)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_DIVU,   /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_REMU)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_REMU,   /* | */ rf_r0D,               /* | */ alu_op2,              /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : {416{1'bZ}}
-                                            /* =================================================================================================================================================================================================================================================================================================================================================================== ========================================================================================================================================= */
-        `isEQ(decoder_op, `INSTR_TYP_I)     ? `isEQ(decoder_func, `R_TYP_FC_ADDI)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ {32{1'bZ}},  /* | */ `ALU_CTL_ADDI,   /* | */ rf_r0D,               /* | */ decoder_imm,          /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `I_TYP_FC_SLTI)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ {32{1'bZ}},  /* | */ `I_TYP_FC_SLTI,  /* | */ c2t_1T,               /* | */ c2t_IT,               /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `I_TYP_FC_SLTIU)  ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ {32{1'bZ}},  /* | */ `I_TYP_FC_SLTIU, /* | */ rf_r0D,               /* | */ decoder_imm,          /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `I_TYP_FC_ANDI)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ {32{1'bZ}},  /* | */ `I_TYP_FC_ANDI,  /* | */ rf_r0D,               /* | */ decoder_imm,          /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_ORI)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ {32{1'bZ}},  /* | */ `I_TYP_FC_ORI,   /* | */ rf_r0D,               /* | */ decoder_imm,          /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `R_TYP_FC_XORI)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ {32{1'bZ}},  /* | */ `I_TYP_FC_XORI,  /* | */ rf_r0D,               /* | */ decoder_imm,          /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `I_TYP_FC_SLLI)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ {32{1'bZ}},  /* | */ `I_TYP_FC_SLLI,  /* | */ rf_r0D,               /* | */ decoder_imm,          /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `I_TYP_FC_SRLI)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ {32{1'bZ}},  /* | */ `I_TYP_FC_SRLI,  /* | */ rf_r0D,               /* | */ decoder_imm,          /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : 
-                                              `isEQ(decoder_func, `I_TYP_FC_SRAI)   ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL, /* | */ {32{1'bZ}}, /* | */ {32{1'bZ}}, /* | */ 1'b1, /* | */ decoder_rd, /* | */ alu_res, /* | */ decoder_rs1, /* | */ {32{1'bZ}},  /* | */ `I_TYP_FC_SRAI,  /* | */ rf_r0D,               /* | */ decoder_imm,          /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},  /* | */ {32{1'bZ}},    /* | */ {32{1'bZ}}                               /* | */} : {416{1'bZ}}
-                                            /* =================================================================================================================================================================================================================================================================================================================================================================== ========================================================================================================================================= */
-        `isEQ(decoder_op, `INSTR_TYP_S)     ? 
-        `isEQ(decoder_op, `INSTR_TYP_B)     ? 
-        `isEQ(decoder_op, `INSTR_TYP_U)     ? 
-        `isEQ(decoder_op, `INSTR_TYP_J)     ? 
-        `isEQ(decoder_op, `INSTR_TYP_I12LD) ? 
-        `isEQ(decoder_op, `INSTR_TYP_I12JR) ? 
-        `isEQ(decoder_op, `INSTR_TYP_I20PC) ? 
+    /* No.1:  32-Bit */ dataO, /*         Date Wrote to Memory                         */
+    /* No.2:   1-Bit */ store_or_load, /* Signal of Memory Read/Write                  */
+    /* No.3:   2-Bit */ width_of_data, /* Size of Date in Memory to Read/Write         */
+    /* No.4:  32-Bit */ locat_of_data, /* Address of Memory to Read/Write              */
+    /* No.5:   2-Bit */ pc_mode, /*       Mode of PC                                   */
+    /* No.6:  32-Bit */ pc_offset, /*     Offset Add to PC                             */
+    /* No.7:  32-Bit */ pc_target, /*     Target Write to PC                           */
+    /* No.8:   1-Bit */ rf_en4w, /*       Write Signal of Destination Register         */
+    /* No.9:   5-Bit */ rf_wA, /*         Address of Destination Register              */
+    /* No.10: 32-Bit */ rf_wD, /*         Value Write to Destination Register          */
+    /* No.11:  5-Bit */ rf_r0A, /*        Address of Source Register 1                 */
+    /* No.12:  5-Bit */ rf_r1A, /*        Address of Source Register 2                 */
+    /* No.13: 16-Bit */ alu_ctl, /*       Control Signal of ALU                        */
+    /* No.14: 32-Bit */ alu_op1, /*       OP1 of ALU                                   */
+    /* No.15: 32-Bit */ alu_op2, /*       OP2 of ALU                                   */
+    /* No.16: 32-Bit */ c2t_1C, /*        2'complement (Converted to True Code as OP1) */
+    /* No.17: 32-Bit */ c2t_2C, /*        2'complement (Converted to True Code as OP2) */
+    /* No.18: 32-Bit */ c2t_IC, /*        2'complement (Converted to True Code as IMM) */
+    /* No.19: 32-Bit */ t2c_T /*          RES of True Code (Converted to 2'complement) */                          /* No.1: 32-Bit   */ /* No.2: 1-Bit   */ /* No.3: 2-Bit   */ /* No.4: 32-Bit   */ /* No.5: 2-Bit */ /* No.6: 32-Bit                                   */ /* No.7: 32-Bit  */ /* No.8: 1-Bit */ /* No.9: 5-Bit   */ /* No.10: 32-Bit                     */ /* No.11: 5-Bit   */ /* No.12: 5-Bit   */ /* No.13: 16-Bit    */ /* No.14: 32-Bit           */ /* No.15: 32-Bit                 */ /* No.16: 32-Bit       */ /* No.17: 32-Bit       */ /* No.18: 32-Bit       */ /* No.19: 32-Bit                              */
+    } = Hub2O; assign I2Hub = `isEQ(decoder_op, `INSTR_TYP_R)     ? `isEQ(decoder_func, `R_TYP_FC_ADD)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_SUB)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SUB,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_SLL)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SLL,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_SRL)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SRL,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_SRA)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SRA,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_SLT)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SLT,  /* | */ c2t_1T,               /* | */ c2t_2T,                     /* | */ rf_r0D,           /* | */ rf_r1D,           /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_SLTU)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SLTU, /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_AND)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_AND,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_OR)       ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_OR,   /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_XOR)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_XOR,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_MUL)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_MUL,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_MULH)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_MUL,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_MULHU)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_MUL,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_MULHSU )  ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_MUL,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_DIV)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ t2c_C,                          /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_DIV,  /* | */ {1'b0, c2t_1T[30:0]}, /* | */ {1'b0, c2t_2T[30:0]},       /* | */ rf_r0D,           /* | */ rf_r1D,           /* | */ {32{1'bZ}},       /* | */ {rf_r0D[31] ^ rf_r1D[31], alu_res[30:0]} /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_REM)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_REM,  /* | */ {1'b0, c2t_1T[30:0]}, /* | */ {1'b0, c2t_2T[30:0]},       /* | */ rf_r0D,           /* | */ rf_r1D,           /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_DIVU)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_DIV,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `R_TYP_FC_REMU)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_REM,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
+                                                                  /* ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================== */
+                              `isEQ(decoder_op, `INSTR_TYP_I)     ? `isEQ(decoder_func, `I_TYP_FC_ADDI)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I_TYP_FC_SLTI)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_SLT,  /* | */ c2t_1T,               /* | */ c2t_IT,                     /* | */ rf_r0D,           /* | */ {32{1'bZ}},       /* | */ decoder_imm,      /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I_TYP_FC_SLTIU)    ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_SLTU, /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I_TYP_FC_ANDI)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_AND,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I_TYP_FC_ORI)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_OR,   /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I_TYP_FC_XORI)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_XOR,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I_TYP_FC_SLLI)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_SLL,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I_TYP_FC_SRLI)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_SRL,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I_TYP_FC_SRAI)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_SRA,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
+                                                                  /* ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================== */
+                              `isEQ(decoder_op, `INSTR_TYP_S)     ? `isEQ(decoder_func, `S_TYP_FC_SB)       ? {/* | */ rf_r1D,      /* | */ `DATA_ST,   /* | */ `MW_Byte,   /* | */ alu_res,     /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'bZ,     /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `S_TYP_FC_SH)       ? {/* | */ rf_r1D,      /* | */ `DATA_ST,   /* | */ `MW_Half,   /* | */ alu_res,     /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'bZ,     /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `S_TYP_FC_SW)       ? {/* | */ rf_r1D,      /* | */ `DATA_ST,   /* | */ `MW_Word,   /* | */ alu_res,     /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'bZ,     /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
+                                                                  /* ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================== */
+                              `isEQ(decoder_op, `INSTR_TYP_B)     ? `isEQ(decoder_func, `B_TYP_FC_BEQ)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `BRANCH,  /* | */ `isEQ(rf_r0D, rf_r1D) ? decoder_imm : 32'd4, /* | */ {32{1'bZ}}, /* | */ 1'bZ,     /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ {5{1'bZ}},   /* | */ {5{1'bZ}},   /* | */ {16{1'bZ}},    /* | */ {32{1'bZ}},           /* | */ {32{1'bZ}},                 /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `B_TYP_FC_BEN)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `BRANCH,  /* | */ `isEQ(rf_r0D, rf_r1D) ? 32'd4 : decoder_imm, /* | */ {32{1'bZ}}, /* | */ 1'bZ,     /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ {5{1'bZ}},   /* | */ {5{1'bZ}},   /* | */ {16{1'bZ}},    /* | */ {32{1'bZ}},           /* | */ {32{1'bZ}},                 /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `B_TYP_FC_BLT)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `BRANCH,  /* | */            alu_res[0] ? decoder_imm : 32'd4, /* | */ {32{1'bZ}}, /* | */ 1'bZ,     /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SLT,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `B_TYP_FC_BGE)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `BRANCH,  /* | */            alu_res[0] ? 32'd4 : decoder_imm, /* | */ {32{1'bZ}}, /* | */ 1'bZ,     /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SLT,  /* | */ rf_r0D,               /* | */ rf_r1D,                     /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `B_TYP_FC_BLTU)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `BRANCH,  /* | */            alu_res[0] ? decoder_imm : 32'd4, /* | */ {32{1'bZ}}, /* | */ 1'bZ,     /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SLTU, /* | */ c2t_1T,               /* | */ c2t_2T,                     /* | */ rf_r0D,           /* | */ rf_r1D,           /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `B_TYP_FC_BGEU)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `BRANCH,  /* | */            alu_res[0] ? 32'd4 : decoder_imm, /* | */ {32{1'bZ}}, /* | */ 1'bZ,     /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `ALU_CTL_SLTU, /* | */ c2t_1T,               /* | */ c2t_2T,                     /* | */ rf_r0D,           /* | */ rf_r1D,           /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
+                                                                  /* ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================= */
+                              `isEQ(decoder_op, `INSTR_TYP_U)     ?                                    1'b1 ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ decoder_imm,                    /* | */ {5{1'bZ}},   /* | */ {5{1'bZ}},   /* | */ {16{1'bZ}},    /* | */ {32{1'bZ}},           /* | */ {32{1'bZ}},                 /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
+                                                                  /* ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================== */
+                              `isEQ(decoder_op, `INSTR_TYP_J)     ?                                    1'b1 ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `UCJUMP,  /* | */ {32{1'bZ}},                                  /* | */ alu_res,    /* | */ 1'b1,     /* | */ decoder_rd, /* | */ pc_addr_nxt,                    /* | */ {5{1'bZ}},   /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ pc_addr,              /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
+                                                                  /* ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================== */
+                              `isEQ(decoder_op, `INSTR_TYP_I12LD) ? `isEQ(decoder_func, `I12LD_TYP_FC_LB)   ? {/* | */ {32{1'bZ}},  /* | */ `DATA_LD,   /* | */ `MW_Byte,   /* | */ alu_res,     /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ {{24{dataI[ 7]}}, dataI[ 7:0]}, /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I12LD_TYP_FC_LH)   ? {/* | */ {32{1'bZ}},  /* | */ `DATA_LD,   /* | */ `MW_Half,   /* | */ alu_res,     /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ {{16{dataI[15]}}, dataI[15:0]}, /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I12LD_TYP_FC_LW)   ? {/* | */ {32{1'bZ}},  /* | */ `DATA_LD,   /* | */ `MW_Word,   /* | */ alu_res,     /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ dataI,                          /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I12LD_TYP_FC_LBU)  ? {/* | */ {32{1'bZ}},  /* | */ `DATA_LD,   /* | */ `MW_Byte,   /* | */ alu_res,     /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ {24'b0, dataI[ 7:0]},           /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `I12LD_TYP_FC_LBU)  ? {/* | */ {32{1'bZ}},  /* | */ `DATA_LD,   /* | */ `MW_Byte,   /* | */ alu_res,     /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ {16'b0, dataI[15:0]} ,          /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
+                                                                  /* ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================== */
+                              `isEQ(decoder_op, `INSTR_TYP_I12JR) ? `isEQ(decoder_func, `I12JR_TYP_FC_JALR) ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `UCJUMP,  /* | */ {32{1'bZ}},                                  /* | */ alu_res,    /* | */ 1'b1,     /* | */ decoder_rd, /* | */ pc_addr_nxt,                    /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
+                                                                  /* ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================== */
+                              `isEQ(decoder_op, `INSTR_TYP_I20PC) ?                                    1'b1 ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ 1'b1,     /* | */ decoder_rd, /* | */ alu_res,                        /* | */ {5{1'bZ}},   /* | */ {5{1'bZ}},   /* | */ `ALU_CTL_ADD,  /* | */ pc_addr,              /* | */ {decoder_imm[19:0], 12'b0}, /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} : {HB{1'bZ}};
+                                                                  /* ========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================== */
 
+
+    assign decoder_instr = instr;
+
+    reg [HB-1 : 0] __Hub__;
+    assign Hub2O = __Hub__;
     always @(negedge rst or posedge clk) begin
-        where_is_instr <= pc_addr;
         if (rst) begin
-            pc_mode   <= `UCJUMP;
-            pc_target <= 32'd2048;
         end else begin
-            decoder_instr <= instr;
-            case (decoder_op)
-                `INSTR_TYP_R: begin
-                    pc_mode <= `NORMAL;
-                    rf_r0A  <= decoder_rs1;
-                    rf_r1A  <= decoder_rs2;
-                    rf_wA   <= decoder_rd;
-                    rf_en4w <= 1'b1;
-                    case (decoder_func)
-                        `R_TYP_FC_ADD: begin
-                            alu_ctl <= `ALU_CTL_ADD;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_SUB: begin
-                            alu_ctl <= `ALU_CTL_SUB;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_SLL: begin
-                            alu_ctl <= `ALU_CTL_SLL;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_SRL: begin
-                            alu_ctl <= `ALU_CTL_SRL;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_SRA: begin
-                            alu_ctl <= `ALU_CTL_SRA;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_SLT: begin
-                            alu_ctl <= `ALU_CTL_SLT;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_SLTU: begin 
-                            alu_ctl <= `ALU_CTL_SLTU;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_AND: begin
-                            alu_ctl <= `ALU_CTL_AND;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_OR: begin
-                            alu_ctl <= `ALU_CTL_OR;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_XOR: begin
-                            alu_ctl <= `ALU_CTL_XOR;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_MUL: begin
-                            alu_ctl <= `ALU_CTL_MUL;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_MULH: begin
-                            alu_ctl <= `ALU_CTL_MULH;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_MULHU: begin
-                            alu_ctl <= `ALU_CTL_MULH;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_MULHSU: begin
-                            alu_ctl <= `ALU_CTL_MULH;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_DIV: begin
-                            alu_ctl <= `ALU_CTL_DIV;
-                            c2t_1C  <= rf_r0D;
-                            c2t_2C  <= rf_r1D;
-                            alu_op1 <= {1'b0, c2t_1T[30:0]};
-                            alu_op2 <= {1'b0, c2t_2T[30:0]};
-                            t2c_T   <= {rf_r0D[31] ^ rf_r1D[31], alu_res[30:0]};
-                            rf_wD   <= t2c_C;
-                        end
-                        `R_TYP_FC_REM: begin
-                            alu_ctl <= `ALU_CTL_REM;
-                            c2t_1C  <= rf_r0D;
-                            c2t_2C  <= rf_r1D;
-                            alu_op1 <= {1'b0, c2t_1T[30:0]};
-                            alu_op2 <= {1'b0, c2t_2T[30:0]};
-                            t2c_T   <= {rf_r0D[31] ^ rf_r1D[31], alu_res[30:0]};
-                            rf_wD   <= t2c_C;
-                        end
-                        `R_TYP_FC_DIVU: begin
-                            alu_ctl <= `ALU_CTL_DIV;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        `R_TYP_FC_REMU: begin
-                            alu_ctl <= `ALU_CTL_REM;
-                            alu_op1 <= rf_r0D;
-                            alu_op2 <= rf_r1D;
-                            rf_wD   <= alu_res;
-                        end
-                        default: ;
-                    endcase
-                end 
-                `INSTR_TYP_I: begin
-                    pc_mode <= `NORMAL;
-                    rf_r0A  <= decoder_rs1;
-                    alu_op1 <= rf_r0D;
-                    alu_op2 <= decoder_imm;
-                    rf_wA   <= decoder_rd;
-                    rf_wD   <= alu_res;
-                    rf_en4w <= 1'b1;
-                    case (decoder_func)
-                        `I_TYP_FC_ADDI: begin
-                            alu_ctl <= `ALU_CTL_ADD;
-                        end
-                        `I_TYP_FC_SLTI: begin 
-                            alu_ctl <= `ALU_CTL_SLT;
-                        end
-                        `I_TYP_FC_SLTIU: begin
-                            alu_ctl <= `ALU_CTL_SLTU;
-                        end
-                        `I_TYP_FC_ANDI: begin
-                            alu_ctl <= `ALU_CTL_AND;
-                        end
-                        `I_TYP_FC_ORI: begin
-                            alu_ctl <= `ALU_CTL_OR;
-                        end
-                        `I_TYP_FC_XORI: begin
-                            alu_ctl <= `ALU_CTL_XOR;
-                        end
-                        `I_TYP_FC_SLLI: begin
-                            alu_ctl <= `ALU_CTL_SLL;
-                        end
-                        `I_TYP_FC_SRLI: begin
-                            alu_ctl <= `ALU_CTL_SRL;
-                        end
-                        `I_TYP_FC_SRAI: begin
-                            alu_ctl <= `ALU_CTL_SRA;
-                        end
-                        default: ;
-                    endcase
-                end
-                `INSTR_TYP_S: begin
-                    pc_mode <= `NORMAL;
-                    alu_ctl <= `ALU_CTL_ADD;
-                    rf_r0A  <= decoder_rs1;
-                    alu_op1 <= rf_r0D;
-                    alu_op2 <= decoder_imm;
-                    rf_r1A  <= decoder_rs2;
-                    store_or_load <= `DATA_ST;
-                    locat_of_data <= alu_res;
-                    dataO <= rf_r1D;
-                    case (decoder_func)
-                        `S_TYP_FC_SB: begin
-                            width_of_data  <= `MW_Byte;
-                        end
-                        `S_TYP_FC_SH: begin
-                            width_of_data  <= `MW_Half;
-                        end
-                        `S_TYP_FC_SW: begin
-                            width_of_data  <= `MW_Word;
-                        end
-                        default: ;
-                    endcase
-                end
-                `INSTR_TYP_B: begin
-                    pc_mode <= `BRANCH;
-                    rf_r0A  <= decoder_rs1;
-                    rf_r1A  <= decoder_rs2;
-                    alu_op1 <= rf_r0D;
-                    alu_op2 <= rf_r1D;
-                    case (decoder_func)
-                        `B_TYP_FC_BEQ: begin
-                            pc_offset <= `isEQ(rf_r0D, rf_r1D) ? decoder_imm : 32'd4;
-                        end
-                        `B_TYP_FC_BEN: begin
-                            pc_offset <= `isEQ(rf_r0D, rf_r1D) ? 32'd4 : decoder_imm;
-                        end
-                        `B_TYP_FC_BLT: begin
-                            alu_ctl   <= `ALU_CTL_SLT;
-                            pc_offset <= alu_res[0] ? decoder_imm : 32'd4;
-                        end
-                        `B_TYP_FC_BGE: begin
-                            alu_ctl   <= `ALU_CTL_SLT;
-                            pc_offset <= alu_res[0] ? 32'd4 : decoder_imm;
-                        end
-                        `B_TYP_FC_BLTU: begin
-                            alu_ctl   <= `ALU_CTL_SLTU;
-                            pc_offset <= alu_res[0] ? decoder_imm : 32'd4;
-                        end
-                        `B_TYP_FC_BGEU: begin
-                            alu_ctl   <= `ALU_CTL_SLTU;
-                            pc_offset <= alu_res[0] ? 32'd4 : decoder_imm;
-                        end
-                        default: ;
-                    endcase
-                end
-                `INSTR_TYP_U: begin
-                    pc_mode <= `NORMAL;
-                    rf_en4w <= 1'b0;
-                    rf_wA   <= decoder_rd;
-                    rf_wD   <= decoder_imm;
-                end
-                `INSTR_TYP_J: begin
-                    pc_mode   <= `UCJUMP;
-                    alu_ctl   <= `ALU_CTL_ADD;
-                    alu_op1   <= pc_addr;
-                    alu_op2   <= decoder_imm;
-                    pc_target <= alu_res;
-                end
-                `INSTR_TYP_I12LD: begin
-                    pc_mode <= `NORMAL;
-                    alu_ctl <= `ALU_CTL_ADD;
-                    rf_r0A  <= decoder_rs1;
-                    alu_op1 <= rf_r0D;
-                    alu_op2 <= decoder_imm;
-                    rf_wA   <= decoder_rd;
-                    store_or_load <= `DATA_LD;
-                    locat_of_data <= alu_res;
-                    case (decoder_func) 
-                        `I12LD_TYP_FC_LB: begin
-                            width_of_data  <= `MW_Byte;
-                            rf_wD <= {{24{dataI[7]}}, dataI[ 7:0]};
-                        end
-                        `I12LD_TYP_FC_LH: begin
-                            width_of_data  <= `MW_Half;
-                            rf_wD <= {{16{dataI[7]}}, dataI[15:0]};
-                        end
-                        `I12LD_TYP_FC_LW: begin
-                            width_of_data  <= `MW_Word;
-                            rf_wD <= dataI;
-                        end
-                        `I12LD_TYP_FC_LBU: begin
-                            width_of_data  <= `MW_Byte;
-                            rf_wD <= {24'b0, dataI[ 7:0]};
-                        end
-                        `I12LD_TYP_FC_LHU: begin
-                            width_of_data  <= `MW_Half;
-                            rf_wD <= {16'b0, dataI[15:0]};
-                        end
-                        default: ;
-                    endcase
-                end
-                `INSTR_TYP_I12JR: begin
-                    pc_mode <= `UCJUMP;
-                    case (decoder_func) 
-                        `I12JR_TYP_FC_JALR: begin
-                        end
-                        default: ;
-                    endcase
-                end
-                `INSTR_TYP_I20PC: begin
-                end
-                default: ;
-            endcase
             DBG_detail_of_instr_exec(decoder_instr, 
                                      decoder_op, 
                                      decoder_func, 
@@ -454,6 +201,7 @@ module MicroarchiSC (
                                      rf_r0A, rf_r0D, 
                                      rf_r1A, rf_r0D, 
                                      rf_wA,  rf_wD);
+            __Hub__ = I2Hub;
         end
     end
 
