@@ -23,7 +23,7 @@ module PC (
         .sum(pcNext)
     );
 
-    always @(negedge rst or posedge clk) begin
+    always @(posedge clk) begin
         if (rst) begin
             pc <= 32'h00000000;
         end else begin
