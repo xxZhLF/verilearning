@@ -64,22 +64,22 @@ module Mem4K ( input wire clk,
     reg [31:0] Word4A, Word4B;
     always @(posedge clk) begin
         if (A_EnWR) begin
-            {mem[BytesA[3]], mem[BytesA[2]], mem[BytesA[1]], mem[BytesA[0]]} <= A_DBusW;
+            {mem[BytesA[3][11:0]], mem[BytesA[2][11:0]], mem[BytesA[1][11:0]], mem[BytesA[0][11:0]]} <= A_DBusW;
         end else begin
-            Word4A <= {mem[BytesA[3]], mem[BytesA[2]], mem[BytesA[1]], mem[BytesA[0]]};
+            Word4A <= {mem[BytesA[3][11:0]], mem[BytesA[2][11:0]], mem[BytesA[1][11:0]], mem[BytesA[0][11:0]]};
         end
         if (B_EnWR) begin
             case (B_Size)
-                `MW_Byte: {mem[BytesB[0]]} <= B_DBusW[7:0];
-                `MW_Half: {mem[BytesB[1]], mem[BytesB[0]]} <= B_DBusW[15:0];
-                `MW_Word: {mem[BytesB[3]], mem[BytesB[2]], mem[BytesB[1]], mem[BytesB[0]]} <= B_DBusW[31:0];
+                `MW_Byte: {mem[BytesB[0][11:0]]} <= B_DBusW[7:0];
+                `MW_Half: {mem[BytesB[1][11:0]], mem[BytesB[0][11:0]]} <= B_DBusW[15:0];
+                `MW_Word: {mem[BytesB[3][11:0]], mem[BytesB[2][11:0]], mem[BytesB[1][11:0]], mem[BytesB[0][11:0]]} <= B_DBusW[31:0];
                 default: ;
             endcase
         end else begin
             case (B_Size)
-                `MW_Byte: Word4B <= {24'b0,                                          mem[BytesB[0]]};
-                `MW_Half: Word4B <= {16'b0,                          mem[BytesB[1]], mem[BytesB[0]]};
-                `MW_Word: Word4B <= {mem[BytesB[3]], mem[BytesB[2]], mem[BytesB[1]], mem[BytesB[0]]};
+                `MW_Byte: Word4B <= {24'b0,                                                            mem[BytesB[0][11:0]]};
+                `MW_Half: Word4B <= {16'b0,                                      mem[BytesB[1][11:0]], mem[BytesB[0][11:0]]};
+                `MW_Word: Word4B <= {mem[BytesB[3][11:0]], mem[BytesB[2][11:0]], mem[BytesB[1][11:0]], mem[BytesB[0][11:0]]};
                 default: ;
             endcase
         end
