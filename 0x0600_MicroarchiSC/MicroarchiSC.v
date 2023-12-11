@@ -202,7 +202,6 @@ module MicroarchiSC (
             __Hub__[273:272] <= `UCJUMP; /* PC Mode   */
             __Hub__[239:208] <= 32'h0;   /* PC Target */
         end else begin 
-            // __Hub__ <= clk_UC ? I2Hub : __Hub__;
             __Hub__ <= I2Hub;
         end
     end
@@ -215,20 +214,23 @@ module MicroarchiSC (
     reg [ 9:0] DBG_decoder_func;
     reg [31:0] DBG_decoder_imm;
 
-    always @(posedge clk_UC) begin
+    always @(posedge clk_LF) begin
         if (rst) begin
         end else begin
             DBG_decoder_op   <= decoder_op;
             DBG_decoder_func <= decoder_func;
             DBG_decoder_imm  <= decoder_imm;
-            DBG_detail_of_instr_exec(pc_addr,
-                                    decoder_instr, 
-                                    DBG_decoder_op,   /* As output of module, transit by debug register */
-                                    DBG_decoder_func, /* As output of module, transit by debug register */
-                                    DBG_decoder_imm,  /* As output of module, transit by debug register */
-                                    rf_r0A, rf_r0D,   /* As  input of module, transit by Hub */
-                                    rf_r1A, rf_r1D,   /* As  input of module, transit by Hub */
-                                    rf_wA,  rf_wD);   /* As  input of module, transit by Hub */
+            if (clk_UC) begin
+            end else begin
+                DBG_detail_of_instr_exec(pc_addr,
+                                        decoder_instr, 
+                                        DBG_decoder_op,   /* As output of module, transit by debug register */
+                                        DBG_decoder_func, /* As output of module, transit by debug register */
+                                        DBG_decoder_imm,  /* As output of module, transit by debug register */
+                                        rf_r0A, rf_r0D,   /* As  input of module, transit by Hub */
+                                        rf_r1A, rf_r1D,   /* As  input of module, transit by Hub */
+                                        rf_wA,  rf_wD);   /* As  input of module, transit by Hub */
+            end
         end
     end
 
