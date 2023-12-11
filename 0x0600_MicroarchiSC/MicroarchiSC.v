@@ -161,9 +161,9 @@ module MicroarchiSC (
                                                                     `isEQ(decoder_func, `I_TYP_FC_SRLI)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ 1'b1,      /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ `ALU_CTL_SRL,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
                                                                     `isEQ(decoder_func, `I_TYP_FC_SRAI)     ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ 1'b1,      /* | */ decoder_rd, /* | */ alu_res,                        /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ `ALU_CTL_SRA,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
                                                                   /* =========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================== */
-                              `isEQ(decoder_op, `INSTR_TYP_S)     ? `isEQ(decoder_func, `S_TYP_FC_SB)       ? {/* | */ rf_r1D,      /* | */ `DATA_ST,   /* | */ `MW_Byte,   /* | */ alu_res,     /* | */ 1'bZ,      /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
-                                                                    `isEQ(decoder_func, `S_TYP_FC_SH)       ? {/* | */ rf_r1D,      /* | */ `DATA_ST,   /* | */ `MW_Half,   /* | */ alu_res,     /* | */ 1'bZ,      /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
-                                                                    `isEQ(decoder_func, `S_TYP_FC_SW)       ? {/* | */ rf_r1D,      /* | */ `DATA_ST,   /* | */ `MW_Word,   /* | */ alu_res,     /* | */ 1'bZ,      /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ {5{1'bZ}},   /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
+                              `isEQ(decoder_op, `INSTR_TYP_S)     ? `isEQ(decoder_func, `S_TYP_FC_SB)       ? {/* | */ rf_r1D,      /* | */ `DATA_ST,   /* | */ `MW_Byte,   /* | */ alu_res,     /* | */ 1'bZ,      /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `S_TYP_FC_SH)       ? {/* | */ rf_r1D,      /* | */ `DATA_ST,   /* | */ `MW_Half,   /* | */ alu_res,     /* | */ 1'bZ,      /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
+                                                                    `isEQ(decoder_func, `S_TYP_FC_SW)       ? {/* | */ rf_r1D,      /* | */ `DATA_ST,   /* | */ `MW_Word,   /* | */ alu_res,     /* | */ 1'bZ,      /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ decoder_rs1, /* | */ decoder_rs2, /* | */ `NORMAL,  /* | */ {32{1'bZ}},                                  /* | */ {32{1'bZ}}, /* | */ `ALU_CTL_ADD,  /* | */ rf_r0D,               /* | */ decoder_imm,                /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : {HB{1'bZ}} :
                                                                   /* =========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================== */
                               `isEQ(decoder_op, `INSTR_TYP_B)     ? `isEQ(decoder_func, `B_TYP_FC_BEQ)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ 1'bZ,      /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ {5{1'bZ}},   /* | */ {5{1'bZ}},   /* | */ `BRANCH,  /* | */ `isEQ(rf_r0D, rf_r1D) ? decoder_imm : 32'd4, /* | */ {32{1'bZ}}, /* | */ {16{1'bZ}},    /* | */ {32{1'bZ}},           /* | */ {32{1'bZ}},                 /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
                                                                     `isEQ(decoder_func, `B_TYP_FC_BEN)      ? {/* | */ {32{1'bZ}},  /* | */ 1'bZ,       /* | */ 2'bZZ,      /* | */ {32{1'bZ}},  /* | */ 1'bZ,      /* | */ {5{1'bZ}},  /* | */ {32{1'bZ}},                     /* | */ {5{1'bZ}},   /* | */ {5{1'bZ}},   /* | */ `BRANCH,  /* | */ `isEQ(rf_r0D, rf_r1D) ? 32'd4 : decoder_imm, /* | */ {32{1'bZ}}, /* | */ {16{1'bZ}},    /* | */ {32{1'bZ}},           /* | */ {32{1'bZ}},                 /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}},       /* | */ {32{1'bZ}}                               /* | */} : 
@@ -195,30 +195,41 @@ module MicroarchiSC (
     assign Hub2O = __Hub__;
     always @(posedge clk_LF) begin
         if (rst) begin 
-            __Hub__[273:272] <= `UCJUMP;  /* PC Mode   */
-            __Hub__[239:208] <= 32'd2048; /* PC Target */
+            __Hub__[273:272] <= `UCJUMP; /* PC Mode   */
+            __Hub__[239:208] <= 32'h0;   /* PC Target */
         end else begin 
             __Hub__ <= I2Hub;
         end
     end
 
+`define DBG_TRACE_LOG_ENABLE
+`ifndef DBG_TRACE_LOG_ENABLE
+`else
+
+    reg [ 6:0] DBG_decoder_op;
+    reg [ 9:0] DBG_decoder_func;
+    reg [31:0] DBG_decoder_imm;
+
     reg [31:0] cnt;
-    parameter Latency = 4*2;
+    // parameter Latency = 3;
     always @(posedge clk_LF) begin
         if (rst) begin
             cnt <= 0;
         end else begin
-            if (cnt > 2) begin
-                DBG_detail_of_instr_exec(pc_addr - Latency,
+            DBG_decoder_op   <= decoder_op;
+            DBG_decoder_func <= decoder_func;
+            DBG_decoder_imm  <= decoder_imm;
+            // if (cnt > Latency) begin
+                DBG_detail_of_instr_exec(pc_addr,
                                         decoder_instr, 
-                                        decoder_op, 
-                                        decoder_func, 
-                                        decoder_imm, 
-                                        rf_r0A, rf_r0D, 
-                                        rf_r1A, rf_r1D, 
-                                        rf_wA,  rf_wD);
-            end else begin
-            end
+                                        DBG_decoder_op,   /* As output of module, transit by debug register */
+                                        DBG_decoder_func, /* As output of module, transit by debug register */
+                                        DBG_decoder_imm,  /* As output of module, transit by debug register */
+                                        rf_r0A, rf_r0D,   /* As  input of module, transit by Hub */
+                                        rf_r1A, rf_r1D,   /* As  input of module, transit by Hub */
+                                        rf_wA,  rf_wD);   /* As  input of module, transit by Hub */
+            // end else begin
+            // end
             cnt <= cnt + 1;
         end
     end
@@ -319,10 +330,12 @@ module MicroarchiSC (
                 $display("AUIPC:  @[%08H] rd  is x%-2d=%08H, imm is 0x%05H", pc, rd_addr, rd_data, $signed(imm));
             end
             default: begin
-                $display("*[ERROR] Machine Code is instr=%08H, op=%b @[%08H]", instr, op, pc);
+                $display("*[ERROR] Machine Code is instr=%08H, @[%08H]", instr, pc);
             end
         endcase
     end endtask
+
+`endif /* DBG_TRACE_LOG_ENABLE */
 
 endmodule
 
