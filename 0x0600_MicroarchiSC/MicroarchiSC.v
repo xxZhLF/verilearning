@@ -24,6 +24,25 @@ module MicroarchiSC (
     output wire [31:0] where_is_instr
 );
 
+    reg clk_UC; /* UnConventional */
+    always @(posedge clk_LF) 
+        clk_UC <= rst ? 1'b1 : ~clk_UC;
+
+    wire [ 1:0] pc_mode;
+    wire [31:0] pc_offset;
+    wire [31:0] pc_target;
+    wire [31:0] pc_addr;
+    wire [31:0] pc_addr_nxt;
+    PC pc(
+        .rst(rst),
+        .clk(clk_UC),
+        .mode(pc_mode),
+        .offset(pc_offset),
+        .target(pc_target),
+        .addr(pc_addr),
+        .addr_ret(pc_addr_nxt)
+    );
+
     wire        rf_en4w;
     wire [ 4:0] rf_wA;
     wire [31:0] rf_wD;
@@ -38,21 +57,6 @@ module MicroarchiSC (
         .data_o0(rf_r0D),
         .addr_r1(rf_r1A),
         .data_o1(rf_r1D)
-    );
-
-    wire [ 1:0] pc_mode;
-    wire [31:0] pc_offset;
-    wire [31:0] pc_target;
-    wire [31:0] pc_addr;
-    wire [31:0] pc_addr_nxt;
-    PC pc(
-        .rst(rst),
-        .clk(clk_LF),
-        .mode(pc_mode),
-        .offset(pc_offset),
-        .target(pc_target),
-        .addr(pc_addr),
-        .addr_ret(pc_addr_nxt)
     );
 
     wire [15:0] alu_ctl;
@@ -198,6 +202,7 @@ module MicroarchiSC (
             __Hub__[273:272] <= `UCJUMP; /* PC Mode   */
             __Hub__[239:208] <= 32'h0;   /* PC Target */
         end else begin 
+            // __Hub__ <= clk_UC ? I2Hub : __Hub__;
             __Hub__ <= I2Hub;
         end
     end
@@ -210,27 +215,20 @@ module MicroarchiSC (
     reg [ 9:0] DBG_decoder_func;
     reg [31:0] DBG_decoder_imm;
 
-    reg [31:0] cnt;
-    // parameter Latency = 3;
-    always @(posedge clk_LF) begin
+    always @(posedge clk_UC) begin
         if (rst) begin
-            cnt <= 0;
         end else begin
             DBG_decoder_op   <= decoder_op;
             DBG_decoder_func <= decoder_func;
             DBG_decoder_imm  <= decoder_imm;
-            // if (cnt > Latency) begin
-                DBG_detail_of_instr_exec(pc_addr,
-                                        decoder_instr, 
-                                        DBG_decoder_op,   /* As output of module, transit by debug register */
-                                        DBG_decoder_func, /* As output of module, transit by debug register */
-                                        DBG_decoder_imm,  /* As output of module, transit by debug register */
-                                        rf_r0A, rf_r0D,   /* As  input of module, transit by Hub */
-                                        rf_r1A, rf_r1D,   /* As  input of module, transit by Hub */
-                                        rf_wA,  rf_wD);   /* As  input of module, transit by Hub */
-            // end else begin
-            // end
-            cnt <= cnt + 1;
+            DBG_detail_of_instr_exec(pc_addr,
+                                    decoder_instr, 
+                                    DBG_decoder_op,   /* As output of module, transit by debug register */
+                                    DBG_decoder_func, /* As output of module, transit by debug register */
+                                    DBG_decoder_imm,  /* As output of module, transit by debug register */
+                                    rf_r0A, rf_r0D,   /* As  input of module, transit by Hub */
+                                    rf_r1A, rf_r1D,   /* As  input of module, transit by Hub */
+                                    rf_wA,  rf_wD);   /* As  input of module, transit by Hub */
         end
     end
 
