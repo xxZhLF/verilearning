@@ -84,17 +84,17 @@ module MicroarchiSC_tb(
     assign D_DBusRI = B_DBusRO;
 
     reg [31:0] cnt;
-    always @(posedge clk_base) 
+    always @(posedge clk_core) 
         cnt <= rst ? 32'b0 : cnt + 32'b1;
 
     always @(posedge clk_core) begin
         if (rst) begin
         end else begin
-            if (cnt > 32'b1 << 7) begin
+            if (cnt > {32'b1 << 32'd9}) begin
                 $finish;
             end else begin
             end
-            if (I_DBus == 32'hFFFF0000) begin
+            if (I_DBus == 32'h00008067) begin
                 $finish;
             end else begin
             end
