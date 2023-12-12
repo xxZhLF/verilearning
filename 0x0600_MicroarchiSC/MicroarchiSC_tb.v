@@ -64,7 +64,7 @@ module MicroarchiSC_tb(
             $display("* SUGGEST: Run \"make prog.mc\" to generate, Please.");
             $finish;
         end
-        for (i = 0; !$feof(fd); i += 4) begin
+        for (i = 2048; !$feof(fd); i += 4) begin
             reg [16*8-1 : 0] mnemonic_p1, mnemonic_p2; 
             $fscanf(fd, "%h \t %s \t %s \n", instr[i], mnemonic_p1, mnemonic_p2);
             A_ABusEX = i; A_DBusEX = instr[i]; #20;
