@@ -198,12 +198,30 @@ module MicroarchiSC (
 
     reg [HB-1 : 0] __Hub__;
     assign Hub2O = __Hub__;
-    always @(negedge rst or posedge clk_LF) begin
+    always @(negedge clk_HF) begin
         if (rst) begin 
             __Hub__[273:272] <= `UCJUMP; /* PC Mode   */
             __Hub__[239:208] <= 32'h800; /* PC Target */
         end else begin 
-            __Hub__ <= I2Hub;
+            if (`isEQ(decoder_op, `INSTR_TYP_I12LD) |
+                `isEQ(decoder_op, `INSTR_TYP_I12JR) |
+                `isEQ(decoder_op, `INSTR_TYP_S) |
+                `isEQ(decoder_op, `INSTR_TYP_B) |
+                `isEQ(decoder_op, `INSTR_TYP_J)) begin
+                    if (clk_LF & ~clk_UC) begin
+                    end else begin
+                        __Hub__ <= I2Hub;
+                    end
+                end else begin
+                    if (clk_LF) begin
+                        __Hub__ <= I2Hub;
+                    end else begin
+                    end
+                end
+            // if (clk_LF) begin
+            //     __Hub__ <= I2Hub;
+            // end else begin
+            // end
         end
     end
 

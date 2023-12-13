@@ -69,7 +69,7 @@ module MicroarchiSC_tb(
             $fscanf(fd, "%h \t %s \t %s \n", instr[i], mnemonic_p1, mnemonic_p2);
             A_ABusEX = i; A_DBusEX = instr[i]; #20;
         end A_ABusEX = i; A_DBusEX = {16'hFFFF, 16'h0000};
-        #20 rst = 1'b0;
+        rst = 1'b0;
     end 
 
     assign A_EnWR = rst ? `MM_ENB_W : `MM_ENB_R;
@@ -94,7 +94,7 @@ module MicroarchiSC_tb(
                 $finish;
             end else begin
             end
-            if (I_DBus == 32'h00008067) begin
+            if (I_DBus == 32'h00000000) begin
                 $finish;
             end else begin
             end
