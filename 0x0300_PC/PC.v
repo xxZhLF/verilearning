@@ -25,7 +25,7 @@ module PC (
 
     always @(negedge rst or posedge clk) begin
         if (rst) begin
-            pc <= 32'h00000000;
+            pc <= target;
         end else begin
             pc <= `isEQ(mode, `UCJUMP) ? target : pcNext;
         end
