@@ -36,6 +36,11 @@ module MicroarchiSC_tb(
     always @(posedge clk_base) 
         clk_core <= ~clk_core;
 
+    reg [31:0] cnt;
+    always @(posedge clk_core) 
+        cnt <= rst ? 32'b0 
+                   : cnt + 32'b1;
+
     wire                D_EnWR;
     wire [ 1:0]         D_Size;
     wire [31:0] I_ABus, D_ABus;
@@ -43,8 +48,8 @@ module MicroarchiSC_tb(
     wire [31:0] I_DBus, D_DBusRI;
     MicroarchiSC core(
         .rst(rst),
-        .clk_LF(clk_core),
-        .clk_HF(clk_base),
+        .clk(clk_core),
+        .cnt(cnt),
         .instr(I_DBus),
         .dataI(D_DBusRI),
         .dataO(D_DBusWO),
@@ -54,7 +59,6 @@ module MicroarchiSC_tb(
         .where_is_instr(I_ABus)
     );
 
-    reg [31:0] instr[1023:0];
     reg [31:0] A_ABusEX, A_DBusEX;
     initial begin 
         integer  i = 0;
@@ -65,11 +69,10 @@ module MicroarchiSC_tb(
             $finish;
         end
         for (i = 2048; !$feof(fd); i += 4) begin
-            reg [16*8-1 : 0] mnemonic_p1, mnemonic_p2; 
-            $fscanf(fd, "%h \t %s \t %s \n", instr[i], mnemonic_p1, mnemonic_p2);
-            A_ABusEX = i; A_DBusEX = instr[i]; #20;
-        end A_ABusEX = i; A_DBusEX = {16'hFFFF, 16'h0000};
-        rst = 1'b0;
+            reg [16*8-1 : 0] mnemonic_p1, mnemonic_p2; A_ABusEX = i; $fscanf(
+            fd, "%h \t %s \t %s \n", A_DBusEX, mnemonic_p1, mnemonic_p2); #20;
+        end 
+        #20 rst = 1'b0;
     end 
 
     assign A_EnWR = rst ? `MM_ENB_W : `MM_ENB_R;
@@ -82,10 +85,6 @@ module MicroarchiSC_tb(
     assign B_ABus = D_ABus;
     assign B_DBusWI = D_DBusWO;
     assign D_DBusRI = B_DBusRO;
-
-    reg [31:0] cnt;
-    always @(posedge clk_core) 
-        cnt <= rst ? 32'b0 : cnt + 32'b1;
 
     always @(posedge clk_core) begin
         if (rst) begin
