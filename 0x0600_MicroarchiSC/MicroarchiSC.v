@@ -184,19 +184,19 @@ module MicroarchiSC (
         width_of_data,
         locat_of_data,
         dataO
-    } = `isEQ(decoder_op, `INSTR_TYP_S)     ? `isEQ(decoder_func,     `S_TYP_FC_SB)   ? {`DATA_ST, `MW_Byte, alu_res,     rf_r1D} : 
-                                              `isEQ(decoder_func,     `S_TYP_FC_SB)   ? {`DATA_ST, `MW_Half, alu_res,     rf_r1D} : 
-                                              `isEQ(decoder_func,     `S_TYP_FC_SB)   ? {`DATA_ST, `MW_Word, alu_res,     rf_r1D} : {67{1'bZ}} : 
-        `isEQ(decoder_op, `INSTR_TYP_I12LD) ? `isEQ(decoder_func, `I12LD_TYP_FC_LB) | 
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LBU)  ? {`DATA_LD, `MW_Byte, alu_res, {32{1'bZ}}} : 
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LH) | 
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LHU)  ? {`DATA_LD, `MW_Half, alu_res, {32{1'bZ}}} : 
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LW)   ? {`DATA_LD, `MW_Word, alu_res, {32{1'bZ}}} : {67{1'bZ}} : {67{1'bZ}};
+    } = `isEQ(decoder_op, `INSTR_TYP_S)     ? `isEQ(decoder_func,     `S_TYP_FC_SB)  ? {`DATA_ST, `MW_Byte, alu_res,     rf_r1D} : 
+                                              `isEQ(decoder_func,     `S_TYP_FC_SH)  ? {`DATA_ST, `MW_Half, alu_res,     rf_r1D} : 
+                                              `isEQ(decoder_func,     `S_TYP_FC_SW)  ? {`DATA_ST, `MW_Word, alu_res,     rf_r1D} : {67{1'bZ}} : 
+        `isEQ(decoder_op, `INSTR_TYP_I12LD) ? `isEQ(decoder_func, `I12LD_TYP_FC_LB) |
+                                              `isEQ(decoder_func, `I12LD_TYP_FC_LBU) ? {`DATA_LD, `MW_Byte, alu_res, {32{1'bZ}}} : 
+                                              `isEQ(decoder_func, `I12LD_TYP_FC_LH) |
+                                              `isEQ(decoder_func, `I12LD_TYP_FC_LHU) ? {`DATA_LD, `MW_Half, alu_res, {32{1'bZ}}} : 
+                                              `isEQ(decoder_func, `I12LD_TYP_FC_LW)  ? {`DATA_LD, `MW_Word, alu_res, {32{1'bZ}}} : {67{1'bZ}} : {67{1'bZ}};
 
     assign {
         rf_en4w,
         rf_wD
-    } = `isEQ(decoder_op, `INSTR_TYP_R) | 
+    } = `isEQ(decoder_op, `INSTR_TYP_R) ? {1'b1, `isEQ(decoder_func, `R_TYP_FC_DIV) ? t2c_resC : alu_res} : 
         `isEQ(decoder_op, `INSTR_TYP_I) | 
         `isEQ(decoder_op, `INSTR_TYP_I20PC) ? {1'b1,     alu_res} :
         `isEQ(decoder_op, `INSTR_TYP_J) | 
@@ -228,103 +228,127 @@ module MicroarchiSC (
         end
     end
 
-`define DBG_TRACE_LOG_ENABLE
-`ifndef DBG_TRACE_LOG_ENABLE
+`define DEBUG_TRACE_LOG_ENABLE
+`ifndef DEBUG_TRACE_LOG_ENABLE
 `else
 
     always @(posedge clk) begin
         if (rst) begin
         end else begin
-            case (decoder_op)
-                `INSTR_TYP_R: begin
-                    case (decoder_func)
-                        `R_TYP_FC_ADD:      $display("No.%03d ADD:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_SUB:      $display("No.%03d SUB:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_SLL:      $display("No.%03d SLL:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_SLT:      $display("No.%03d SLT:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_SLTU:     $display("No.%03d SLTU:   @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_XOR:      $display("No.%03d XOR:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_SRL:      $display("No.%03d SRL:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_SRA:      $display("No.%03d SRA:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_OR:       $display("No.%03d OR:     @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_AND:      $display("No.%03d AND:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_MUL:      $display("No.%03d MUL:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_MULH:     $display("No.%03d MULH:   @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_MULHSU:   $display("No.%03d MULHSU: @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_MULHU:    $display("No.%03d MULHU:  @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_DIV:      $display("No.%03d DIV:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_DIVU:     $display("No.%03d DIVU:   @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_REM:      $display("No.%03d REM:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        `R_TYP_FC_REMU:     $display("No.%03d REMU:   @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, rd  is x%-2d", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_wA);
-                        default: $display("*[ERROR]@INSTR_TYP_R Func=%b ", decoder_func);
-                    endcase
-                end 
-                `INSTR_TYP_I: begin
-                    case (decoder_func)
-                        `I_TYP_FC_ADDI:     $display("No.%03d ADDI:   @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I_TYP_FC_SLTI:     $display("No.%03d SLTI:   @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I_TYP_FC_SLTIU:    $display("No.%03d SLTIU:  @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I_TYP_FC_XORI:     $display("No.%03d XORI:   @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I_TYP_FC_ORI:      $display("No.%03d ORI:    @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I_TYP_FC_ANDI:     $display("No.%03d ANDI:   @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I_TYP_FC_SLLI:     $display("No.%03d SLLI:   @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I_TYP_FC_SRLI:     $display("No.%03d SRLI:   @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I_TYP_FC_SRAI:     $display("No.%03d SRAI:   @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        default: $display("*[ERROR]@INSTR_TYP_I Func=%b ", decoder_func);
-                    endcase
-                end 
-                `INSTR_TYP_S: begin
-                    case (decoder_func)
-                        `S_TYP_FC_SB:       $display("No.%03d SB:     @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, decoder_imm);
-                        `S_TYP_FC_SH:       $display("No.%03d SH:     @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, decoder_imm);
-                        `S_TYP_FC_SW:       $display("No.%03d SW:     @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, decoder_imm);
-                        default: $display("*[ERROR]@INSTR_TYP_S Func=%b ", decoder_func);
-                    endcase
-                end 
-                `INSTR_TYP_B: begin
-                    case (decoder_func)
-                        `B_TYP_FC_BEQ:      $display("No.%03d BEQ:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, decoder_imm);
-                        `B_TYP_FC_BEN:      $display("No.%03d BNE:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, decoder_imm);
-                        `B_TYP_FC_BLT:      $display("No.%03d BLT:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, decoder_imm);
-                        `B_TYP_FC_BGE:      $display("No.%03d BGE:    @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, decoder_imm);
-                        `B_TYP_FC_BLTU:     $display("No.%03d BLTU:   @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, decoder_imm);
-                        `B_TYP_FC_BGEU:     $display("No.%03d BGEU:   @[%08H] rs1 is x%-2d=0x%08H, rs2 is x%-2d=0x%08H, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_r1A, rf_r1D, decoder_imm);
-                        default: $display("*[ERROR]@INSTR_TYP_B Func=%b ", decoder_func);
-                    endcase
-                end 
-                `INSTR_TYP_U: begin
-                                            $display("No.%03d LUI:    @[%08H] rd  is x%-2d, imm is 0x%05H", cnt, pc_addr, rf_wA, decoder_imm);
-                end 
-                `INSTR_TYP_J: begin
-                                            $display("No.%03d JAL:    @[%08H] rd  is x%-2d, imm is 0x%05H", cnt, pc_addr, rf_wA, decoder_imm);
-                end 
-                `INSTR_TYP_I12LD: begin
-                    case (decoder_func) 
-                        `I12LD_TYP_FC_LB:   $display("No.%03d LB:     @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I12LD_TYP_FC_LH:   $display("No.%03d LH:     @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I12LD_TYP_FC_LW:   $display("No.%03d LW:     @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I12LD_TYP_FC_LBU:  $display("No.%03d LBU:    @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        `I12LD_TYP_FC_LHU:  $display("No.-03d LHU:    @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        default: $display("*[ERROR]@INSTR_TYP_I12LD Func=%b ", decoder_func);
-                    endcase
-                end
-                `INSTR_TYP_I12JR: begin
-                    case (decoder_func) 
-                        `I12JR_TYP_FC_JALR: $display("No.%-3d JALR:   @[%08H] rs1 is x%-2d=0x%08H, rd  is x%-2d, imm is 0x%08H", cnt, pc_addr, rf_r0A, rf_r0D, rf_wA, decoder_imm);
-                        default: $display("*[ERROR]@INSTR_TYP_I12JR Func=%b ", decoder_func);
-                    endcase
-                end
-                `INSTR_TYP_I20PC: begin
-                                            $display("No.%-3d AUIPC:  @[%08H] rd  is x%-2d, imm is 0x%05H", cnt, pc_addr, rf_wA, decoder_imm);
-                end
-                default: begin
-                    $display("*[ERROR] Machine Code is instr=%08H, @[%08H]", decoder_instr, pc_addr);
-                end
-            endcase
+            DEBUG_detail_of_instr_exec(instr,
+                                       pc_addr,
+                                       decoder_op,
+                                       decoder_func,
+                                       decoder_imm,
+                                       rf_r0A, rf_r0D,
+                                       rf_r1A, rf_r1D,
+                                       rf_wA,  rf_wD);
         end
     end
 
-`endif /* DBG_TRACE_LOG_ENABLE */
+    task DEBUG_detail_of_instr_exec;
+        input [31:0] instr;
+        input [31:0] pc;
+        input [ 6:0] op;
+        input [ 9:0] func;
+        input [31:0] imm;
+        input [ 4:0] rs1A;
+        input [31:0] rs1D;
+        input [ 4:0] rs2A;
+        input [31:0] rs2D;
+        input [ 4:0] rdA;
+        input [31:0] rdD;
+    begin
+        case (op)
+            `INSTR_TYP_R: begin
+                case (func)
+                    `R_TYP_FC_ADD:      $display("No.%03d ADD:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_SUB:      $display("No.%03d SUB:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_SLL:      $display("No.%03d SLL:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_SLT:      $display("No.%03d SLT:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_SLTU:     $display("No.%03d SLTU:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_XOR:      $display("No.%03d XOR:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_SRL:      $display("No.%03d SRL:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_SRA:      $display("No.%03d SRA:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_OR:       $display("No.%03d OR:     @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_AND:      $display("No.%03d AND:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_MUL:      $display("No.%03d MUL:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_MULH:     $display("No.%03d MULH:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_MULHSU:   $display("No.%03d MULHSU: @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_MULHU:    $display("No.%03d MULHU:  @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_DIV:      $display("No.%03d DIV:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_DIVU:     $display("No.%03d DIVU:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_REM:      $display("No.%03d REM:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    `R_TYP_FC_REMU:     $display("No.%03d REMU:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
+                    default: $display("*[ERROR]@INSTR_TYP_R Func=%b ", func);
+                endcase
+            end 
+            `INSTR_TYP_I: begin
+                case (func)
+                    `I_TYP_FC_ADDI:     $display("No.%03d ADDI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I_TYP_FC_SLTI:     $display("No.%03d SLTI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I_TYP_FC_SLTIU:    $display("No.%03d SLTIU:  @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I_TYP_FC_XORI:     $display("No.%03d XORI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I_TYP_FC_ORI:      $display("No.%03d ORI:    @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I_TYP_FC_ANDI:     $display("No.%03d ANDI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I_TYP_FC_SLLI:     $display("No.%03d SLLI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I_TYP_FC_SRLI:     $display("No.%03d SRLI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I_TYP_FC_SRAI:     $display("No.%03d SRAI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    default: $display("*[ERROR]@INSTR_TYP_I Func=%b ", func);
+                endcase
+            end 
+            `INSTR_TYP_S: begin
+                case (func)
+                    `S_TYP_FC_SB:       $display("No.%03d SB:     @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
+                    `S_TYP_FC_SH:       $display("No.%03d SH:     @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
+                    `S_TYP_FC_SW:       $display("No.%03d SW:     @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
+                    default: $display("*[ERROR]@INSTR_TYP_S Func=%b ", func);
+                endcase
+            end 
+            `INSTR_TYP_B: begin
+                case (func)
+                    `B_TYP_FC_BEQ:      $display("No.%03d BEQ:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
+                    `B_TYP_FC_BEN:      $display("No.%03d BNE:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
+                    `B_TYP_FC_BLT:      $display("No.%03d BLT:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
+                    `B_TYP_FC_BGE:      $display("No.%03d BGE:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
+                    `B_TYP_FC_BLTU:     $display("No.%03d BLTU:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
+                    `B_TYP_FC_BGEU:     $display("No.%03d BGEU:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
+                    default: $display("*[ERROR]@INSTR_TYP_B Func=%b ", func);
+                endcase
+            end 
+            `INSTR_TYP_U: begin
+                                        $display("No.%03d LUI:    @[%08H] rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rdA, rdD, imm);
+            end 
+            `INSTR_TYP_J: begin
+                                        $display("No.%03d JAL:    @[%08H] rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rdA, rdD, imm);
+            end 
+            `INSTR_TYP_I12LD: begin
+                case (func) 
+                    `I12LD_TYP_FC_LB:   $display("No.%03d LB:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I12LD_TYP_FC_LH:   $display("No.%03d LH:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I12LD_TYP_FC_LW:   $display("No.%03d LW:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I12LD_TYP_FC_LBU:  $display("No.%03d LBU:    @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I12LD_TYP_FC_LHU:  $display("No.-03d LHU:    @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    default: $display("*[ERROR]@INSTR_TYP_I12LD Func=%b ", func);
+                endcase
+            end
+            `INSTR_TYP_I12JR: begin
+                case (func) 
+                    `I12JR_TYP_FC_JALR: $display("No.%-3d JALR:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    default: $display("*[ERROR]@INSTR_TYP_I12JR Func=%b ", func);
+                endcase
+            end
+            `INSTR_TYP_I20PC: begin
+                                        $display("No.%-3d AUIPC:  @[%08H] rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rdA, rdD, imm);
+            end
+            default: begin
+                $display("*[ERROR] Machine Code is instr=%08H, @[%08H]", instr, pc);
+            end
+        endcase
+    end
+    endtask
+
+`endif /* DEBUG_TRACE_LOG_ENABLE */
 
 endmodule
 

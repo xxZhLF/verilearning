@@ -1,26 +1,26 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Thu Dec 14 09:02:06 2023
+[*] Thu Dec 14 14:14:25 2023
 [*]
-[dumpfile] "/home/xxzhou/verilearning/0x0600_MicroarchiSC/MicroarchiSC.vcd"
-[dumpfile_mtime] "Thu Dec 14 08:58:49 2023"
-[dumpfile_size] 23281286
-[savefile] "/home/xxzhou/verilearning/0x0600_MicroarchiSC/MicroarchiSC.gtkw"
-[timestart] 865
-[size] 1908 987
+[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0600_MicroarchiSC/MicroarchiSC.vcd"
+[dumpfile_mtime] "Thu Dec 14 13:27:15 2023"
+[dumpfile_size] 28740708
+[savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0600_MicroarchiSC/MicroarchiSC.gtkw"
+[timestart] 0
+[size] 1428 819
 [pos] -1 -1
-*-6.000000 1090 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.000000 1481 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.MicroarchiSC_tb.
 [treeopen] TOP.MicroarchiSC_tb.core.
 [sst_width] 214
-[signals_width] 252
+[signals_width] 211
 [sst_expanded] 1
-[sst_vpaned_height] 287
+[sst_vpaned_height] 228
 @28
 TOP.MicroarchiSC_tb.rst
-TOP.MicroarchiSC_tb.core.clk_HF
-TOP.MicroarchiSC_tb.core.clk_LF
+TOP.MicroarchiSC_tb.clk_base
+TOP.MicroarchiSC_tb.clk_core
 @24
 TOP.MicroarchiSC_tb.cnt[31:0]
 @200
@@ -45,9 +45,7 @@ TOP.MicroarchiSC_tb.core.rf.en4w
 TOP.MicroarchiSC_tb.core.rf.addr_r0[4:0]
 TOP.MicroarchiSC_tb.core.rf.data_o0[31:0]
 TOP.MicroarchiSC_tb.core.rf.addr_r1[4:0]
-@23
 TOP.MicroarchiSC_tb.core.rf.data_o1[31:0]
-@22
 TOP.MicroarchiSC_tb.core.rf.addr_w[4:0]
 TOP.MicroarchiSC_tb.core.rf.data_i[31:0]
 @200

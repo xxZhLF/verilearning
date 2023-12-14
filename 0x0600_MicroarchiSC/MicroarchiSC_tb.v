@@ -71,8 +71,8 @@ module MicroarchiSC_tb(
         for (i = 2048; !$feof(fd); i += 4) begin
             reg [16*8-1 : 0] mnemonic_p1, mnemonic_p2; A_ABusEX = i; $fscanf(
             fd, "%h \t %s \t %s \n", A_DBusEX, mnemonic_p1, mnemonic_p2); #20;
-        end 
-        #20 rst = 1'b0;
+        end $fclose(fd);
+        #30 rst = 1'b0;
     end 
 
     assign A_EnWR = rst ? `MM_ENB_W : `MM_ENB_R;
@@ -89,11 +89,8 @@ module MicroarchiSC_tb(
     always @(posedge clk_core) begin
         if (rst) begin
         end else begin
-            if (cnt > {32'b1 << 32'd9}) begin
-                $finish;
-            end else begin
-            end
-            if (I_DBus == 32'h00000000) begin
+            if ((cnt > {32'b1 << 32'd9})
+                || (I_ABus == 32'b0000)) begin
                 $finish;
             end else begin
             end
