@@ -62,10 +62,10 @@ module MicroarchiSC_tb(
     reg        A_EnWRex;
     reg [31:0] A_ABusEX, A_DBusEX;
     initial begin 
-        integer f = $fopen("prog.mc", "r");
+        integer f = $fopen("prog.rv", "r");
         if (f == 0) begin
             $display("* WARNING: Test Program is NOT Exist!");
-            $display("* SUGGEST: Run \"make prog.mc\" to generate, Please.");
+            $display("* SUGGEST: Run \"make prog.rv\" to generate, Please.");
             $finish;
         end A_EnWRex = `MM_ENB_W;
         for (integer i = 2048; !$feof(f); i += 4) begin
