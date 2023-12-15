@@ -16,5 +16,5 @@
 0x0600_MicroarchiSC/prog.S
 0x0600_MicroarchiSC/prog.o
 0x0600_MicroarchiSC/prog
-0x0600_MicroarchiSC/prog.mc
+0x0600_MicroarchiSC/prog.rv
 0x0600_MicroarchiSC/RAM.dump
