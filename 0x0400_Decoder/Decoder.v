@@ -8,10 +8,10 @@
 module Decoder (
     input  wire [31:0] instr,
     output wire [ 6:0] op,
+    output wire [ 9:0] func,
     output wire [ 4:0] rs1,
     output wire [ 4:0] rs2,
     output wire [ 4:0] rd,
-    output wire [ 9:0] func,
     output wire [31:0] imm
 );
 

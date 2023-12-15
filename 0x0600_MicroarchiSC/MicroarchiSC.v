@@ -71,18 +71,18 @@ module MicroarchiSC (
 
     wire [31:0] decoder_instr;
     wire [ 6:0] decoder_op;
+    wire [ 9:0] decoder_func;
     wire [ 4:0] decoder_rs1;
     wire [ 4:0] decoder_rs2;
     wire [ 4:0] decoder_rd;
-    wire [ 9:0] decoder_func;
     wire [31:0] decoder_imm;
     Decoder decoder(
         .instr(decoder_instr),
         .op(decoder_op),
+        .func(decoder_func),
         .rs1(decoder_rs1),
         .rs2(decoder_rs2),
         .rd(decoder_rd),
-        .func(decoder_func),
         .imm(decoder_imm)
     );
 

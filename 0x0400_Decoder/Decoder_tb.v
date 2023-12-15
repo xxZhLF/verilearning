@@ -9,16 +9,16 @@ module Decoder_tb(
 
     reg  [31:0] instr;
     wire [ 6:0] op;
-    wire [ 4:0] rs1, rs2, rd;
     wire [ 9:0] func;
+    wire [ 4:0] rs1, rs2, rd;
     wire [31:0] imm;
     Decoder decoder(
         .instr(instr),
         .op(op),
+        .func(func),
         .rs1(rs1),
         .rs2(rs2),
         .rd(rd),
-        .func(func),
         .imm(imm)
     );
 
