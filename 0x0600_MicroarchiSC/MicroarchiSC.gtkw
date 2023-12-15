@@ -1,22 +1,22 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Thu Dec 14 14:14:25 2023
+[*] Fri Dec 15 03:24:06 2023
 [*]
-[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0600_MicroarchiSC/MicroarchiSC.vcd"
-[dumpfile_mtime] "Thu Dec 14 13:27:15 2023"
-[dumpfile_size] 28740708
-[savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0600_MicroarchiSC/MicroarchiSC.gtkw"
-[timestart] 0
-[size] 1428 819
+[dumpfile] "/home/xxzhou/verilearning/0x0600_MicroarchiSC/MicroarchiSC.vcd"
+[dumpfile_mtime] "Fri Dec 15 03:01:35 2023"
+[dumpfile_size] 29371858
+[savefile] "/home/xxzhou/verilearning/0x0600_MicroarchiSC/MicroarchiSC.gtkw"
+[timestart] 797
+[size] 1908 987
 [pos] -1 -1
-*-6.000000 1481 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.000000 1070 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.MicroarchiSC_tb.
 [treeopen] TOP.MicroarchiSC_tb.core.
 [sst_width] 214
-[signals_width] 211
+[signals_width] 227
 [sst_expanded] 1
-[sst_vpaned_height] 228
+[sst_vpaned_height] 287
 @28
 TOP.MicroarchiSC_tb.rst
 TOP.MicroarchiSC_tb.clk_base

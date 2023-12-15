@@ -61,17 +61,16 @@ module MicroarchiSC_tb(
 
     reg [31:0] A_ABusEX, A_DBusEX;
     initial begin 
-        integer  i = 0;
-        integer fd = $fopen("prog.mc", "r");
-        if (fd == 0) begin
+        integer f = $fopen("prog.mc", "r");
+        if (f == 0) begin
             $display("* WARNING: Test Program is NOT Exist!");
             $display("* SUGGEST: Run \"make prog.mc\" to generate, Please.");
             $finish;
         end
-        for (i = 2048; !$feof(fd); i += 4) begin
+        for (integer i = 2048; !$feof(f); i += 4) begin
             reg [16*8-1 : 0] mnemonic_p1, mnemonic_p2; A_ABusEX = i; $fscanf(
-            fd, "%h \t %s \t %s \n", A_DBusEX, mnemonic_p1, mnemonic_p2); #20;
-        end $fclose(fd);
+            f, "%h \t %s \t %s \n", A_DBusEX, mnemonic_p1, mnemonic_p2); #20;
+        end $fclose(f);
         #30 rst = 1'b0;
     end 
 
@@ -89,8 +88,8 @@ module MicroarchiSC_tb(
     always @(posedge clk_core) begin
         if (rst) begin
         end else begin
-            if ((cnt > {32'b1 << 32'd9})
-                || (I_ABus == 32'b0000)) begin
+            if ((cnt > {32'b1 << 32'd12})
+                || (I_ABus == 32'b00000)) begin
                 $finish;
             end else begin
             end
