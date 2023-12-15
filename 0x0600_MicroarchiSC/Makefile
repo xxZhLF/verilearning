@@ -65,7 +65,7 @@ CLFLGs +=  -nostdlib
 CLFLGs +=  -O0
 CLFLGs +=  -g
 
-$(C_PROG).mc: $(C_PROG)
+$(C_PROG).riscv: $(C_PROG)
 	@ $(DC) $< -d -M no-aliases,numeric | awk 'NR > 7 {print $$2, "\t", $$3, "\t", $$4, " "}' > $@
 
 $(C_PROG): $(patsubst %.S, %.o, $(patsubst %.c, %.S, $(wildcard *.c))) 
