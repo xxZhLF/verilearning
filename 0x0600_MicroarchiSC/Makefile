@@ -77,6 +77,11 @@ $(C_PROG): $(patsubst %.S, %.o, $(patsubst %.c, %.S, $(wildcard *.c)))
 %.S: %.c
 	@ $(CC) $< $(CLFLGs) -o $@ -S 
 
+$(C_PROG).x86: $(wildcard *.c)
+	@ gcc $^ -o $@
+	@ ./$(C_PROG).x86
+	@ rm $(C_PROG).x86
+
 .PHONY: clear
 clear:
 	rm *.S *.o *.mc $(C_PROG)
