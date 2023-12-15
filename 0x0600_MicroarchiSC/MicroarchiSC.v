@@ -2,7 +2,7 @@
 `define MICROARCHITECTURE_SINGLE_CYCLE_V
 
 `include "../IPs_shared/universal4inc.v"
-`include "../0x0101_ALU32FF/CtlALU.v"
+`include "../0x0101_ALU32FF/ALU1HotCtl.v"
 `include "../0x0200_REGs3P/RegName.v"
 `include "../0x0300_PC/PCIM.v"
 `include "../0x0400_Decoder/RV32I.v"
