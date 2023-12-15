@@ -14,8 +14,8 @@ int main(int argc, char* argv[]){
     }
 #if defined(__x86) || defined(__x86_64)
     for (unsigned int i = 0; i < 16; ++i){
-        printf("%d ", buff[i]);
-    }   printf("\n");
+        printf("%08x\n", buff[i]);
+    }
 #endif
     return 0;
 }
