@@ -65,7 +65,7 @@ CLFLGs +=  -nostdlib
 CLFLGs +=  -O0
 CLFLGs +=  -g
 
-$(C_PROG).riscv: $(C_PROG)
+$(C_PROG).rv: $(C_PROG)
 	@ $(DC) $< -d -M no-aliases,numeric | awk 'NR > 7 {print $$2, "\t", $$3, "\t", $$4, " "}' > $@
 
 $(C_PROG): $(patsubst %.S, %.o, $(patsubst %.c, %.S, $(wildcard *.c))) 
@@ -84,4 +84,4 @@ $(C_PROG).x86: $(wildcard *.c)
 
 .PHONY: clear
 clear:
-	rm *.S *.o *.mc $(C_PROG)
+	rm *.S *.o *.rv $(C_PROG)
