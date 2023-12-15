@@ -1,6 +1,6 @@
 `timescale 1ps/1ps 
 
-`include "CtlALU.v"
+`include "ALU1HotCtl.v"
 
 module ALU32FF_tb (
     // None
