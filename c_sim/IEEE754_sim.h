@@ -77,25 +77,25 @@ unsigned char endian_check(){
 )
 
 #define IEEE754_decode(fraction) ( \
-    /* Without sign bit => Highest data bit at 31 => left shift 8 bits */ \
-    (0b00000000100000000000000000000000 | (unsigned int)(fraction)) << 8  \
+    (0b00000000100000000000000000000000 | (unsigned int)(fraction)) << 8 \
 )
 
-#define IEEE754_encode(fraction, discard) \
-    (0b00000000011111111111111111111111 & smart_shift_4_encoder(fraction, discard))
+#define IEEE754_encode(fraction) ( \
+    0b00000000011111111111111111111111 & ((unsigned int)(fraction) >> 8) \
+)
+
+#define Bias(fraction) ( \
+    (unsigned int)(fraction) >> 7 & 1 ? 1 : 0 \
+)
 
 #define Complement_of_2(sign, fraction) ( \
-        ((unsigned int)sign << 31) \
-    | \
-        ((unsigned int)sign == 0 ?  ((unsigned int)(fraction) >> 1) : \
-                                  (~((unsigned int)(fraction) >> 1) + 1)) \
+        !(unsigned int)(sign) ? ((unsigned int)(fraction) >> 1) : \
+                              (~((unsigned int)(fraction) >> 1) + 1) \
 )
 
-#define Complement2TrueCode(sign, fraction) ( \
-        ((unsigned int)sign << 31) \
-    | \
-        ((unsigned int)sign == 0 ?  ((unsigned int)(fraction) >> 1) : \
-                                  ~(((unsigned int)(fraction) >> 1) - 1)) \
+#define Complement2TrueCode(fraction) ( \
+        !((unsigned int)(fraction) >> 31) ? ((unsigned int)(fraction) << 1) : \
+                                          ~(((unsigned int)(fraction) << 1) - 1) \
 )
 
 #define show_FLOAT2BIN(n, end) do { \
@@ -152,30 +152,34 @@ float calc_IEEE754(float _a_, float _b_, char op){
     } a = { .f = _a_ }, b = { .f = _b_ }, c;
     unsigned int frac_a = IEEE754_decode(a.u.fraction);
     unsigned int frac_b = IEEE754_decode(b.u.fraction);
+    unsigned int msb_at = 0;
     switch (op) {
         case '+': {
                 unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
                 if (a.u.exponent > b.u.exponent){
-                    c.u.sign = a.u.sign;
                     unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
-                    unsigned int overflow = frac_c >> 31 != c.u.sign;
-                    frac_c = overflow ? frac_c >> 1 : frac_c;
-                    c.u.fraction = IEEE754_encode(Complement2TrueCode(c.u.sign, frac_c << 1), 0x00000000);
-                    c.u.exponent = a.u.exponent - number_of_bits_to_shift(Complement2TrueCode(a.u.sign, frac_c << 1)) + overflow;
+                    c.u.sign = frac_c >> 31; 
+                    printf("------- %X\n", frac_c);
+                    frac_c = Complement2TrueCode(frac_c);
+                    for (msb_at = 31; (!(frac_c & ((unsigned int)1 << msb_at))) && (msb_at >= 0); --msb_at){}
+                    c.u.fraction = IEEE754_encode(frac_c) + Bias(frac_c);
+                    c.u.exponent = a.u.exponent - (31 - msb_at);
+                    printf("======= %X\n", frac_c);
+                    show_FLOAT2BIN(_a_ + _b_, '\n');
                 } else if (a.u.exponent < b.u.exponent) {
-                    c.u.sign = b.u.sign;
                     unsigned int frac_c = Complement_of_2(a.u.sign, frac_a >> nbs) + Complement_of_2(b.u.sign, frac_b);
-                    unsigned int overflow = frac_c >> 31 != c.u.sign;
-                    frac_c = overflow ? frac_c >> 1 : frac_c;
-                    c.u.fraction = IEEE754_encode(Complement2TrueCode(c.u.sign, frac_c << 1), 0x00000000);
-                    c.u.exponent = b.u.exponent - number_of_bits_to_shift(Complement2TrueCode(b.u.sign, frac_c << 1)) + overflow;
+                    c.u.sign = frac_c >> 31; 
+                    frac_c = Complement2TrueCode(frac_c);
+                    for (msb_at = 31; (!(frac_c & ((unsigned int)1 << msb_at))) && (msb_at >= 0); --msb_at){}
+                    c.u.fraction = IEEE754_encode(frac_c) + Bias(frac_c);
+                    c.u.exponent = b.u.exponent - (31 - msb_at);
                 } else {
-                    c.u.sign = a.u.fraction > b.u.fraction ? a.u.sign : b.u.sign;
                     unsigned int frac_c = Complement_of_2(a.u.sign, frac_a) + Complement_of_2(b.u.sign, frac_b >> nbs);
-                    unsigned int overflow = frac_c >> 31 != c.u.sign;
-                    frac_c = overflow ? frac_c >> 1 : frac_c;
-                    c.u.fraction = IEEE754_encode(Complement2TrueCode(c.u.sign, frac_c << 1), 0x00000000);
-                    c.u.exponent = b.u.exponent + overflow;
+                    c.u.sign = frac_c >> 31; 
+                    frac_c = Complement2TrueCode(frac_c);
+                    for (msb_at = 31; (!(frac_c & ((unsigned int)1 << msb_at))) && (msb_at >= 0); --msb_at){}
+                    c.u.fraction = IEEE754_encode(frac_c) + Bias(frac_c);
+                    c.u.exponent = b.u.exponent - (31 - msb_at);
                 }
             } break;
         case '-': {
@@ -183,27 +187,27 @@ float calc_IEEE754(float _a_, float _b_, char op){
                 c.f = calc_IEEE754(a.f, b.f, '+');
             } break;
         case '*': {
-                unsigned long int frac_c = (
-                    (unsigned long int)frac_a * (unsigned long int)frac_b
-                ) >> 1; /* Positive Unsigned Integer to Signed Integer */
-                c.u.exponent = a.u.exponent + b.u.exponent - 127 + 1 /* Point left shift 1-bit */
-                             - number_of_bits_to_shift((unsigned int)(frac_c >> 32));
-                c.u.fraction = IEEE754_encode((unsigned int)(frac_c >> 32), 
-                                              (unsigned int)(frac_c & 0x00000000FFFFFFFF));
-                c.u.sign = a.u.sign ^ b.u.sign;
+                // unsigned long int frac_c = (
+                //     (unsigned long int)frac_a * (unsigned long int)frac_b
+                // ) >> 1; /* Positive Unsigned Integer to Signed Integer */
+                // c.u.exponent = a.u.exponent + b.u.exponent - 127 + 1 /* Point left shift 1-bit */
+                //              - number_of_bits_to_shift((unsigned int)(frac_c >> 32));
+                // c.u.fraction = IEEE754_encode((unsigned int)(frac_c >> 32), 
+                //                               (unsigned int)(frac_c & 0x00000000FFFFFFFF));
+                // c.u.sign = a.u.sign ^ b.u.sign;
             } break;
         case '/': {
-                unsigned long int fracEX_a = (unsigned long int)frac_a << 32;
-                unsigned long int fracEX_b = (unsigned long int)frac_b << 32;
-                unsigned int frac_c = 0;
-                for (unsigned int i = 0; i < 24; ++i){
-                    frac_c = frac_c | (fracEX_a < fracEX_b ? 0 : (unsigned int)1 << (31 - i));
-                    fracEX_a = (fracEX_a < fracEX_b ? fracEX_a : fracEX_a - fracEX_b);
-                    fracEX_b = fracEX_b >> 1;
-                }   c.u.fraction = IEEE754_encode(frac_c >> 1, 0x00000000);
-                    c.u.exponent = a.u.exponent - b.u.exponent + 127 
-                                 - number_of_bits_to_shift(frac_c >> 1);
-                    c.u.sign = a.u.sign ^ b.u.sign;
+                // unsigned long int fracEX_a = (unsigned long int)frac_a << 32;
+                // unsigned long int fracEX_b = (unsigned long int)frac_b << 32;
+                // unsigned int frac_c = 0;
+                // for (unsigned int i = 0; i < 24; ++i){
+                //     frac_c = frac_c | (fracEX_a < fracEX_b ? 0 : (unsigned int)1 << (31 - i));
+                //     fracEX_a = (fracEX_a < fracEX_b ? fracEX_a : fracEX_a - fracEX_b);
+                //     fracEX_b = fracEX_b >> 1;
+                // }   c.u.fraction = IEEE754_encode(frac_c >> 1, 0x00000000);
+                //     c.u.exponent = a.u.exponent - b.u.exponent + 127 
+                //                  - number_of_bits_to_shift(frac_c >> 1);
+                //     c.u.sign = a.u.sign ^ b.u.sign;
             } break;
         default:
             break;

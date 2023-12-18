@@ -18,15 +18,17 @@ int main(int argc, char* argv[]){
 
     Prepare4Show();
 
-    show_calc_add(array[0], array[2]);
-    show_calc_add(array[1], array[2]);
-    show_calc_add(array[1], array[3]);
-    show_calc_add(array[0], array[3]);
-    show_calc_add(array[4], array[5]);
-    show_calc_add(array[6], array[7]);
+    // show_calc_add(array[0], array[2]);
+    // show_calc_add(array[1], array[2]);
+    // show_calc_add(array[1], array[3]);
+    // show_calc_add(array[0], array[3]);
+    // show_calc_add(array[4], array[5]);
+    // show_calc_add(array[6], array[7]);
     show_calc_add(array[4], array[6]);
     show_calc_add(array[7], array[5]);
-    show_calc_add(array[8], array[9]);
+    // show_calc_add(array[5], array[6]);
+    // show_calc_add(array[6], array[5]);
+    // show_calc_add(array[8], array[9]);
 
     CleanUp4Show();
 
