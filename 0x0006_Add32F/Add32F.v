@@ -33,14 +33,12 @@ module Add32F(
         .frac_sft_nbs(frac_sft_nbs) 
     );
 
-    wire        fracoverflow;
     wire [31:0] fraction_raw;
     IEEE754_fraction_process processor_f(
         .sign(s),
         .frac(f),
         .exp1_vs_exp2(exp1_vs_exp2), 
         .frac_sft_nbs(frac_sft_nbs), 
-        .frac_of(fracoverflow),
         .frac3rd(fraction_raw)
     );
 
@@ -49,7 +47,6 @@ module Add32F(
     IEEE754_smart_shift smart_shift(
         .exponent_i(`isEQ(exp1_vs_exp2, `OP1_GT_OP2) ? e[0] : e[1]),
         .fraction_i(fraction_raw),
-        .overflow_i(fracoverflow),
         .exponent_o(exponent_cooked),
         .fraction_o(fraction_cooked)
     );
@@ -93,7 +90,6 @@ module IEEE754_fraction_process(
     input  wire [23:0] frac[1:0],
     input  wire [ 1:0] exp1_vs_exp2,
     input  wire [ 7:0] frac_sft_nbs,
-    output wire        frac_of,
     output wire [31:0] frac3rd
 );
 
@@ -145,24 +141,23 @@ module IEEE754_fraction_process(
         .sum(frac3C)
     );  
 
-    wire sign3, overflow;
+    wire   sign3;
     assign sign3 = `isEQ(exp1_vs_exp2, `OP1_GT_OP2) ? sign[0] :
                    `isEQ(exp1_vs_exp2, `OP1_LT_OP2) ? sign[1] : `isEQ(frac1_vs_frac2, `OP1_GT_OP2) ? sign[0] : sign[1];
-    assign overflow = sign3 ^ frac3C[31];
 
+    wire [31:0] frac3T;
     CTC32 c2t(
-        .C(overflow ? {sign3, frac3C[31:1]} : frac3C),
-        .T(frac3rd)
+        .C(frac3C),
+        .T(frac3T)
     );
 
-    assign frac_of = overflow;
+    assign frac3rd = {sign3, frac3T[30:0]};
 
 endmodule
 
 module IEEE754_smart_shift(
     input  wire [ 7:0] exponent_i,
     input  wire [31:0] fraction_i,
-    input  wire        overflow_i,
     output wire [ 7:0] exponent_o,
     output wire [22:0] fraction_o
 );
@@ -208,14 +203,7 @@ module IEEE754_smart_shift(
         .op1({24'b0, exponent_i}),
         .op2({24'b0, nbs}),
         .diff(exponent)
-    );
-
-    wire [31:0] exponent_2;
-    Add32 adderE(
-        .op1(exponent),
-        .op2({31'b0, overflow_i}),
-        .sum(exponent_2)
-    );  assign exponent_o = exponent_2[7:0];
+    ); assign exponent_o = exponent[7:0];
 
     wire [31:0] fraction_r;
     Add32 adderF(
