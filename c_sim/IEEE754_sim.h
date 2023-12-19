@@ -69,20 +69,24 @@ unsigned char endian_check(){
     fprintf(fp, "%08X - %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
-#define show_calc_div(a, b) do {\
-    float c = calc_IEEE754(a, b, '/'); \
-    show_FLOAT2BIN(a, '\n'); show_FLOAT2BIN(b, '\n'); show_FLOAT2BIN(c, '\n'); \
-    printf("(%f)@T / (%f)@M = (%f)@B\n", a, b, c); \
-    printf("Error to CPU: %.30f\n\n", fabs(c - (a / b))); \
-    fprintf(fp, "%08X / %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
-} while(0)
-
 #define show_calc_mul(a, b) do {\
     float c = calc_IEEE754(a, b, '*'); \
-    show_FLOAT2BIN(a, '\n'); show_FLOAT2BIN(b, '\n'); show_FLOAT2BIN(c, '\n'); \
+    show_FLOAT2BIN(a, ' '); printf("T\n"); \
+    show_FLOAT2BIN(b, ' '); printf("M\n"); \
+    show_FLOAT2BIN(c, ' '); printf("B\n"); \
     printf("(%f)@T * (%f)@M = (%f)@B\n", a, b, c); \
     printf("Error to CPU: %.30f\n\n", fabs(c - (a * b))); \
     fprintf(fp, "%08X * %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
+} while(0)
+
+#define show_calc_div(a, b) do {\
+    float c = calc_IEEE754(a, b, '/'); \
+    show_FLOAT2BIN(a, ' '); printf("T\n"); \
+    show_FLOAT2BIN(b, ' '); printf("M\n"); \
+    show_FLOAT2BIN(c, ' '); printf("B\n"); \
+    printf("(%f)@T / (%f)@M = (%f)@B\n", a, b, c); \
+    printf("Error to CPU: %.30f\n\n", fabs(c - (a / b))); \
+    fprintf(fp, "%08X / %08X = %08X\n", *(unsigned int *)&a, *(unsigned int *)&b, *(unsigned int *)&c); \
 } while(0)
 
 #define Prepare4Show() FILE* fp = fopen("data.tb", "w")
@@ -139,17 +143,18 @@ float calc_IEEE754(float _a_, float _b_, char op){
                 c.u.sign = a.u.sign ^ b.u.sign;
             } break;
         case '/': {
-                // unsigned long int fracEX_a = (unsigned long int)frac_a << 32;
-                // unsigned long int fracEX_b = (unsigned long int)frac_b << 32;
-                // unsigned int frac_c = 0;
-                // for (unsigned int i = 0; i < 24; ++i){
-                //     frac_c = frac_c | (fracEX_a < fracEX_b ? 0 : (unsigned int)1 << (31 - i));
-                //     fracEX_a = (fracEX_a < fracEX_b ? fracEX_a : fracEX_a - fracEX_b);
-                //     fracEX_b = fracEX_b >> 1;
-                // }   c.u.fraction = IEEE754_encode(frac_c >> 1, 0x00000000);
-                //     c.u.exponent = a.u.exponent - b.u.exponent + 127 
-                //                  - number_of_bits_to_shift(frac_c >> 1);
-                //     c.u.sign = a.u.sign ^ b.u.sign;
+                unsigned long int fracEX_a = (unsigned long int)(frac_a) << 32;
+                unsigned long int fracEX_b = (unsigned long int)(frac_b) << 32;
+                unsigned int frac_c = 0;
+                for (unsigned int i = 0; i < 24; ++i){
+                    frac_c   = frac_c | (
+                               fracEX_a < fracEX_b ? 0 : (unsigned int)1 << (31 - i));
+                    fracEX_a = fracEX_a < fracEX_b ? fracEX_a : (fracEX_a - fracEX_b);
+                    fracEX_b = fracEX_b >> 1;
+                }   for (msb_at = 31; (!(frac_c & ((unsigned int)1 << msb_at))) && (msb_at >= 0); --msb_at){}
+                c.u.fraction = IEEE754_encode(frac_c << (31 - msb_at));
+                c.u.exponent = a.u.exponent - b.u.exponent + 127 - (31 - msb_at);
+                c.u.sign = a.u.sign ^ b.u.sign;
             } break;
         default:
             break;
