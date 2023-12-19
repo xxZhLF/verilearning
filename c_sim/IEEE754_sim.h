@@ -99,7 +99,7 @@ float calc_IEEE754(float _a_, float _b_, char op){
     } a = { .f = _a_ }, b = { .f = _b_ }, c;
     unsigned int frac_a = IEEE754_decode(a.u.fraction);
     unsigned int frac_b = IEEE754_decode(b.u.fraction);
-    unsigned int msb_at = 0;
+             int msb_at = 0;
     switch (op) {
         case '+': {
                 unsigned int nbs = a.u.exponent > b.u.exponent ? a.u.exponent - b.u.exponent : b.u.exponent - a.u.exponent;
@@ -131,14 +131,12 @@ float calc_IEEE754(float _a_, float _b_, char op){
                 c.f = calc_IEEE754(a.f, b.f, '+');
             } break;
         case '*': {
-                // unsigned long int frac_c = (
-                //     (unsigned long int)frac_a * (unsigned long int)frac_b
-                // ) >> 1; /* Positive Unsigned Integer to Signed Integer */
-                // c.u.exponent = a.u.exponent + b.u.exponent - 127 + 1 /* Point left shift 1-bit */
-                //              - number_of_bits_to_shift((unsigned int)(frac_c >> 32));
-                // c.u.fraction = IEEE754_encode((unsigned int)(frac_c >> 32), 
-                //                               (unsigned int)(frac_c & 0x00000000FFFFFFFF));
-                // c.u.sign = a.u.sign ^ b.u.sign;
+                unsigned long int frac_c = (unsigned long int)(frac_a) * (unsigned long int)(frac_b); 
+                for (msb_at = 63; (!(frac_c & ((unsigned int)1 << msb_at))) && (msb_at >= 0); --msb_at){}
+                c.u.exponent = a.u.exponent + b.u.exponent - 127 + 1 /* Point left shift 1-bit. Cause is:
+                               x.xxx * x.xxx = xx.xxxxx */ - (63 - msb_at);
+                c.u.fraction = IEEE754_encode((frac_c >> 32)); 
+                c.u.sign = a.u.sign ^ b.u.sign;
             } break;
         case '/': {
                 // unsigned long int fracEX_a = (unsigned long int)frac_a << 32;
