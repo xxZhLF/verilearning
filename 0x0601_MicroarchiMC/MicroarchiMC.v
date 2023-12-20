@@ -1,5 +1,5 @@
-`ifndef MICROARCHITECTURE_SINGLE_CYCLE_V
-`define MICROARCHITECTURE_SINGLE_CYCLE_V
+`ifndef MICROARCHITECTURE_MULTI_CYCLE_V
+`define MICROARCHITECTURE_MULTI_CYCLE_V
 
 `include "../IPs_shared/universal4inc.v"
 `include "../0x0101_ALU32FF/ALU1HotCtl.v"
@@ -9,7 +9,12 @@
 `include "../0x0400_Decoder/RV32M.v"
 `include "../0x0500_Mem/MemIO.v"
 
-`define START_POINT_at(sp) (sp - 32'd4)
+`define STAT_HALT 3'b0
+`define STAT_IF 3'b001
+`define STAT_ID 3'b010
+`define STAT_EX 3'b011
+`define STAT_MM 3'b100
+`define STAT_WB 3'b101
 
 `define DATA_ST `MM_ENB_W
 `define DATA_LD `MM_ENB_R
@@ -27,9 +32,9 @@ module MicroarchiMC (
     output wire [31:0] where_is_instr
 );
 
-    wire [ 1:0] pc_mode;
-    wire [31:0] pc_offset;
-    wire [31:0] pc_target;
+    reg  [ 1:0] pc_mode;
+    reg  [31:0] pc_offset;
+    reg  [31:0] pc_target;
     wire [31:0] pc_addr;
     wire [31:0] pc_addr_nxt;
     PC pc(
@@ -42,10 +47,10 @@ module MicroarchiMC (
         .addr_ret(pc_addr_nxt)
     );
 
-    wire        rf_en4w;
-    wire [ 4:0] rf_wA;
-    wire [31:0] rf_wD;
-    wire [ 4:0] rf_r0A, rf_r1A;
+    reg         rf_en4w;
+    reg  [ 4:0] rf_wA;
+    reg  [31:0] rf_wD;
+    reg  [ 4:0] rf_r0A, rf_r1A;
     wire [31:0] rf_r0D, rf_r1D;
     REGs3P rf(
         .clk(clk),
@@ -58,9 +63,9 @@ module MicroarchiMC (
         .data_o1(rf_r1D)
     );
 
-    wire [15:0] alu_ctl;
-    wire [31:0] alu_op1;
-    wire [31:0] alu_op2;
+    reg  [15:0] alu_ctl;
+    reg  [31:0] alu_op1;
+    reg  [31:0] alu_op2;
     wire [31:0] alu_res;
     ALU32FF alu(
         .ctl(alu_ctl),
@@ -69,7 +74,7 @@ module MicroarchiMC (
         .res(alu_res)
     );
 
-    wire [31:0] decoder_instr;
+    reg  [31:0] decoder_instr;
     wire [ 6:0] decoder_op;
     wire [ 9:0] decoder_func;
     wire [ 4:0] decoder_rs1;
@@ -110,245 +115,19 @@ module MicroarchiMC (
         .C(t2c_resC)
     );
 
-    assign decoder_instr  = instr;
-    assign where_is_instr = rst ? 32'd2048 : pc_addr;
-
-    assign c2t_r0DC  = rf_r0D;
-    assign c2t_r1DC  = rf_r1D;
-    assign c2t_immC  = decoder_imm;
-    assign rf_r0A    = decoder_rs1;
-    assign rf_r1A    = decoder_rs2;
-    assign rf_wA     = decoder_rd;
-
-// `define BinaryTreeMUX4ALU
-`ifndef BinaryTreeMUX4ALU
-
-    assign {
-        alu_ctl,
-        alu_op1,
-        alu_op2
-    } = MUX_of_ALU(decoder_op, 
-                   decoder_func, 
-                   pc_addr,
-                   rf_r0D, c2t_r0DT, 
-                   rf_r1D, c2t_r1DT,
-                   decoder_imm, 
-                   c2t_immT);
-    function [79:0] MUX_of_ALU;
-        input [ 6:0] op;
-        input [ 9:0] func;
-        input [31:0] pc;
-        input [31:0] op1, op1T;
-        input [31:0] op2, op2T;
-        input [31:0] imm, immT;
-    begin
-        case (op)
-            `INSTR_TYP_R: begin
-                case (func)
-                    `R_TYP_FC_ADD:      return {`ALU_CTL_ADD,  op1,                op2               };
-                    `R_TYP_FC_SUB:      return {`ALU_CTL_SUB,  op1,                op2               };
-                    `R_TYP_FC_SLL:      return {`ALU_CTL_SLL,  op1,                op2               };
-                    `R_TYP_FC_SRL:      return {`ALU_CTL_SRL,  op1,                op2               };
-                    `R_TYP_FC_SRA:      return {`ALU_CTL_SRA,  op1,                op2               };
-                    `R_TYP_FC_SLT:      return {`ALU_CTL_SLT,  op1T,               op2T              };
-                    `R_TYP_FC_SLTU:     return {`ALU_CTL_SLTU, op1,                op2               };
-                    `R_TYP_FC_AND:      return {`ALU_CTL_AND,  op1,                op2               };
-                    `R_TYP_FC_OR:       return {`ALU_CTL_OR,   op1,                op2               };
-                    `R_TYP_FC_XOR:      return {`ALU_CTL_XOR,  op1,                op2               };
-                    `R_TYP_FC_MUL:      return {`ALU_CTL_MUL,  op1,                op2               };
-                    `R_TYP_FC_MULH:     return {`ALU_CTL_MUL,  op1,                op2               };
-                    `R_TYP_FC_MULHU:    return {`ALU_CTL_MUL,  op1,                op2               };
-                    `R_TYP_FC_MULHSU:   return {`ALU_CTL_MUL,  op1,                op2               };
-                    `R_TYP_FC_DIV:      return {`ALU_CTL_DIV,  {1'b0, op1T[30:0]}, {1'b0, op2T[30:0]}};
-                    `R_TYP_FC_REM:      return {`ALU_CTL_REM,  {1'b0, op1T[30:0]}, {1'b0, op2T[30:0]}};
-                    `R_TYP_FC_DIVU:     return {`ALU_CTL_DIV,  op1,                op2               };
-                    `R_TYP_FC_REMU:     return {`ALU_CTL_REM,  op1,                op2               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_I: begin
-                case (func)
-                    `I_TYP_FC_ADDI:     return {`ALU_CTL_ADD,  op1,                imm               };
-                    `I_TYP_FC_SLTI:     return {`ALU_CTL_SLT,  op1T,               immT              };
-                    `I_TYP_FC_SLTIU:    return {`ALU_CTL_SLTU, op1,                imm               };
-                    `I_TYP_FC_ANDI:     return {`ALU_CTL_AND,  op1,                imm               };
-                    `I_TYP_FC_ORI:      return {`ALU_CTL_OR,   op1,                imm               };
-                    `I_TYP_FC_XORI:     return {`ALU_CTL_XOR,  op1,                imm               };
-                    `I_TYP_FC_SLLI:     return {`ALU_CTL_SLL,  op1,                imm               };
-                    `I_TYP_FC_SRLI:     return {`ALU_CTL_SRL,  op1,                imm               };
-                    `I_TYP_FC_SRAI:     return {`ALU_CTL_SRA,  op1,                imm               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_S: begin
-                case (func)
-                    `S_TYP_FC_SB:       return {`ALU_CTL_ADD,  op1,                imm               };
-                    `S_TYP_FC_SH:       return {`ALU_CTL_ADD,  op1,                imm               };
-                    `S_TYP_FC_SW:       return {`ALU_CTL_ADD,  op1,                imm               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_B: begin
-                case (func)
-                    `B_TYP_FC_BEQ:      return {{16{1'bZ}},    {32{1'bZ}},         {32{1'bZ}}        };
-                    `B_TYP_FC_BEN:      return {{16{1'bZ}},    {32{1'bZ}},         {32{1'bZ}}        };
-                    `B_TYP_FC_BLT:      return {`ALU_CTL_SLT,  op1,                op2               };
-                    `B_TYP_FC_BGE:      return {`ALU_CTL_SLT,  op1,                op2               };
-                    `B_TYP_FC_BLTU:     return {`ALU_CTL_SLTU, op1T,               op2T              };
-                    `B_TYP_FC_BGEU:     return {`ALU_CTL_SLTU, op1T,               op2T              };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_U: begin
-                casez (func)
-                    10'b??????????:     return {{16{1'bZ}},    {32{1'bZ}},         {32{1'bZ}}        };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_J: begin
-                casez (func)
-                    10'b??????????:     return {`ALU_CTL_ADD,  pc,                 imm               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_I12LD: begin
-                case (func)
-                    `I12LD_TYP_FC_LB:   return {`ALU_CTL_ADD,  op1,                imm               };
-                    `I12LD_TYP_FC_LH:   return {`ALU_CTL_ADD,  op1,                imm               };
-                    `I12LD_TYP_FC_LW:   return {`ALU_CTL_ADD,  op1,                imm               };
-                    `I12LD_TYP_FC_LBU:  return {`ALU_CTL_ADD,  op1,                imm               };
-                    `I12LD_TYP_FC_LHU:  return {`ALU_CTL_ADD,  op1,                imm               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_I12JR: begin
-                case (func)
-                    `I12JR_TYP_FC_JALR: return {`ALU_CTL_ADD,  op1,                imm               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_I20PC: begin
-                casez (func)
-                    10'b??????????:     return {`ALU_CTL_ADD,  pc,                 {imm[19:0], 12'b0}};
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            default: return {80{1'bZ}};
-        endcase
-    end
-    endfunction
-
-`else
-
-    xxZh: Stop using "? :" on ALU.
-
-    assign {
-        alu_ctl,
-        alu_op1,
-        alu_op2
-    } = `isEQ(decoder_op, `INSTR_TYP_R)     ? `isEQ(decoder_func, `R_TYP_FC_ADD)      ? {`ALU_CTL_ADD,  rf_r0D,                 rf_r1D                    } :
-                                              `isEQ(decoder_func, `R_TYP_FC_SUB)      ? {`ALU_CTL_SUB,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SLL)      ? {`ALU_CTL_SLL,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SRL)      ? {`ALU_CTL_SRL,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SRA)      ? {`ALU_CTL_SRA,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SLT)      ? {`ALU_CTL_SLT,  c2t_r0DT,               c2t_r1DT                  } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_SLTU)     ? {`ALU_CTL_SLTU, rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_AND)      ? {`ALU_CTL_AND,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_OR)       ? {`ALU_CTL_OR,   rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_XOR)      ? {`ALU_CTL_XOR,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_MUL)      ? {`ALU_CTL_MUL,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_MULH)     ? {`ALU_CTL_MUL,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_MULHU)    ? {`ALU_CTL_MUL,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_MULHSU )  ? {`ALU_CTL_MUL,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_DIV)      ? {`ALU_CTL_DIV,  {1'b0, c2t_r0DT[30:0]}, {1'b0, c2t_r1DT[30:0]}    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_REM)      ? {`ALU_CTL_REM,  {1'b0, c2t_r0DT[30:0]}, {1'b0, c2t_r1DT[30:0]}    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_DIVU)     ? {`ALU_CTL_DIV,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `R_TYP_FC_REMU)     ? {`ALU_CTL_REM,  rf_r0D,                 rf_r1D                    } : {80{1'bZ}} :
-                                            /* ======================================================================================================================================= */
-        `isEQ(decoder_op, `INSTR_TYP_I)     ? `isEQ(decoder_func, `I_TYP_FC_ADDI)     ? {`ALU_CTL_ADD,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I_TYP_FC_SLTI)     ? {`ALU_CTL_SLT,  c2t_r0DT,               c2t_immT                  } : 
-                                              `isEQ(decoder_func, `I_TYP_FC_SLTIU)    ? {`ALU_CTL_SLTU, rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I_TYP_FC_ANDI)     ? {`ALU_CTL_AND,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I_TYP_FC_ORI)      ? {`ALU_CTL_OR,   rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I_TYP_FC_XORI)     ? {`ALU_CTL_XOR,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I_TYP_FC_SLLI)     ? {`ALU_CTL_SLL,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I_TYP_FC_SRLI)     ? {`ALU_CTL_SRL,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I_TYP_FC_SRAI)     ? {`ALU_CTL_SRA,  rf_r0D,                 decoder_imm               } : {80{1'bZ}} :
-                                            /* ======================================================================================================================================= */
-        `isEQ(decoder_op, `INSTR_TYP_S)     ? `isEQ(decoder_func, `S_TYP_FC_SB)       ? {`ALU_CTL_ADD,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `S_TYP_FC_SH)       ? {`ALU_CTL_ADD,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `S_TYP_FC_SW)       ? {`ALU_CTL_ADD,  rf_r0D,                 decoder_imm               } : {80{1'bZ}} :
-                                            /* ======================================================================================================================================= */
-        `isEQ(decoder_op, `INSTR_TYP_B)     ? `isEQ(decoder_func, `B_TYP_FC_BEQ)      ? {{16{1'bZ}},    {32{1'bZ}},             {32{1'bZ}}                } : 
-                                              `isEQ(decoder_func, `B_TYP_FC_BEN)      ? {{16{1'bZ}},    {32{1'bZ}},             {32{1'bZ}}                } : 
-                                              `isEQ(decoder_func, `B_TYP_FC_BLT)      ? {`ALU_CTL_SLT,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `B_TYP_FC_BGE)      ? {`ALU_CTL_SLT,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `B_TYP_FC_BLTU)     ? {`ALU_CTL_SLTU, c2t_r0DT,               c2t_r1DT                  } : 
-                                              `isEQ(decoder_func, `B_TYP_FC_BGEU)     ? {`ALU_CTL_SLTU, c2t_r0DT,               c2t_r1DT                  } : {80{1'bZ}} :
-                                            /* ======================================================================================================================================= */
-        `isEQ(decoder_op, `INSTR_TYP_U)     ?                                    1'b1 ? {{16{1'bZ}},    {32{1'bZ}},             {32{1'bZ}}                } : {80{1'bZ}} :
-                                            /* ======================================================================================================================================= */
-        `isEQ(decoder_op, `INSTR_TYP_J)     ?                                    1'b1 ? {`ALU_CTL_ADD,  pc_addr,                decoder_imm               } : {80{1'bZ}} :
-                                            /* ======================================================================================================================================= */
-        `isEQ(decoder_op, `INSTR_TYP_I12LD) ? `isEQ(decoder_func, `I12LD_TYP_FC_LB)   ? {`ALU_CTL_ADD,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LH)   ? {`ALU_CTL_ADD,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LW)   ? {`ALU_CTL_ADD,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LBU)  ? {`ALU_CTL_ADD,  rf_r0D,                 decoder_imm               } : 
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LHU)  ? {`ALU_CTL_ADD,  rf_r0D,                 decoder_imm               } : {80{1'bZ}} :
-                                            /* ======================================================================================================================================= */
-        `isEQ(decoder_op, `INSTR_TYP_I12JR) ? `isEQ(decoder_func, `I12JR_TYP_FC_JALR) ? {`ALU_CTL_ADD,  rf_r0D,                 decoder_imm               } : {80{1'bZ}} :
-                                            /* ======================================================================================================================================= */
-        `isEQ(decoder_op, `INSTR_TYP_I20PC) ?                                    1'b1 ? {`ALU_CTL_ADD,  pc_addr,                {decoder_imm[19:0], 12'b0}} : {80{1'bZ}} : {80{1'bZ}};
-                                            /* ======================================================================================================================================= */
-
-`endif /* BinaryTreeMUX4ALU */ 
-
-    assign {
-        store_or_load,
-        width_of_data,
-        locat_of_data,
-        dataO
-    } = `isEQ(decoder_op, `INSTR_TYP_S)     ? `isEQ(decoder_func,     `S_TYP_FC_SB)  ? {`DATA_ST, `MW_Byte, alu_res,     rf_r1D} : 
-                                              `isEQ(decoder_func,     `S_TYP_FC_SH)  ? {`DATA_ST, `MW_Half, alu_res,     rf_r1D} : 
-                                              `isEQ(decoder_func,     `S_TYP_FC_SW)  ? {`DATA_ST, `MW_Word, alu_res,     rf_r1D} : {67{1'bZ}} : 
-        `isEQ(decoder_op, `INSTR_TYP_I12LD) ? `isEQ(decoder_func, `I12LD_TYP_FC_LB) |
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LBU) ? {`DATA_LD, `MW_Byte, alu_res, {32{1'bZ}}} : 
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LH) |
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LHU) ? {`DATA_LD, `MW_Half, alu_res, {32{1'bZ}}} : 
-                                              `isEQ(decoder_func, `I12LD_TYP_FC_LW)  ? {`DATA_LD, `MW_Word, alu_res, {32{1'bZ}}} : {67{1'bZ}} : {67{1'bZ}};
-
-    assign {
-        rf_en4w,
-        rf_wD
-    } = `isEQ(decoder_op, `INSTR_TYP_R) ? {1'b1, `isEQ(decoder_func, `R_TYP_FC_DIV) ? t2c_resC : alu_res} : 
-        `isEQ(decoder_op, `INSTR_TYP_I) | 
-        `isEQ(decoder_op, `INSTR_TYP_I20PC) ? {1'b1,     alu_res} :
-        `isEQ(decoder_op, `INSTR_TYP_J) | 
-        `isEQ(decoder_op, `INSTR_TYP_I12JR) ? {1'b1, pc_addr_nxt} :
-        `isEQ(decoder_op, `INSTR_TYP_U)     ? {1'b1, decoder_imm} :
-        `isEQ(decoder_op, `INSTR_TYP_I12LD) ? {1'b1,       dataI} : {33{1'bZ}};
-
-    assign {
-        pc_mode,
-        pc_offset,
-        pc_target
-    } = rst ? {`UCJUMP, {32{1'bZ}}, goto} :
-        `isEQ(decoder_op,   `INSTR_TYP_B) ? `isEQ(decoder_func, `B_TYP_FC_BEQ)  ? {`BRANCH, `isEQ(rf_r0D, rf_r1D) ? decoder_imm : 32'd4, {32{1'bZ}}} : 
-                                            `isEQ(decoder_func, `B_TYP_FC_BEN)  ? {`BRANCH, `isEQ(rf_r0D, rf_r1D) ? 32'd4 : decoder_imm, {32{1'bZ}}} : 
-                                            `isEQ(decoder_func, `B_TYP_FC_BLT)  ? {`BRANCH,            alu_res[0] ? decoder_imm : 32'd4, {32{1'bZ}}} : 
-                                            `isEQ(decoder_func, `B_TYP_FC_BGE)  ? {`BRANCH,            alu_res[0] ? 32'd4 : decoder_imm, {32{1'bZ}}} : 
-                                            `isEQ(decoder_func, `B_TYP_FC_BLTU) ? {`BRANCH,            alu_res[0] ? decoder_imm : 32'd4, {32{1'bZ}}} : 
-                                            `isEQ(decoder_func, `B_TYP_FC_BGEU) ? {`BRANCH,            alu_res[0] ? 32'd4 : decoder_imm, {32{1'bZ}}} : {66{1'bZ}} :
-        `isEQ(decoder_op,   `INSTR_TYP_J) ?       {`UCJUMP, {32{1'bZ}},    alu_res} : 
-        `isEQ(decoder_op,   `INSTR_TYP_I12JR)   & 
-        `isEQ(decoder_func, `I12JR_TYP_FC_JALR) ? {`UCJUMP, {32{1'bZ}},    alu_res} 
-                                                : {`NORMAL, {32{1'bZ}}, {32{1'bZ}}};
-
-    reg [31:0] goto;
+    reg [3:0] stat;
     always @(negedge rst or posedge clk) begin
         if (rst) begin
-            goto <= `START_POINT_at(32'd2048);
+            stat <= `STAT_HALT;
         end else begin
+            case (stat)
+                `STAT_HALT: stat <= `STAT_IF;
+                `STAT_IF:   stat <= `STAT_ID;
+                `STAT_ID:   stat <= `STAT_EX;
+                `STAT_EX:   stat <= `STAT_MM;
+                `STAT_MM:   stat <= `STAT_WB;
+                `STAT_WB:   stat <= `STAT_IF;
+            endcase
         end
     end
 
@@ -359,14 +138,6 @@ module MicroarchiMC (
     always @(posedge clk) begin
         if (rst) begin
         end else begin
-            DEBUG_detail_of_instr_exec(instr,
-                                       pc_addr,
-                                       decoder_op,
-                                       decoder_func,
-                                       decoder_imm,
-                                       rf_r0A, rf_r0D,
-                                       rf_r1A, rf_r1D,
-                                       rf_wA,  rf_wD);
         end
     end
 
