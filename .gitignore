@@ -4,7 +4,7 @@
 0x0006_Add32F/data.tb
 0x0013_Sub32F/data.tb
 0x0023_Mul32F/data.tb
-0x0032_Div32F/data.tb
+0x0033_Div32F/data.tb
 0x0400_Decoder/prog.S
 0x0400_Decoder/prog.o
 0x0400_Decoder/prog
