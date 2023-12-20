@@ -281,10 +281,10 @@ module MicroarchiSC (
                                             /* ======================================================================================================================================= */
         `isEQ(decoder_op, `INSTR_TYP_B)     ? `isEQ(decoder_func, `B_TYP_FC_BEQ)      ? {{16{1'bZ}},    {32{1'bZ}},             {32{1'bZ}}                } : 
                                               `isEQ(decoder_func, `B_TYP_FC_BEN)      ? {{16{1'bZ}},    {32{1'bZ}},             {32{1'bZ}}                } : 
-                                              `isEQ(decoder_func, `B_TYP_FC_BLT)      ? {`ALU_CTL_SLT,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `B_TYP_FC_BGE)      ? {`ALU_CTL_SLT,  rf_r0D,                 rf_r1D                    } : 
-                                              `isEQ(decoder_func, `B_TYP_FC_BLTU)     ? {`ALU_CTL_SLTU, c2t_r0DT,               c2t_r1DT                  } : 
-                                              `isEQ(decoder_func, `B_TYP_FC_BGEU)     ? {`ALU_CTL_SLTU, c2t_r0DT,               c2t_r1DT                  } : {80{1'bZ}} :
+                                              `isEQ(decoder_func, `B_TYP_FC_BLT)      ? {`ALU_CTL_SLT,  c2t_r0DT,               c2t_r1DT                  } : 
+                                              `isEQ(decoder_func, `B_TYP_FC_BGE)      ? {`ALU_CTL_SLT,  c2t_r0DT,               c2t_r1DT                  } : 
+                                              `isEQ(decoder_func, `B_TYP_FC_BLTU)     ? {`ALU_CTL_SLTU, rf_r0D,                 rf_r1D                    } : 
+                                              `isEQ(decoder_func, `B_TYP_FC_BGEU)     ? {`ALU_CTL_SLTU, rf_r0D,                 rf_r1D                    } : {80{1'bZ}} :
                                             /* ======================================================================================================================================= */
         `isEQ(decoder_op, `INSTR_TYP_U)     ?                                    1'b1 ? {{16{1'bZ}},    {32{1'bZ}},             {32{1'bZ}}                } : {80{1'bZ}} :
                                             /* ======================================================================================================================================= */
