@@ -115,7 +115,110 @@ module MicroarchiMC (
         .C(t2c_resC)
     );
 
-    reg [3:0] stat;
+    assign c2t_r0DC  = rf_r0D;
+    assign c2t_r1DC  = rf_r1D;
+    assign c2t_immC  = decoder_imm;
+    assign rf_r0A    = decoder_rs1;
+    assign rf_r1A    = decoder_rs2;
+    assign rf_wA     = decoder_rd;
+
+
+    function [15:0] MUX_of_ALU_ctl;
+        input [6:0] op;
+        input [9:0] func;
+    begin
+        casez ({op, func}) 
+            {`INSTR_TYP_R,     `R_TYP_FC_ADD}:      return `ALU_CTL_ADD;
+            {`INSTR_TYP_R,     `R_TYP_FC_SUB}:      return `ALU_CTL_SUB;
+            {`INSTR_TYP_R,     `R_TYP_FC_SLL}:      return `ALU_CTL_SLL;
+            {`INSTR_TYP_R,     `R_TYP_FC_SRL}:      return `ALU_CTL_SRL;
+            {`INSTR_TYP_R,     `R_TYP_FC_SRA}:      return `ALU_CTL_SRA;
+            {`INSTR_TYP_R,     `R_TYP_FC_SLT}:      return `ALU_CTL_SLT;
+            {`INSTR_TYP_R,     `R_TYP_FC_SLTU}:     return `ALU_CTL_SLTU;
+            {`INSTR_TYP_R,     `R_TYP_FC_AND}:      return `ALU_CTL_AND;
+            {`INSTR_TYP_R,     `R_TYP_FC_OR}:       return `ALU_CTL_OR;
+            {`INSTR_TYP_R,     `R_TYP_FC_XOR}:      return `ALU_CTL_XOR;
+            {`INSTR_TYP_R,     `R_TYP_FC_MUL}:      return `ALU_CTL_MUL;
+            {`INSTR_TYP_R,     `R_TYP_FC_MULH}:     return `ALU_CTL_MUL;
+            {`INSTR_TYP_R,     `R_TYP_FC_MULHU}:    return `ALU_CTL_MUL;
+            {`INSTR_TYP_R,     `R_TYP_FC_MULHSU}:   return `ALU_CTL_MUL;
+            {`INSTR_TYP_R,     `R_TYP_FC_DIV}:      return `ALU_CTL_DIV;
+            {`INSTR_TYP_R,     `R_TYP_FC_REM}:      return `ALU_CTL_REM;
+            {`INSTR_TYP_R,     `R_TYP_FC_DIVU}:     return `ALU_CTL_DIV;
+            {`INSTR_TYP_R,     `R_TYP_FC_REMU}:     return `ALU_CTL_REM;
+            {`INSTR_TYP_I,     `I_TYP_FC_ADDI}:     return `ALU_CTL_ADD;
+            {`INSTR_TYP_I,     `I_TYP_FC_SLTI}:     return `ALU_CTL_SLT;
+            {`INSTR_TYP_I,     `I_TYP_FC_SLTIU}:    return `ALU_CTL_SLT;
+            {`INSTR_TYP_I,     `I_TYP_FC_ANDI}:     return `ALU_CTL_AND;
+            {`INSTR_TYP_I,     `I_TYP_FC_ORI}:      return `ALU_CTL_OR;
+            {`INSTR_TYP_I,     `I_TYP_FC_XORI}:     return `ALU_CTL_XOR;
+            {`INSTR_TYP_I,     `I_TYP_FC_SLLI}:     return `ALU_CTL_SLL;
+            {`INSTR_TYP_I,     `I_TYP_FC_SRLI}:     return `ALU_CTL_SRL;
+            {`INSTR_TYP_I,     `I_TYP_FC_SRAI}:     return `ALU_CTL_SRA;
+            {`INSTR_TYP_S,     `S_TYP_FC_SB}:       return `ALU_CTL_ADD;
+            {`INSTR_TYP_S,     `S_TYP_FC_SH}:       return `ALU_CTL_ADD;
+            {`INSTR_TYP_S,     `S_TYP_FC_SW}:       return `ALU_CTL_ADD;
+            {`INSTR_TYP_B,     `B_TYP_FC_BEQ}:      return {16{1'bZ}};
+            {`INSTR_TYP_B,     `B_TYP_FC_BEN}:      return {16{1'bZ}};
+            {`INSTR_TYP_B,     `B_TYP_FC_BLT}:      return `ALU_CTL_SLT;
+            {`INSTR_TYP_B,     `B_TYP_FC_BGE}:      return `ALU_CTL_SLT;
+            {`INSTR_TYP_B,     `B_TYP_FC_BLTU}:     return `ALU_CTL_SLTU;
+            {`INSTR_TYP_B,     `B_TYP_FC_BGEU}:     return `ALU_CTL_SLTU;
+            {`INSTR_TYP_U,     {10{1'b?}}}:         return {16{1'bZ}};
+            {`INSTR_TYP_J,     {10{1'b?}}}:         return `ALU_CTL_ADD;
+            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LB}:   return `ALU_CTL_ADD;
+            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LH}:   return `ALU_CTL_ADD;
+            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LW}:   return `ALU_CTL_ADD;
+            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LBU}:  return `ALU_CTL_ADD;
+            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LHU}:  return `ALU_CTL_ADD;
+            {`INSTR_TYP_I12JR, `I12JR_TYP_FC_JALR}: return `ALU_CTL_ADD;
+            {`INSTR_TYP_I20PC, {10{1'b?}}}:         return `ALU_CTL_ADD;
+            default:                                return {16{1'bZ}};
+        endcase
+    end
+    endfunction
+
+    function [31:0] MUX_of_ALU_op1;
+        input [ 6:0] op;
+        input [ 9:0] func;
+        input [31:0] op1;
+        input [31:0] op1T;
+        input [31:0] pc;
+    begin
+        casez({op, func})
+            {`INSTR_TYP_R,     {10{1'b?}}},
+            {`INSTR_TYP_I,     {10{1'b?}}},
+            {`INSTR_TYP_S,     {10{1'b?}}},
+            {`INSTR_TYP_B,     {10{1'b?}}},
+            {`INSTR_TYP_I12LD, {10{1'b?}}}:    return op1;
+            {`INSTR_TYP_R,     `R_TYP_FC_SLT},
+            {`INSTR_TYP_I,     `I_TYP_FC_SLTI},
+            {`INSTR_TYP_B,     `B_TYP_FC_BLT},
+            {`INSTR_TYP_B,     `B_TYP_FC_BGE}: return op1T;
+            {`INSTR_TYP_R,     `R_TYP_FC_DIV}, 
+            {`INSTR_TYP_R,     `R_TYP_FC_REM}: return {1'b0, op1T[30:0]};
+            {`INSTR_TYP_J,     {10{1'b?}}},
+            {`INSTR_TYP_I20PC, {10{1'b?}}}:    return pc;
+            default:                           return {32{1'bZ}};
+        endcase
+    end
+    endfunction
+
+    function [31:0] MUX_of_ALU_op2;
+        input [ 6:0] op;
+        input [ 9:0] func;
+        input [31:0] op2;
+        input [31:0] op2T;
+        input [31:0] imm;
+        input [31:0] immT;
+    begin
+        casez({op, func})
+            default: return {32{1'bZ}};
+        endcase
+    end
+    endfunction
+
+    reg [2:0] stat;
     always @(negedge rst or posedge clk) begin
         if (rst) begin
             stat <= `STAT_HALT;
@@ -127,6 +230,7 @@ module MicroarchiMC (
                 `STAT_EX:   stat <= `STAT_MM;
                 `STAT_MM:   stat <= `STAT_WB;
                 `STAT_WB:   stat <= `STAT_IF;
+                default:;
             endcase
         end
     end
