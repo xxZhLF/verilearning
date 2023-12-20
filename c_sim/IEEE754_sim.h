@@ -147,10 +147,10 @@ float calc_IEEE754(float _a_, float _b_, char op){
                 unsigned long int fracEX_b = (unsigned long int)(frac_b) << 32;
                 unsigned int frac_c = 0;
                 for (unsigned int i = 0; i < 31; ++i){
-                    frac_c   = frac_c | (
-                               fracEX_a < fracEX_b ? 0 : (unsigned int)1 << (31 - i));
-                    fracEX_a = fracEX_a < fracEX_b ? fracEX_a : (fracEX_a - fracEX_b);
-                    fracEX_b = fracEX_b >> 1;
+                    frac_c = frac_c | (
+                             frac_a < frac_b ?      0 : (unsigned int)1 << (31 - i));
+                    frac_a = frac_a < frac_b ? frac_a : frac_a - frac_b;
+                    frac_b = frac_b >> 1;
                 }   for (msb_at = 31; (!(frac_c & ((unsigned int)1 << msb_at))) && (msb_at >= 0); --msb_at){}
                 c.u.fraction = IEEE754_encode(frac_c << (31 - msb_at));
                 c.u.exponent = a.u.exponent - b.u.exponent + 127 - (31 - msb_at);
