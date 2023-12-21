@@ -19,6 +19,8 @@
 `define DATA_ST `MM_ENB_W
 `define DATA_LD `MM_ENB_R
 
+// `define MUTLI_CYCLE
+
 `define START_POINT_at(sp) (sp - 32'd4)
 
 module MicroarchiMC (
@@ -27,16 +29,30 @@ module MicroarchiMC (
     input  wire [31:0] cnt,
     input  wire [31:0] instr,
     input  wire [31:0] dataI,
+`ifndef MUTLI_CYCLE
     output wire [31:0] dataO,
     output wire        store_or_load,
     output wire [ 1:0] width_of_data,
     output wire [31:0] locat_of_data,
     output wire [31:0] where_is_instr
+`else
+    output reg  [31:0] dataO,
+    output reg         store_or_load,
+    output reg  [ 1:0] width_of_data,
+    output reg  [31:0] locat_of_data,
+    output reg  [31:0] where_is_instr
+`endif
 );
 
-    /* reg */ wire  [ 1:0] pc_mode;
-    /* reg */ wire  [31:0] pc_offset;
-    /* reg */ wire  [31:0] pc_target;
+`ifdef MUTLI_CYCLE
+    reg  [ 1:0] pc_mode;
+    reg  [31:0] pc_offset;
+    reg  [31:0] pc_target;
+`else
+    wire [ 1:0] pc_mode;
+    wire [31:0] pc_offset;
+    wire [31:0] pc_target;
+`endif
     wire [31:0] pc_addr;
     wire [31:0] pc_addr_nxt;
     PC pc(
@@ -49,10 +65,17 @@ module MicroarchiMC (
         .addr_ret(pc_addr_nxt)
     );
 
-    /* reg */ wire          rf_en4w;
-    /* reg */ wire   [ 4:0] rf_wA;
-    /* reg */ wire   [31:0] rf_wD;
-    /* reg */ wire   [ 4:0] rf_r0A, rf_r1A;
+`ifdef MUTLI_CYCLE
+    reg         rf_en4w;
+    reg  [ 4:0] rf_wA;
+    reg  [31:0] rf_wD;
+    reg  [ 4:0] rf_r0A, rf_r1A;
+`else
+    wire        rf_en4w;
+    wire [ 4:0] rf_wA;
+    wire [31:0] rf_wD;
+    wire [ 4:0] rf_r0A, rf_r1A;
+`endif
     wire [31:0] rf_r0D, rf_r1D;
     REGs3P rf(
         .clk(clk),
@@ -65,9 +88,15 @@ module MicroarchiMC (
         .data_o1(rf_r1D)
     );
 
-    /* reg */ wire   [15:0] alu_ctl;
-    /* reg */ wire   [31:0] alu_op1;
-    /* reg */ wire   [31:0] alu_op2;
+`ifdef MUTLI_CYCLE
+    reg   [15:0] alu_ctl;
+    reg   [31:0] alu_op1;
+    reg   [31:0] alu_op2;
+`else
+    wire  [15:0] alu_ctl;
+    wire  [31:0] alu_op1;
+    wire  [31:0] alu_op2;
+`endif
     wire [31:0] alu_res;
     ALU32FF alu(
         .ctl(alu_ctl),
@@ -76,7 +105,11 @@ module MicroarchiMC (
         .res(alu_res)
     );
 
-    /* reg */ wire   [31:0] decoder_instr;
+`ifdef MUTLI_CYCLE
+    reg   [31:0] decoder_instr;
+`else
+    wire  [31:0] decoder_instr;
+`endif
     wire [ 6:0] decoder_op;
     wire [ 9:0] decoder_func;
     wire [ 4:0] decoder_rs1;
@@ -117,8 +150,11 @@ module MicroarchiMC (
         .C(t2c_resC)
     );
 
+`ifdef MUTLI_CYCLE
+`else 
     assign decoder_instr  = instr;
     assign where_is_instr = rst ? 32'd2048 : pc_addr;
+`endif 
 
     assign c2t_r0DC  = rf_r0D;
     assign c2t_r1DC  = rf_r1D;
@@ -286,6 +322,8 @@ module MicroarchiMC (
     end
     endfunction
 
+`ifdef MUTLI_CYCLE
+`else
     assign alu_ctl = MUX_of_ALU_ctl(decoder_op, decoder_func);
     assign alu_op1 = MUX_of_ALU_op1(decoder_op, decoder_func,
                                     rf_r0D, c2t_r0DT, pc_addr);
@@ -313,13 +351,17 @@ module MicroarchiMC (
                                                  rf_r0D, rf_r1D, alu_res);
     assign pc_target = rst ? goto : alu_res;
     assign pc_offset = decoder_imm;
+`endif
 
-    reg [ 2:0] stat;
+`ifdef MUTLI_CYCLE
+`else
     reg [31:0] goto;
+`endif 
+    reg [ 2:0] stat;
     always @(negedge rst or posedge clk) begin
         if (rst) begin
             stat <= `STAT_HALT;
-            goto <= `START_POINT_at(32'd2048);
+            // goto <= `START_POINT_at(32'd2048);
         end else begin
             case (stat)
                 `STAT_HALT: stat <= `STAT_IF;
@@ -333,6 +375,47 @@ module MicroarchiMC (
         end
     end
 
+`ifdef MUTLI_CYCLE
+    always @(posedge clk) begin
+        if (`isEQ(stat, `STAT_HALT)) begin
+            pc_mode   <= `UCJUMP
+            pc_target <= `START_POINT_at(32'd2048);
+        end else if (`isEQ(stat, `STAT_IF)) begin
+            pc_mode        <= MUX_of_PC(decoder_op, decoder_func,
+                                        rf_r0D, rf_r1D, alu_res);
+            pc_offset      <= decoder_imm;
+            pc_target      <= alu_res;
+            where_is_instr <= pc_addr;
+        end else if (`isEQ(stat, `STAT_ID)) begin
+            decoder_instr <= instr;
+        end else if (`isEQ(stat, `STAT_EX)) begin
+            alu_ctl <= MUX_of_ALU_ctl(decoder_op, decoder_func);
+            alu_op1 <= MUX_of_ALU_op1(decoder_op, decoder_func,
+                                      rf_r0D, c2t_r0DT, pc_addr);
+            alu_op2 <= MUX_of_ALU_op2(decoder_op, decoder_func,
+                                      rf_r1D, c2t_r1DT, decoder_imm, c2t_immT);
+        end else if (`isEQ(stat, `STAT_MM)) begin
+            rf_en4w       <= `isEQ(decoder_op, `INSTR_TYP_R) |
+                             `isEQ(decoder_op, `INSTR_TYP_I) |
+                             `isEQ(decoder_op, `INSTR_TYP_U) |
+                             `isEQ(decoder_op, `INSTR_TYP_J) |
+                             `isEQ(decoder_op, `INSTR_TYP_I12LD) |
+                             `isEQ(decoder_op, `INSTR_TYP_I12JR) |
+                             `isEQ(decoder_op, `INSTR_TYP_I20PC) ? 1'b1 : 1'b0;
+            store_or_load <= `isEQ(decoder_op,   `INSTR_TYP_S) ? `DATA_ST : `DATA_LD;
+            width_of_data <= `isEQ(decoder_func, `S_TYP_FC_SB) ? `MW_Byte : 
+                             `isEQ(decoder_func, `S_TYP_FC_SH) ? `MW_Half :
+                             `isEQ(decoder_func, `S_TYP_FC_SW) ? `MW_Word : 2'b00;
+            locat_of_data <= alu_res;
+        end else if (`isEQ(stat, `STAT_WB)) begin
+            rf_wD <= MUX_of_RF(decoder_op, decoder_func,
+                               alu_res, t2c_resC, decoder_imm, pc_addr_nxt, dataI);
+            dataO <= rf_r1D;
+        end else begin
+        end
+    end
+`endif 
+
 `define DEBUG_TRACE_LOG_ENABLE
 `ifndef DEBUG_TRACE_LOG_ENABLE
 `else
@@ -340,118 +423,8 @@ module MicroarchiMC (
     always @(posedge clk) begin
         if (rst) begin
         end else begin
-            DEBUG_detail_of_instr_exec(instr,
-                                       pc_addr,
-                                       decoder_op,
-                                       decoder_func,
-                                       decoder_imm,
-                                       rf_r0A, rf_r0D,
-                                       rf_r1A, rf_r1D,
-                                       rf_wA,  rf_wD);
         end
     end
-
-    task DEBUG_detail_of_instr_exec;
-        input [31:0] instr;
-        input [31:0] pc;
-        input [ 6:0] op;
-        input [ 9:0] func;
-        input [31:0] imm;
-        input [ 4:0] rs1A;
-        input [31:0] rs1D;
-        input [ 4:0] rs2A;
-        input [31:0] rs2D;
-        input [ 4:0] rdA;
-        input [31:0] rdD;
-    begin
-        case (op)
-            `INSTR_TYP_R: begin
-                case (func)
-                    `R_TYP_FC_ADD:      $display("No.%03d ADD:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_SUB:      $display("No.%03d SUB:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_SLL:      $display("No.%03d SLL:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_SLT:      $display("No.%03d SLT:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_SLTU:     $display("No.%03d SLTU:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_XOR:      $display("No.%03d XOR:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_SRL:      $display("No.%03d SRL:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_SRA:      $display("No.%03d SRA:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_OR:       $display("No.%03d OR:     @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_AND:      $display("No.%03d AND:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_MUL:      $display("No.%03d MUL:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_MULH:     $display("No.%03d MULH:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_MULHSU:   $display("No.%03d MULHSU: @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_MULHU:    $display("No.%03d MULHU:  @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_DIV:      $display("No.%03d DIV:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_DIVU:     $display("No.%03d DIVU:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_REM:      $display("No.%03d REM:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    `R_TYP_FC_REMU:     $display("No.%03d REMU:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, rdA, rdD);
-                    default: $display("*[ERROR]@INSTR_TYP_R Func=%b ", func);
-                endcase
-            end 
-            `INSTR_TYP_I: begin
-                case (func)
-                    `I_TYP_FC_ADDI:     $display("No.%03d ADDI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I_TYP_FC_SLTI:     $display("No.%03d SLTI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I_TYP_FC_SLTIU:    $display("No.%03d SLTIU:  @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I_TYP_FC_XORI:     $display("No.%03d XORI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I_TYP_FC_ORI:      $display("No.%03d ORI:    @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I_TYP_FC_ANDI:     $display("No.%03d ANDI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I_TYP_FC_SLLI:     $display("No.%03d SLLI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I_TYP_FC_SRLI:     $display("No.%03d SRLI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I_TYP_FC_SRAI:     $display("No.%03d SRAI:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    default: $display("*[ERROR]@INSTR_TYP_I Func=%b ", func);
-                endcase
-            end 
-            `INSTR_TYP_S: begin
-                case (func)
-                    `S_TYP_FC_SB:       $display("No.%03d SB:     @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
-                    `S_TYP_FC_SH:       $display("No.%03d SH:     @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
-                    `S_TYP_FC_SW:       $display("No.%03d SW:     @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
-                    default: $display("*[ERROR]@INSTR_TYP_S Func=%b ", func);
-                endcase
-            end 
-            `INSTR_TYP_B: begin
-                case (func)
-                    `B_TYP_FC_BEQ:      $display("No.%03d BEQ:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
-                    `B_TYP_FC_BEN:      $display("No.%03d BNE:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
-                    `B_TYP_FC_BLT:      $display("No.%03d BLT:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
-                    `B_TYP_FC_BGE:      $display("No.%03d BGE:    @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
-                    `B_TYP_FC_BLTU:     $display("No.%03d BLTU:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
-                    `B_TYP_FC_BGEU:     $display("No.%03d BGEU:   @[%08H] rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rs2A, rs2D, imm);
-                    default: $display("*[ERROR]@INSTR_TYP_B Func=%b ", func);
-                endcase
-            end 
-            `INSTR_TYP_U: begin
-                                        $display("No.%03d LUI:    @[%08H] rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rdA, rdD, imm);
-            end 
-            `INSTR_TYP_J: begin
-                                        $display("No.%03d JAL:    @[%08H] rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rdA, rdD, imm);
-            end 
-            `INSTR_TYP_I12LD: begin
-                case (func) 
-                    `I12LD_TYP_FC_LB:   $display("No.%03d LB:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I12LD_TYP_FC_LH:   $display("No.%03d LH:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I12LD_TYP_FC_LW:   $display("No.%03d LW:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I12LD_TYP_FC_LBU:  $display("No.%03d LBU:    @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I12LD_TYP_FC_LHU:  $display("No.-03d LHU:    @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    default: $display("*[ERROR]@INSTR_TYP_I12LD Func=%b ", func);
-                endcase
-            end
-            `INSTR_TYP_I12JR: begin
-                case (func) 
-                    `I12JR_TYP_FC_JALR: $display("No.%-3d JALR:   @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    default: $display("*[ERROR]@INSTR_TYP_I12JR Func=%b ", func);
-                endcase
-            end
-            `INSTR_TYP_I20PC: begin
-                                        $display("No.%-3d AUIPC:  @[%08H] rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rdA, rdD, imm);
-            end
-            default: begin
-                $display("*[ERROR] Machine Code is instr=%08H, @[%08H]", instr, pc);
-            end
-        endcase
-    end
-    endtask
 
 `endif /* DEBUG_TRACE_LOG_ENABLE */
 
