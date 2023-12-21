@@ -19,9 +19,12 @@
 `define DATA_ST `MM_ENB_W
 `define DATA_LD `MM_ENB_R
 
-// `define MUTLI_CYCLE
-
+`ifdef MUTLI_CYCLE
+`else
 `define START_POINT_at(sp) (sp - 32'd4)
+`endif 
+
+`define MUTLI_CYCLE
 
 module MicroarchiMC (
     input  wire        rst,
@@ -361,7 +364,11 @@ module MicroarchiMC (
     always @(negedge rst or posedge clk) begin
         if (rst) begin
             stat <= `STAT_HALT;
-            // goto <= `START_POINT_at(32'd2048);
+`ifdef MUTLI_CYCLE
+            where_is_instr <= 32'd2048;
+`else
+            goto <= `START_POINT_at(32'd2048);
+`endif
         end else begin
             case (stat)
                 `STAT_HALT: stat <= `STAT_IF;
@@ -378,13 +385,9 @@ module MicroarchiMC (
 `ifdef MUTLI_CYCLE
     always @(posedge clk) begin
         if (`isEQ(stat, `STAT_HALT)) begin
-            pc_mode   <= `UCJUMP
+            pc_mode   <= `UCJUMP;
             pc_target <= `START_POINT_at(32'd2048);
         end else if (`isEQ(stat, `STAT_IF)) begin
-            pc_mode        <= MUX_of_PC(decoder_op, decoder_func,
-                                        rf_r0D, rf_r1D, alu_res);
-            pc_offset      <= decoder_imm;
-            pc_target      <= alu_res;
             where_is_instr <= pc_addr;
         end else if (`isEQ(stat, `STAT_ID)) begin
             decoder_instr <= instr;
@@ -406,11 +409,15 @@ module MicroarchiMC (
             width_of_data <= `isEQ(decoder_func, `S_TYP_FC_SB) ? `MW_Byte : 
                              `isEQ(decoder_func, `S_TYP_FC_SH) ? `MW_Half :
                              `isEQ(decoder_func, `S_TYP_FC_SW) ? `MW_Word : 2'b00;
+            pc_mode       <= MUX_of_PC(decoder_op, decoder_func,
+                                       rf_r0D, rf_r1D, alu_res);
             locat_of_data <= alu_res;
         end else if (`isEQ(stat, `STAT_WB)) begin
-            rf_wD <= MUX_of_RF(decoder_op, decoder_func,
-                               alu_res, t2c_resC, decoder_imm, pc_addr_nxt, dataI);
-            dataO <= rf_r1D;
+            dataO     <= rf_r1D;
+            rf_wD     <= MUX_of_RF(decoder_op, decoder_func,
+                                   alu_res, t2c_resC, decoder_imm, pc_addr_nxt, dataI);
+            pc_offset <= decoder_imm;
+            pc_target <= alu_res;
         end else begin
         end
     end
