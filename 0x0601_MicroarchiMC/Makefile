@@ -84,4 +84,4 @@ $(C_PROG).x86: $(wildcard *.c)
 
 .PHONY: clear
 clear:
-	rm *.S *.o *.rv $(C_PROG)
+	rm *.S *.o *.rv *.dump $(C_PROG)
