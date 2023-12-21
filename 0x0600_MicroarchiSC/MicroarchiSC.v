@@ -120,128 +120,6 @@ module MicroarchiSC (
     assign rf_r1A    = decoder_rs2;
     assign rf_wA     = decoder_rd;
 
-// `define BinaryTreeMUX4ALU
-`ifndef BinaryTreeMUX4ALU
-
-    assign {
-        alu_ctl,
-        alu_op1,
-        alu_op2
-    } = MUX_of_ALU(decoder_op, 
-                   decoder_func, 
-                   pc_addr,
-                   rf_r0D, c2t_r0DT, 
-                   rf_r1D, c2t_r1DT,
-                   decoder_imm, 
-                   c2t_immT);
-    function [79:0] MUX_of_ALU;
-        input [ 6:0] op;
-        input [ 9:0] func;
-        input [31:0] pc;
-        input [31:0] op1, op1T;
-        input [31:0] op2, op2T;
-        input [31:0] imm, immT;
-    begin
-        case (op)
-            `INSTR_TYP_R: begin
-                case (func)
-                    `R_TYP_FC_ADD:      return {`ALU_CTL_ADD,  op1,                op2               };
-                    `R_TYP_FC_SUB:      return {`ALU_CTL_SUB,  op1,                op2               };
-                    `R_TYP_FC_SLL:      return {`ALU_CTL_SLL,  op1,                op2               };
-                    `R_TYP_FC_SRL:      return {`ALU_CTL_SRL,  op1,                op2               };
-                    `R_TYP_FC_SRA:      return {`ALU_CTL_SRA,  op1,                op2               };
-                    `R_TYP_FC_SLT:      return {`ALU_CTL_SLT,  op1T,               op2T              };
-                    `R_TYP_FC_SLTU:     return {`ALU_CTL_SLTU, op1,                op2               };
-                    `R_TYP_FC_AND:      return {`ALU_CTL_AND,  op1,                op2               };
-                    `R_TYP_FC_OR:       return {`ALU_CTL_OR,   op1,                op2               };
-                    `R_TYP_FC_XOR:      return {`ALU_CTL_XOR,  op1,                op2               };
-                    `R_TYP_FC_MUL:      return {`ALU_CTL_MUL,  op1,                op2               };
-                    `R_TYP_FC_MULH:     return {`ALU_CTL_MUL,  op1,                op2               };
-                    `R_TYP_FC_MULHU:    return {`ALU_CTL_MUL,  op1,                op2               };
-                    `R_TYP_FC_MULHSU:   return {`ALU_CTL_MUL,  op1,                op2               };
-                    `R_TYP_FC_DIV:      return {`ALU_CTL_DIV,  {1'b0, op1T[30:0]}, {1'b0, op2T[30:0]}};
-                    `R_TYP_FC_REM:      return {`ALU_CTL_REM,  {1'b0, op1T[30:0]}, {1'b0, op2T[30:0]}};
-                    `R_TYP_FC_DIVU:     return {`ALU_CTL_DIV,  op1,                op2               };
-                    `R_TYP_FC_REMU:     return {`ALU_CTL_REM,  op1,                op2               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_I: begin
-                case (func)
-                    `I_TYP_FC_ADDI:     return {`ALU_CTL_ADD,  op1,                imm               };
-                    `I_TYP_FC_SLTI:     return {`ALU_CTL_SLT,  op1T,               immT              };
-                    `I_TYP_FC_SLTIU:    return {`ALU_CTL_SLTU, op1,                imm               };
-                    `I_TYP_FC_ANDI:     return {`ALU_CTL_AND,  op1,                imm               };
-                    `I_TYP_FC_ORI:      return {`ALU_CTL_OR,   op1,                imm               };
-                    `I_TYP_FC_XORI:     return {`ALU_CTL_XOR,  op1,                imm               };
-                    `I_TYP_FC_SLLI:     return {`ALU_CTL_SLL,  op1,                imm               };
-                    `I_TYP_FC_SRLI:     return {`ALU_CTL_SRL,  op1,                imm               };
-                    `I_TYP_FC_SRAI:     return {`ALU_CTL_SRA,  op1,                imm               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_S: begin
-                case (func)
-                    `S_TYP_FC_SB:       return {`ALU_CTL_ADD,  op1,                imm               };
-                    `S_TYP_FC_SH:       return {`ALU_CTL_ADD,  op1,                imm               };
-                    `S_TYP_FC_SW:       return {`ALU_CTL_ADD,  op1,                imm               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_B: begin
-                case (func)
-                    `B_TYP_FC_BEQ:      return {{16{1'bZ}},    {32{1'bZ}},         {32{1'bZ}}        };
-                    `B_TYP_FC_BEN:      return {{16{1'bZ}},    {32{1'bZ}},         {32{1'bZ}}        };
-                    `B_TYP_FC_BLT:      return {`ALU_CTL_SLT,  op1,                op2               };
-                    `B_TYP_FC_BGE:      return {`ALU_CTL_SLT,  op1,                op2               };
-                    `B_TYP_FC_BLTU:     return {`ALU_CTL_SLTU, op1T,               op2T              };
-                    `B_TYP_FC_BGEU:     return {`ALU_CTL_SLTU, op1T,               op2T              };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_U: begin
-                casez (func)
-                    10'b??????????:     return {{16{1'bZ}},    {32{1'bZ}},         {32{1'bZ}}        };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_J: begin
-                casez (func)
-                    10'b??????????:     return {`ALU_CTL_ADD,  pc,                 imm               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_I12LD: begin
-                case (func)
-                    `I12LD_TYP_FC_LB:   return {`ALU_CTL_ADD,  op1,                imm               };
-                    `I12LD_TYP_FC_LH:   return {`ALU_CTL_ADD,  op1,                imm               };
-                    `I12LD_TYP_FC_LW:   return {`ALU_CTL_ADD,  op1,                imm               };
-                    `I12LD_TYP_FC_LBU:  return {`ALU_CTL_ADD,  op1,                imm               };
-                    `I12LD_TYP_FC_LHU:  return {`ALU_CTL_ADD,  op1,                imm               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_I12JR: begin
-                case (func)
-                    `I12JR_TYP_FC_JALR: return {`ALU_CTL_ADD,  op1,                imm               };
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            `INSTR_TYP_I20PC: begin
-                casez (func)
-                    10'b??????????:     return {`ALU_CTL_ADD,  pc,                 {imm[19:0], 12'b0}};
-                    default:            return {80{1'bZ}};
-                endcase
-            end
-            default: return {80{1'bZ}};
-        endcase
-    end
-    endfunction
-
-`else
-
-    xxZh: Stop using "? :" on ALU.
-
     assign {
         alu_ctl,
         alu_op1,
@@ -300,8 +178,6 @@ module MicroarchiSC (
                                             /* ======================================================================================================================================= */
         `isEQ(decoder_op, `INSTR_TYP_I20PC) ?                                    1'b1 ? {`ALU_CTL_ADD,  pc_addr,                {decoder_imm[19:0], 12'b0}} : {80{1'bZ}} : {80{1'bZ}};
                                             /* ======================================================================================================================================= */
-
-`endif /* BinaryTreeMUX4ALU */ 
 
     assign {
         store_or_load,
