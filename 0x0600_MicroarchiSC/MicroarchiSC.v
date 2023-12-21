@@ -106,7 +106,7 @@ module MicroarchiSC (
     wire [31:0] t2c_resT;
     wire [31:0] t2c_resC;
     TCC32 t2c(
-        .T(t2c_resT),
+        .T({c2t_r0DT[31] ^ c2t_r1DT[31], t2c_resT[30:0]}),
         .C(t2c_resC)
     );
 
