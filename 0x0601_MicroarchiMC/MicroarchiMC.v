@@ -365,7 +365,6 @@ module MicroarchiMC (
         if (rst) begin
             stat <= `STAT_HALT;
 `ifdef MUTLI_CYCLE
-            where_is_instr <= 32'd2048;
 `else
             goto <= `START_POINT_at(32'd2048);
 `endif
@@ -385,9 +384,11 @@ module MicroarchiMC (
 `ifdef MUTLI_CYCLE
     always @(posedge clk) begin
         if (`isEQ(stat, `STAT_HALT)) begin
-            pc_mode   <= `UCJUMP;
-            pc_target <= `START_POINT_at(32'd2048);
+            pc_mode        <= `UCJUMP;
+            pc_target      <= `START_POINT_at(32'd2048);
+            where_is_instr <= 32'd2048;
         end else if (`isEQ(stat, `STAT_IF)) begin
+            pc_mode        <= `STOP_C;
             where_is_instr <= pc_addr;
         end else if (`isEQ(stat, `STAT_ID)) begin
             decoder_instr <= instr;
