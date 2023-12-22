@@ -27,7 +27,14 @@ module PC (
         if (rst) begin
             pc <= target;
         end else begin
-            pc <= `isEQ(mode, `UCJUMP) ? target : pcNext;
+            // pc <= `isEQ(mode, `UCJUMP) ? target : pcNext;
+            case (mode)
+                `NORMAL,
+                `BRANCH: pc <= pcNext;
+                `UCJUMP: pc <= target;
+                `STOP_C: pc <= pc;
+                default: pc <= 32'b0;
+            endcase
         end
     end
 
