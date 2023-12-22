@@ -19,6 +19,8 @@
 `define DATA_ST `MM_ENB_W
 `define DATA_LD `MM_ENB_R
 
+`define START_POINT_at(sp) (sp - 32'd4)
+
 `define MUTLI_CYCLE
 
 module MicroarchiMC (
@@ -336,22 +338,29 @@ module MicroarchiMC (
         end
     end
 
+    reg I1st; /* Flag of First Instr */
     always @(posedge clk) begin
         case (stat)
             `STAT_HALT: begin
+                        I1st <= 1'b1;
                         pc_mode   <= `UCJUMP;
-                        pc_target <= 32'd2048;
-                        where_is_instr <= 32'd2048;
+                        pc_target <= `START_POINT_at(32'd2048);
+                        where_is_instr <= `START_POINT_at(32'd2048);
                     end
             `STAT_IF: begin 
-                        pc_mode <= `STOP_C;
+                        I1st <= 1'b0;
+                        pc_mode   <= I1st ? `NORMAL : MUX_of_PC(decoder_op, decoder_func,
+                                                                rf_r0D, rf_r1D, alu_res);
+                        pc_target <= alu_res;
+                        pc_offset <= decoder_imm;
                         where_is_instr <= pc_addr;
                         decoder_instr  <= instr;
                     end
             `STAT_ID: begin 
-                        rf_r0A <= decoder_rs1;
-                        rf_r1A <= decoder_rs2;
-                        rf_wA  <= decoder_rd;
+                        pc_mode <= `STOP_C;
+                        rf_r0A  <= decoder_rs1;
+                        rf_r1A  <= decoder_rs2;
+                        rf_wA   <= decoder_rd;
                     end
             `STAT_EX: begin 
                         alu_ctl <= MUX_of_ALU_ctl(decoder_op, decoder_func);
@@ -376,20 +385,14 @@ module MicroarchiMC (
                     end
             `STAT_WB: begin 
                         dataO <= rf_r1D;
-                        rf_wD <=   MUX_of_RF(decoder_op, decoder_func,
-                                             alu_res, t2c_resC, decoder_imm, pc_addr_nxt, dataI);
-                        pc_mode <= MUX_of_PC(decoder_op, decoder_func,
-                                             rf_r0D, rf_r1D, alu_res);
-                        pc_target <= alu_res;
-                        pc_offset <= decoder_imm;
+                        rf_wD <= MUX_of_RF(decoder_op, decoder_func,
+                                           alu_res, t2c_resC, decoder_imm, pc_addr_nxt, dataI);
                     end
             default:;
         endcase
     end
 
 `else
-
-    `define START_POINT_at(sp) (sp - 32'd4)
 
     reg [31:0] goto;
     always @(negedge rst or posedge clk) begin
