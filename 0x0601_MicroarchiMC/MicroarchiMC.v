@@ -19,11 +19,6 @@
 `define DATA_ST `MM_ENB_W
 `define DATA_LD `MM_ENB_R
 
-`ifdef MUTLI_CYCLE
-`else
-`define START_POINT_at(sp) (sp - 32'd4)
-`endif 
-
 `define MUTLI_CYCLE
 
 module MicroarchiMC (
@@ -162,9 +157,6 @@ module MicroarchiMC (
     assign c2t_r0DC  = rf_r0D;
     assign c2t_r1DC  = rf_r1D;
     assign c2t_immC  = decoder_imm;
-    assign rf_r0A    = decoder_rs1;
-    assign rf_r1A    = decoder_rs2;
-    assign rf_wA     = decoder_rd;
 
     function [15:0] MUX_of_ALU_ctl;
         input [6:0] op;
@@ -326,7 +318,87 @@ module MicroarchiMC (
     endfunction
 
 `ifdef MUTLI_CYCLE
+
+    reg [ 2:0] stat;
+    always @(posedge clk) begin
+        if (rst) begin
+            stat <= `STAT_HALT;
+        end else begin
+            case (stat)
+                `STAT_HALT: stat <= `STAT_IF;
+                `STAT_IF:   stat <= `STAT_ID;
+                `STAT_ID:   stat <= `STAT_EX;
+                `STAT_EX:   stat <= `STAT_MM;
+                `STAT_MM:   stat <= `STAT_WB;
+                `STAT_WB:   stat <= `STAT_IF;
+                default:;
+            endcase
+        end
+    end
+
+    always @(posedge clk) begin
+        case (stat)
+            `STAT_HALT: begin
+                        pc_mode   <= `UCJUMP;
+                        pc_target <= 32'd2048;
+                        where_is_instr <= 32'd2048;
+                    end
+            `STAT_IF: begin 
+                        pc_mode <= `STOP_C;
+                        where_is_instr <= pc_addr;
+                        decoder_instr  <= instr;
+                    end
+            `STAT_ID: begin 
+                        rf_r0A <= decoder_rs1;
+                        rf_r1A <= decoder_rs2;
+                        rf_wA  <= decoder_rd;
+                    end
+            `STAT_EX: begin 
+                        alu_ctl <= MUX_of_ALU_ctl(decoder_op, decoder_func);
+                        alu_op1 <= MUX_of_ALU_op1(decoder_op, decoder_func,
+                                                  rf_r0D, c2t_r0DT, pc_addr);
+                        alu_op2 <= MUX_of_ALU_op2(decoder_op, decoder_func,
+                                                  rf_r1D, c2t_r1DT, decoder_imm, c2t_immT);
+                    end
+            `STAT_MM: begin 
+                        rf_en4w <= `isEQ(decoder_op, `INSTR_TYP_R) |
+                                   `isEQ(decoder_op, `INSTR_TYP_I) |
+                                   `isEQ(decoder_op, `INSTR_TYP_U) |
+                                   `isEQ(decoder_op, `INSTR_TYP_J) |
+                                   `isEQ(decoder_op, `INSTR_TYP_I12LD) |
+                                   `isEQ(decoder_op, `INSTR_TYP_I12JR) |
+                                   `isEQ(decoder_op, `INSTR_TYP_I20PC) ? 1'b1 : 1'b0;
+                        width_of_data <= `isEQ(decoder_func, `S_TYP_FC_SB) ? `MW_Byte : 
+                                         `isEQ(decoder_func, `S_TYP_FC_SH) ? `MW_Half :
+                                         `isEQ(decoder_func, `S_TYP_FC_SW) ? `MW_Word : 2'b00;
+                        store_or_load <= `isEQ(decoder_op, `INSTR_TYP_S) ? `DATA_ST : `DATA_LD;
+                        locat_of_data <= alu_res;
+                    end
+            `STAT_WB: begin 
+                        dataO <= rf_r1D;
+                        rf_wD <=   MUX_of_RF(decoder_op, decoder_func,
+                                             alu_res, t2c_resC, decoder_imm, pc_addr_nxt, dataI);
+                        pc_mode <= MUX_of_PC(decoder_op, decoder_func,
+                                             rf_r0D, rf_r1D, alu_res);
+                        pc_target <= alu_res;
+                        pc_offset <= decoder_imm;
+                    end
+            default:;
+        endcase
+    end
+
 `else
+
+    `define START_POINT_at(sp) (sp - 32'd4)
+
+    reg [31:0] goto;
+    always @(negedge rst or posedge clk) begin
+        if (rst) begin
+            goto <= `START_POINT_at(32'd2048);
+        end else begin
+        end
+    end
+
     assign alu_ctl = MUX_of_ALU_ctl(decoder_op, decoder_func);
     assign alu_op1 = MUX_of_ALU_op1(decoder_op, decoder_func,
                                     rf_r0D, c2t_r0DT, pc_addr);
@@ -354,75 +426,8 @@ module MicroarchiMC (
                                                  rf_r0D, rf_r1D, alu_res);
     assign pc_target = rst ? goto : alu_res;
     assign pc_offset = decoder_imm;
-`endif
 
-`ifdef MUTLI_CYCLE
-`else
-    reg [31:0] goto;
-`endif 
-    reg [ 2:0] stat;
-    always @(negedge rst or posedge clk) begin
-        if (rst) begin
-            stat <= `STAT_HALT;
-`ifdef MUTLI_CYCLE
-`else
-            goto <= `START_POINT_at(32'd2048);
 `endif
-        end else begin
-            case (stat)
-                `STAT_HALT: stat <= `STAT_IF;
-                `STAT_IF:   stat <= `STAT_ID;
-                `STAT_ID:   stat <= `STAT_EX;
-                `STAT_EX:   stat <= `STAT_MM;
-                `STAT_MM:   stat <= `STAT_WB;
-                `STAT_WB:   stat <= `STAT_IF;
-                default:;
-            endcase
-        end
-    end
-
-`ifdef MUTLI_CYCLE
-    always @(posedge clk) begin
-        if (`isEQ(stat, `STAT_HALT)) begin
-            pc_mode        <= `UCJUMP;
-            pc_target      <= `START_POINT_at(32'd2048);
-            where_is_instr <= 32'd2048;
-        end else if (`isEQ(stat, `STAT_IF)) begin
-            pc_mode        <= `STOP_C;
-            where_is_instr <= pc_addr;
-        end else if (`isEQ(stat, `STAT_ID)) begin
-            decoder_instr <= instr;
-        end else if (`isEQ(stat, `STAT_EX)) begin
-            alu_ctl <= MUX_of_ALU_ctl(decoder_op, decoder_func);
-            alu_op1 <= MUX_of_ALU_op1(decoder_op, decoder_func,
-                                      rf_r0D, c2t_r0DT, pc_addr);
-            alu_op2 <= MUX_of_ALU_op2(decoder_op, decoder_func,
-                                      rf_r1D, c2t_r1DT, decoder_imm, c2t_immT);
-        end else if (`isEQ(stat, `STAT_MM)) begin
-            rf_en4w       <= `isEQ(decoder_op, `INSTR_TYP_R) |
-                             `isEQ(decoder_op, `INSTR_TYP_I) |
-                             `isEQ(decoder_op, `INSTR_TYP_U) |
-                             `isEQ(decoder_op, `INSTR_TYP_J) |
-                             `isEQ(decoder_op, `INSTR_TYP_I12LD) |
-                             `isEQ(decoder_op, `INSTR_TYP_I12JR) |
-                             `isEQ(decoder_op, `INSTR_TYP_I20PC) ? 1'b1 : 1'b0;
-            store_or_load <= `isEQ(decoder_op,   `INSTR_TYP_S) ? `DATA_ST : `DATA_LD;
-            width_of_data <= `isEQ(decoder_func, `S_TYP_FC_SB) ? `MW_Byte : 
-                             `isEQ(decoder_func, `S_TYP_FC_SH) ? `MW_Half :
-                             `isEQ(decoder_func, `S_TYP_FC_SW) ? `MW_Word : 2'b00;
-            pc_mode       <= MUX_of_PC(decoder_op, decoder_func,
-                                       rf_r0D, rf_r1D, alu_res);
-            locat_of_data <= alu_res;
-        end else if (`isEQ(stat, `STAT_WB)) begin
-            dataO     <= rf_r1D;
-            rf_wD     <= MUX_of_RF(decoder_op, decoder_func,
-                                   alu_res, t2c_resC, decoder_imm, pc_addr_nxt, dataI);
-            pc_offset <= decoder_imm;
-            pc_target <= alu_res;
-        end else begin
-        end
-    end
-`endif 
 
 `define DEBUG_TRACE_LOG_ENABLE
 `ifndef DEBUG_TRACE_LOG_ENABLE

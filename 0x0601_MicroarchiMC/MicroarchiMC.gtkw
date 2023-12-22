@@ -1,29 +1,58 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Thu Dec 21 15:14:48 2023
+[*] Fri Dec 22 08:32:22 2023
 [*]
-[dumpfile] "/home/xxzhou/MyWORKspace/verilearning/0x0601_MicroarchiMC/MicroarchiMC.vcd"
-[dumpfile_mtime] "Thu Dec 21 15:09:53 2023"
-[dumpfile_size] 30370851
-[savefile] "/home/xxzhou/MyWORKspace/verilearning/0x0601_MicroarchiMC/MicroarchiMC.gtkw"
-[timestart] 624
-[size] 1428 819
+[dumpfile] "/home/xxzhou/verilearning/0x0601_MicroarchiMC/MicroarchiMC.vcd"
+[dumpfile_mtime] "Fri Dec 22 08:27:56 2023"
+[dumpfile_size] 11081698
+[savefile] "/home/xxzhou/verilearning/0x0601_MicroarchiMC/MicroarchiMC.gtkw"
+[timestart] 911
+[size] 1908 987
 [pos] -1 -1
-*-6.000000 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-7.000000 1210 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.MicroarchiMC_tb.
 [treeopen] TOP.MicroarchiMC_tb.core.
 [sst_width] 214
 [signals_width] 190
 [sst_expanded] 1
-[sst_vpaned_height] 228
+[sst_vpaned_height] 287
 @28
 TOP.MicroarchiMC_tb.clk_base
 TOP.MicroarchiMC_tb.clk_core
 TOP.MicroarchiMC_tb.rst
+TOP.MicroarchiMC_tb.core.stat[2:0]
 @200
 -
-@201
+@22
+TOP.MicroarchiMC_tb.core.pc_addr[31:0]
+TOP.MicroarchiMC_tb.core.where_is_instr[31:0]
+TOP.MicroarchiMC_tb.core.instr[31:0]
+TOP.MicroarchiMC_tb.core.decoder_instr[31:0]
+@200
+-
+@22
+TOP.MicroarchiMC_tb.core.alu_op1[31:0]
+TOP.MicroarchiMC_tb.core.alu_op2[31:0]
+TOP.MicroarchiMC_tb.core.alu_res[31:0]
+@200
+-
+@22
+TOP.MicroarchiMC_tb.core.rf_r0A[4:0]
+TOP.MicroarchiMC_tb.core.rf_r0D[31:0]
+@200
+-
+@22
+TOP.MicroarchiMC_tb.core.rf_r1A[4:0]
+TOP.MicroarchiMC_tb.core.rf_r1D[31:0]
+@200
+-
+@28
+TOP.MicroarchiMC_tb.core.rf_en4w
+@22
+TOP.MicroarchiMC_tb.core.rf_wA[4:0]
+TOP.MicroarchiMC_tb.core.rf_wD[31:0]
+@200
 -
 [pattern_trace] 1
 [pattern_trace] 0
