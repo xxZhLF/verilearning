@@ -9,9 +9,9 @@ module MicroarchiMC_tb(
     reg rst;
     initial rst = 1'b1; 
 
-    reg clk_base;
-    initial clk_base = 1'b0;
-    always #10 clk_base = ~clk_base;
+    reg clk;
+    initial clk = 1'b0;
+    always #10 clk = ~clk; 
 
     wire        A_EnWR,  B_EnWR;
     wire [ 1:0]          B_Size;
@@ -19,7 +19,7 @@ module MicroarchiMC_tb(
     wire [31:0] A_DBusWI, B_DBusWI;
     wire [31:0] A_DBusRO, B_DBusRO;
     Mem4K memory (
-        .clk(clk_base),
+        .clk(clk),
         .A_EnWR(A_EnWR),
         .A_ABus(A_ABus),
         .A_DBusW(A_DBusWI),
@@ -31,13 +31,8 @@ module MicroarchiMC_tb(
         .B_DBusR(B_DBusRO)
     );
 
-    reg clk_core;
-    initial clk_core = 1'b0;
-    always @(posedge clk_base) 
-        clk_core <= ~clk_core;
-
     reg [31:0] cnt;
-    always @(posedge clk_core) 
+    always @(posedge clk) 
         cnt <= rst ? 32'b0 
                    : cnt + 32'b1;
 
@@ -48,7 +43,7 @@ module MicroarchiMC_tb(
     wire [31:0] I_DBus, D_DBusRI;
     MicroarchiMC core(
         .rst(rst),
-        .clk(clk_core),
+        .clk(clk),
         .cnt(cnt),
         .instr(I_DBus),
         .dataI(D_DBusRI),
@@ -88,7 +83,7 @@ module MicroarchiMC_tb(
 
     reg isFinished; integer f;
     initial isFinished = 1'b0;
-    always @(posedge clk_core) begin
+    always @(posedge clk) begin
         if (rst & ~isFinished) begin
         end else begin
             if ((cnt > {32'b1 << 32'd12})
@@ -113,9 +108,8 @@ module MicroarchiMC_tb(
     initial begin
         $dumpfile("MicroarchiMC.vcd");
         $dumpvars(0, rst);
-        $dumpvars(1, clk_base);
-        $dumpvars(2, clk_core);
-        $dumpvars(3, cnt);
+        $dumpvars(1, clk);
+        $dumpvars(2, cnt);
     end
 
 endmodule
