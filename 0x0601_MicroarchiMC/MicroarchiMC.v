@@ -449,10 +449,16 @@ module MicroarchiMC (
                                 decoder_func);
                     end
                 `STAT_EX: begin
+                    $display("\t @EX: rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd[%5s] is x%-2d<=0x%08H, (imm is 0x%08H)", 
+                             rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_en4w ? "True" : "False", rf_wA, rf_wD, decoder_imm);
                     end
                 `STAT_MM: begin
+                    $display("\t @MM: rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd[%5s] is x%-2d<=0x%08H, (imm is 0x%08H)", 
+                             rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_en4w ? "True" : "False", rf_wA, rf_wD, decoder_imm);
                     end
                 `STAT_WB: begin
+                    $display("\t @WB: rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd[%5s] is x%-2d<=0x%08H, (imm is 0x%08H)", 
+                             rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_en4w ? "True" : "False", rf_wA, rf_wD, decoder_imm);
                     end
                 default:;
             endcase
