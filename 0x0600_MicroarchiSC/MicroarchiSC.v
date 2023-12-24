@@ -324,11 +324,11 @@ module MicroarchiSC (
             end 
             `INSTR_TYP_I12LD: begin
                 case (func) 
-                    `I12LD_TYP_FC_LB:   $display("No.%03d LB:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I12LD_TYP_FC_LH:   $display("No.%03d LH:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I12LD_TYP_FC_LW:   $display("No.%03d LW:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I12LD_TYP_FC_LBU:  $display("No.%03d LBU:    @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
-                    `I12LD_TYP_FC_LHU:  $display("No.-03d LHU:    @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d=>0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I12LD_TYP_FC_LB:   $display("No.%03d LB:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I12LD_TYP_FC_LH:   $display("No.%03d LH:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I12LD_TYP_FC_LW:   $display("No.%03d LW:     @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I12LD_TYP_FC_LBU:  $display("No.%03d LBU:    @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
+                    `I12LD_TYP_FC_LHU:  $display("No.-03d LHU:    @[%08H] rs1 is x%-2d=>0x%08H, rd  is x%-2d<=0x%08H, imm is 0x%08H", cnt, pc, rs1A, rs1D, rdA, rdD, imm);
                     default: $display("*[ERROR]@INSTR_TYP_I12LD Func=%b ", func);
                 endcase
             end
