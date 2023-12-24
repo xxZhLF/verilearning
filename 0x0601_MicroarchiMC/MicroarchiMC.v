@@ -21,38 +21,22 @@
 
 `define START_POINT_at(sp) (sp - 32'd4)
 
-`define MUTLI_CYCLE
-
 module MicroarchiMC (
     input  wire        rst,
     input  wire        clk,
     input  wire [31:0] cnt,
     input  wire [31:0] instr,
     input  wire [31:0] dataI,
-`ifndef MUTLI_CYCLE
-    output wire [31:0] dataO,
-    output wire        store_or_load,
-    output wire [ 1:0] width_of_data,
-    output wire [31:0] locat_of_data,
-    output wire [31:0] where_is_instr
-`else
     output reg  [31:0] dataO,
     output reg         store_or_load,
     output reg  [ 1:0] width_of_data,
     output reg  [31:0] locat_of_data,
     output reg  [31:0] where_is_instr
-`endif
 );
 
-`ifdef MUTLI_CYCLE
     reg  [ 1:0] pc_mode;
     reg  [31:0] pc_offset;
     reg  [31:0] pc_target;
-`else
-    wire [ 1:0] pc_mode;
-    wire [31:0] pc_offset;
-    wire [31:0] pc_target;
-`endif
     wire [31:0] pc_addr;
     wire [31:0] pc_addr_nxt;
     PC pc(
@@ -65,17 +49,10 @@ module MicroarchiMC (
         .addr_ret(pc_addr_nxt)
     );
 
-`ifdef MUTLI_CYCLE
     reg         rf_en4w;
     reg  [ 4:0] rf_wA;
     reg  [31:0] rf_wD;
     reg  [ 4:0] rf_r0A, rf_r1A;
-`else
-    wire        rf_en4w;
-    wire [ 4:0] rf_wA;
-    wire [31:0] rf_wD;
-    wire [ 4:0] rf_r0A, rf_r1A;
-`endif
     wire [31:0] rf_r0D, rf_r1D;
     REGs3P rf(
         .clk(clk),
@@ -88,15 +65,9 @@ module MicroarchiMC (
         .data_o1(rf_r1D)
     );
 
-`ifdef MUTLI_CYCLE
     reg   [15:0] alu_ctl;
     reg   [31:0] alu_op1;
     reg   [31:0] alu_op2;
-`else
-    wire  [15:0] alu_ctl;
-    wire  [31:0] alu_op1;
-    wire  [31:0] alu_op2;
-`endif
     wire [31:0] alu_res;
     ALU32FF alu(
         .ctl(alu_ctl),
@@ -105,11 +76,7 @@ module MicroarchiMC (
         .res(alu_res)
     );
 
-`ifdef MUTLI_CYCLE
     reg   [31:0] decoder_instr;
-`else
-    wire  [31:0] decoder_instr;
-`endif
     wire [ 6:0] decoder_op;
     wire [ 9:0] decoder_func;
     wire [ 4:0] decoder_rs1;
@@ -149,12 +116,6 @@ module MicroarchiMC (
         .T({c2t_r0DT[31] ^ c2t_r1DT[31], t2c_resT[30:0]}),
         .C(t2c_resC)
     );
-
-`ifdef MUTLI_CYCLE
-`else 
-    assign decoder_instr  = instr;
-    assign where_is_instr = rst ? 32'd2048 : pc_addr;
-`endif 
 
     assign c2t_r0DC  = rf_r0D;
     assign c2t_r1DC  = rf_r1D;
@@ -319,8 +280,6 @@ module MicroarchiMC (
     end
     endfunction
 
-`ifdef MUTLI_CYCLE
-
     reg [ 2:0] stat;
     always @(posedge clk) begin
         if (rst) begin
@@ -392,46 +351,6 @@ module MicroarchiMC (
             default:;
         endcase
     end
-
-`else
-
-    reg [31:0] goto;
-    always @(negedge rst or posedge clk) begin
-        if (rst) begin
-            goto <= `START_POINT_at(32'd2048);
-        end else begin
-        end
-    end
-
-    assign alu_ctl = MUX_of_ALU_ctl(decoder_op, decoder_func);
-    assign alu_op1 = MUX_of_ALU_op1(decoder_op, decoder_func,
-                                    rf_r0D, c2t_r0DT, pc_addr);
-    assign alu_op2 = MUX_of_ALU_op2(decoder_op, decoder_func,
-                                    rf_r1D, c2t_r1DT, decoder_imm, c2t_immT);
-
-    assign rf_en4w = `isEQ(decoder_op, `INSTR_TYP_R) |
-                     `isEQ(decoder_op, `INSTR_TYP_I) |
-                     `isEQ(decoder_op, `INSTR_TYP_U) |
-                     `isEQ(decoder_op, `INSTR_TYP_J) |
-                     `isEQ(decoder_op, `INSTR_TYP_I12LD) |
-                     `isEQ(decoder_op, `INSTR_TYP_I12JR) |
-                     `isEQ(decoder_op, `INSTR_TYP_I20PC) ? 1'b1 : 1'b0;
-    assign rf_wD = MUX_of_RF(decoder_op, decoder_func,
-                             alu_res, t2c_resC, decoder_imm, pc_addr_nxt, dataI);
-
-    assign store_or_load = `isEQ(decoder_op,   `INSTR_TYP_S) ? `DATA_ST : `DATA_LD;
-    assign width_of_data = `isEQ(decoder_func, `S_TYP_FC_SB) ? `MW_Byte : 
-                           `isEQ(decoder_func, `S_TYP_FC_SH) ? `MW_Half :
-                           `isEQ(decoder_func, `S_TYP_FC_SW) ? `MW_Word : 2'b00;
-    assign locat_of_data = alu_res;
-    assign dataO = rf_r1D;
-
-    assign pc_mode   = rst ? `UCJUMP : MUX_of_PC(decoder_op, decoder_func,
-                                                 rf_r0D, rf_r1D, alu_res);
-    assign pc_target = rst ? goto : alu_res;
-    assign pc_offset = decoder_imm;
-
-`endif
 
 `define DEBUG_TRACE_LOG_ENABLE
 `ifndef DEBUG_TRACE_LOG_ENABLE
