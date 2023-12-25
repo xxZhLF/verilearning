@@ -103,6 +103,7 @@ module MicroarchiSC_tb(
                     $fdisplay(f, "@[%08H] %08H %s", A_ABus, A_DBusRO, A_DBusRO != 32'b0 ? "*" : " ");
                 end else begin
                     $fdisplay(f, "@[%08H] %08H %s", A_ABus, A_DBusRO, A_DBusRO != 32'b0 ? "*" : " ");
+                    $fclose(f);
                     $finish;
                 end cnt <= cnt + 32'd4;
             end else begin
