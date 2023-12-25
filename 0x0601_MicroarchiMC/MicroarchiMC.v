@@ -31,7 +31,7 @@ module MicroarchiMC (
     output reg         store_or_load,
     output reg  [ 1:0] width_of_data,
     output reg  [31:0] locat_of_data,
-    output reg  [31:0] where_is_instr
+    output wire [31:0] where_is_instr
 );
 
     reg  [ 1:0] pc_mode;
@@ -116,10 +116,6 @@ module MicroarchiMC (
         .T({c2t_r0DT[31] ^ c2t_r1DT[31], t2c_resT[30:0]}),
         .C(t2c_resC)
     );
-
-    assign c2t_r0DC  = rf_r0D;
-    assign c2t_r1DC  = rf_r1D;
-    assign c2t_immC  = decoder_imm;
 
     function [15:0] MUX_of_ALU_ctl;
         input [6:0] op;
@@ -280,6 +276,14 @@ module MicroarchiMC (
     end
     endfunction
 
+    assign c2t_r0DC  = rf_r0D;
+    assign c2t_r1DC  = rf_r1D;
+    assign c2t_immC  = decoder_imm;
+    // assign rf_r0A = decoder_rs1;
+    // assign rf_r1A = decoder_rs2;
+    // assign rf_wA  = decoder_rd;
+    assign where_is_instr = pc_addr;
+
     reg [ 2:0] stat;
     always @(posedge clk) begin
         if (rst) begin
@@ -304,7 +308,6 @@ module MicroarchiMC (
                         I1st <= 1'b1;
                         pc_mode   <= `UCJUMP;
                         pc_target <= `START_POINT_at(32'd2048);
-                        where_is_instr <= `START_POINT_at(32'd2048);
                     end
             `STAT_IF: begin 
                         I1st <= 1'b0;
@@ -312,8 +315,7 @@ module MicroarchiMC (
                                                                 rf_r0D, rf_r1D, alu_res);
                         pc_target <= alu_res;
                         pc_offset <= decoder_imm;
-                        where_is_instr <= pc_addr;
-                        decoder_instr  <= instr;
+                        decoder_instr <= instr;
                     end
             `STAT_ID: begin 
                         pc_mode <= `STOP_C;
@@ -392,52 +394,52 @@ module MicroarchiMC (
         input [ 9:0] func;
     begin
         casez({op, func})
-            {`INSTR_TYP_R,     `R_TYP_FC_ADD}:      $display("ADD (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_SUB}:      $display("SUB (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_SLL}:      $display("SLL (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_SLT}:      $display("SLT (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_SLTU}:     $display("SLTU (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_XOR}:      $display("XOR (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_SRL}:      $display("SRL (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_SRA}:      $display("SRA (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_OR}:       $display("OR (%08H)@[%08H]:     ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_AND}:      $display("AND (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_MUL}:      $display("MUL (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_MULH}:     $display("MULH (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_MULHSU}:   $display("MULHSU (%08H)@[%08H]: ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_MULHU}:    $display("MULHU (%08H)@[%08H]:  ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_DIV}:      $display("DIV (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_DIVU}:     $display("DIVU (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_REM}:      $display("REM (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_R,     `R_TYP_FC_REMU}:     $display("REMU (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_I,     `I_TYP_FC_ADDI}:     $display("ADDI (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_I,     `I_TYP_FC_SLTI}:     $display("SLTI (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_I,     `I_TYP_FC_SLTIU}:    $display("SLTIU (%08H)@[%08H]:  ", instr, addr - 32'd4);
-            {`INSTR_TYP_I,     `I_TYP_FC_XORI}:     $display("XORI (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_I,     `I_TYP_FC_ORI}:      $display("ORI (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_I,     `I_TYP_FC_ANDI}:     $display("ANDI (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_I,     `I_TYP_FC_SLLI}:     $display("SLLI (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_I,     `I_TYP_FC_SRLI}:     $display("SRLI (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_I,     `I_TYP_FC_SRAI}:     $display("SRAI (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_S,     `S_TYP_FC_SB}:       $display("SB (%08H)@[%08H]:     ", instr, addr - 32'd4);
-            {`INSTR_TYP_S,     `S_TYP_FC_SH}:       $display("SH (%08H)@[%08H]:     ", instr, addr - 32'd4);
-            {`INSTR_TYP_S,     `S_TYP_FC_SW}:       $display("SW (%08H)@[%08H]:     ", instr, addr - 32'd4);
-            {`INSTR_TYP_B,     `B_TYP_FC_BEQ}:      $display("BEQ (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_B,     `B_TYP_FC_BEN}:      $display("BEN (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_B,     `B_TYP_FC_BLT}:      $display("BLT (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_B,     `B_TYP_FC_BGE}:      $display("BGE (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_B,     `B_TYP_FC_BLTU}:     $display("BLTU (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_B,     `B_TYP_FC_BGEU}:     $display("BGEU (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_U,     {10{1'b?}}}:         $display("LUI (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_J,     {10{1'b?}}}:         $display("JAL (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LB}:   $display("LB (%08H)@[%08H]:     ", instr, addr - 32'd4);
-            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LH}:   $display("LH (%08H)@[%08H]:     ", instr, addr - 32'd4);
-            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LW}:   $display("LW (%08H)@[%08H]:     ", instr, addr - 32'd4);
-            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LBU}:  $display("LBU (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LHU}:  $display("LHU (%08H)@[%08H]:    ", instr, addr - 32'd4);
-            {`INSTR_TYP_I12JR, `I12JR_TYP_FC_JALR}: $display("JALR (%08H)@[%08H]:   ", instr, addr - 32'd4);
-            {`INSTR_TYP_I20PC, {10{1'b?}}}:         $display("AUIPC (%08H)@[%08H]:  ", instr, addr - 32'd4);
-            default:                                $display("*Error (%08H)@[%08H]: ", instr, addr - 32'd4);
+            {`INSTR_TYP_R,     `R_TYP_FC_ADD}:      $display("ADD (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_SUB}:      $display("SUB (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_SLL}:      $display("SLL (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_SLT}:      $display("SLT (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_SLTU}:     $display("SLTU (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_XOR}:      $display("XOR (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_SRL}:      $display("SRL (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_SRA}:      $display("SRA (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_OR}:       $display("OR (%08H)@[%08H]:     ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_AND}:      $display("AND (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_MUL}:      $display("MUL (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_MULH}:     $display("MULH (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_MULHSU}:   $display("MULHSU (%08H)@[%08H]: ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_MULHU}:    $display("MULHU (%08H)@[%08H]:  ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_DIV}:      $display("DIV (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_DIVU}:     $display("DIVU (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_REM}:      $display("REM (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_R,     `R_TYP_FC_REMU}:     $display("REMU (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_I,     `I_TYP_FC_ADDI}:     $display("ADDI (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_I,     `I_TYP_FC_SLTI}:     $display("SLTI (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_I,     `I_TYP_FC_SLTIU}:    $display("SLTIU (%08H)@[%08H]:  ", instr, addr);
+            {`INSTR_TYP_I,     `I_TYP_FC_XORI}:     $display("XORI (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_I,     `I_TYP_FC_ORI}:      $display("ORI (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_I,     `I_TYP_FC_ANDI}:     $display("ANDI (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_I,     `I_TYP_FC_SLLI}:     $display("SLLI (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_I,     `I_TYP_FC_SRLI}:     $display("SRLI (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_I,     `I_TYP_FC_SRAI}:     $display("SRAI (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_S,     `S_TYP_FC_SB}:       $display("SB (%08H)@[%08H]:     ", instr, addr);
+            {`INSTR_TYP_S,     `S_TYP_FC_SH}:       $display("SH (%08H)@[%08H]:     ", instr, addr);
+            {`INSTR_TYP_S,     `S_TYP_FC_SW}:       $display("SW (%08H)@[%08H]:     ", instr, addr);
+            {`INSTR_TYP_B,     `B_TYP_FC_BEQ}:      $display("BEQ (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_B,     `B_TYP_FC_BEN}:      $display("BEN (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_B,     `B_TYP_FC_BLT}:      $display("BLT (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_B,     `B_TYP_FC_BGE}:      $display("BGE (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_B,     `B_TYP_FC_BLTU}:     $display("BLTU (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_B,     `B_TYP_FC_BGEU}:     $display("BGEU (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_U,     {10{1'b?}}}:         $display("LUI (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_J,     {10{1'b?}}}:         $display("JAL (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LB}:   $display("LB (%08H)@[%08H]:     ", instr, addr);
+            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LH}:   $display("LH (%08H)@[%08H]:     ", instr, addr);
+            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LW}:   $display("LW (%08H)@[%08H]:     ", instr, addr);
+            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LBU}:  $display("LBU (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_I12LD, `I12LD_TYP_FC_LHU}:  $display("LHU (%08H)@[%08H]:    ", instr, addr);
+            {`INSTR_TYP_I12JR, `I12JR_TYP_FC_JALR}: $display("JALR (%08H)@[%08H]:   ", instr, addr);
+            {`INSTR_TYP_I20PC, {10{1'b?}}}:         $display("AUIPC (%08H)@[%08H]:  ", instr, addr);
+            default:                                $display("*Error (%08H)@[%08H]: ", instr, addr);
         endcase
     end
     endtask
