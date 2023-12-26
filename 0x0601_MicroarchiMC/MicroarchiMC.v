@@ -313,7 +313,6 @@ module MicroarchiMC (
                         rf_r0A  <= decoder_rs1;
                         rf_r1A  <= decoder_rs2;
                         rf_wA   <= decoder_rd;
-                        rf_en4w <= 1'b0;
                     end
             `STAT_EX: begin 
                         alu_ctl <= MUX_of_ALU_ctl(decoder_op, decoder_func);
