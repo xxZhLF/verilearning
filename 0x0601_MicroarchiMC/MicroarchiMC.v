@@ -15,6 +15,7 @@
 `define STAT_EX 3'b011
 `define STAT_MM 3'b100
 `define STAT_WB 3'b101
+`define STAT_X1 3'b110
 
 `define DATA_ST `MM_ENB_W
 `define DATA_LD `MM_ENB_R
@@ -65,9 +66,9 @@ module MicroarchiMC (
         .data_o1(rf_r1D)
     );
 
-    reg   [15:0] alu_ctl;
-    reg   [31:0] alu_op1;
-    reg   [31:0] alu_op2;
+    reg  [15:0] alu_ctl;
+    reg  [31:0] alu_op1;
+    reg  [31:0] alu_op2;
     wire [31:0] alu_res;
     ALU32FF alu(
         .ctl(alu_ctl),
@@ -76,7 +77,7 @@ module MicroarchiMC (
         .res(alu_res)
     );
 
-    reg   [31:0] decoder_instr;
+    reg  [31:0] decoder_instr;
     wire [ 6:0] decoder_op;
     wire [ 9:0] decoder_func;
     wire [ 4:0] decoder_rs1;
@@ -276,12 +277,9 @@ module MicroarchiMC (
     end
     endfunction
 
-    assign c2t_r0DC  = rf_r0D;
-    assign c2t_r1DC  = rf_r1D;
-    assign c2t_immC  = decoder_imm;
-    // assign rf_r0A = decoder_rs1;
-    // assign rf_r1A = decoder_rs2;
-    // assign rf_wA  = decoder_rd;
+    assign c2t_r0DC = rf_r0D;
+    assign c2t_r1DC = rf_r1D;
+    assign c2t_immC = decoder_imm;
     assign where_is_instr = pc_addr;
 
     reg [ 2:0] stat;
@@ -295,30 +293,23 @@ module MicroarchiMC (
                 `STAT_ID:   stat <= `STAT_EX;
                 `STAT_EX:   stat <= `STAT_MM;
                 `STAT_MM:   stat <= `STAT_WB;
-                `STAT_WB:   stat <= `STAT_IF;
+                `STAT_WB:   stat <= `STAT_X1;
+                `STAT_X1:   stat <= `STAT_IF; /* Wait instruction valid after address given */
                 default:;
             endcase
         end
     end
 
-    reg I1st; /* Flag of First Instr */
     always @(posedge clk) begin
         case (stat)
             `STAT_HALT: begin
-                        I1st <= 1'b1;
                         pc_mode   <= `UCJUMP;
-                        pc_target <= `START_POINT_at(32'd2048);
+                        pc_target <= 32'd2048;
                     end
             `STAT_IF: begin 
-                        I1st <= 1'b0;
-                        pc_mode   <= I1st ? `NORMAL : MUX_of_PC(decoder_op, decoder_func,
-                                                                rf_r0D, rf_r1D, alu_res);
-                        pc_target <= alu_res;
-                        pc_offset <= decoder_imm;
                         decoder_instr <= instr;
                     end
             `STAT_ID: begin 
-                        pc_mode <= `STOP_C;
                         rf_r0A  <= decoder_rs1;
                         rf_r1A  <= decoder_rs2;
                         rf_wA   <= decoder_rd;
@@ -347,8 +338,18 @@ module MicroarchiMC (
                     end
             `STAT_WB: begin 
                         dataO <= rf_r1D;
-                        rf_wD <= MUX_of_RF(decoder_op, decoder_func,
-                                           alu_res, t2c_resC, decoder_imm, pc_addr_nxt, dataI);
+                        rf_wD <=   MUX_of_RF(decoder_op, decoder_func,
+                                               alu_res, t2c_resC, decoder_imm, pc_addr_nxt, dataI);
+                        pc_mode <= MUX_of_PC(decoder_op, decoder_func,
+                                             rf_r0D, rf_r1D, alu_res);
+                        pc_target <= alu_res;
+                        pc_offset <= decoder_imm;
+                    end
+            `STAT_X1: begin /* Wait instruction 
+                      valid after address given */
+                        rf_en4w <= 1'b0;
+                        pc_mode <= 2'b0;
+                        store_or_load <= 1'b0;
                     end
             default:;
         endcase
@@ -380,6 +381,10 @@ module MicroarchiMC (
                     end
                 `STAT_WB: begin
                     $display("\t @WB: rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd[%5s] is x%-2d<=0x%08H, (imm is 0x%08H)", 
+                             rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_en4w ? "True" : "False", rf_wA, rf_wD, decoder_imm);
+                    end
+                `STAT_X1: begin
+                    $display("\t @X1: rs1 is x%-2d=>0x%08H, rs2 is x%-2d=>0x%08H, rd[%5s] is x%-2d<=0x%08H, (imm is 0x%08H)", 
                              rf_r0A, rf_r0D, rf_r1A, rf_r1D, rf_en4w ? "True" : "False", rf_wA, rf_wD, decoder_imm);
                     end
                 default:;
