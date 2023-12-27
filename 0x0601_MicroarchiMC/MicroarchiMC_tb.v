@@ -36,10 +36,10 @@ module MicroarchiMC_tb(
     always @(posedge clk_base) 
         clk_core <= ~clk_core;
 
-    reg [31:0] cnt;
-    always @(posedge clk_core) 
-        cnt <= rst ? 32'b0 
-                   : cnt + 32'b1;
+    reg [31:0] cnt_core;
+    always @(I_ABus) 
+        cnt_core <= rst ? 32'b0 
+                        : cnt_core + 32'b1;
 
     wire                D_EnWR;
     wire [ 1:0]         D_Size;
@@ -49,7 +49,7 @@ module MicroarchiMC_tb(
     MicroarchiMC core(
         .rst(rst),
         .clk(clk_core),
-        .cnt(cnt),
+        .cnt(cnt_core),
         .instr(I_DBus),
         .dataI(D_DBusRI),
         .dataO(D_DBusWO),
@@ -86,6 +86,7 @@ module MicroarchiMC_tb(
     assign B_DBusWI = D_DBusWO;
     assign D_DBusRI = B_DBusRO;
 
+    reg [31:0] cnt;
     reg isFinished; integer f;
     initial isFinished = 1'b0;
     always @(posedge clk_core) begin
