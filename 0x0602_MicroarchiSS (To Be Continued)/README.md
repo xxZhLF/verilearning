@@ -6,4 +6,5 @@
 关于Verilog的使用：到目前为止，语法层面上基本已无大碍。接下来打算 \
 学习一下的Chisel的使用。
 
-超标量架构的设计与实现，将放到Chisel的学习过程中进行。
+超标量架构的设计与实现，
+将放到[Chisel的学习过程](https://github.com/xxZhLF/chiselearning.git)中进行。
